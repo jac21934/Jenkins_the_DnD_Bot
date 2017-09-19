@@ -100,40 +100,105 @@ function set(id, args){
 		return message;
 }
 
+function getDice(someString){
+	var numDie = 0;
+	var dieMax = 0;
+/*	while((someString[0] != "d" && someString.length > 1)){
+		someString = someString.replace(someString[0],"");
+		console.log(someString);
+	}*/
+	if( someString[0] == "d"){
+		numDie = 1;
+	}
+	else{
+		numDie=parseNumberFromString(0,someString);
+		someString = someString.replace(numDie, "");
+	}
+
+	if(someString.length == 0){
+		dieMax = 0;	
+	}		
+	else if( someString[0] == "d"){
+		dieMax=parseNumberFromString(1,someString);
+	}
+	else{
+		dieMax = 0;	
+	}
+		
+
+	return [Math.floor(numDie), Math.floor(dieMax)];
+}
+
+function parseNumberFromString(Index,someString){
+	var periodCheck = false;	
+	buffVal = "";
+	var numFlag = true;
+	var initIndex = Index;
+	while(numFlag){
+		if( String(Number(someString[Index])) == someString[Index] 
+		|| ((someString[Index] == '.') && periodCheck == false) ){
+			if(String(someString[Index]) == '.'){
+				periodCheck = true;
+				if(buffVal.length == 0){
+					buffVal += "0";
+				}
+			}
+			buffVal += String(someString[Index]);
+		}
+		else{
+			numFlag = false;
+			Index -=1;
+		}
+		if(Index == someString.length -1 ){
+			numFlag = false;
+			Index -=1;
+		}
+		Index += 1;
+
+	}
+
+	return Number(buffVal)
+}
+
 function parseSum(someString){
 
 		var checkFlag = true;
+		var sumFlag = false;
+		var minusFlag = false;
 		var Index  = 0;
 		var totVal = 0;
 		var bufVal = "";
 		while(checkFlag){
 				Index = someString.indexOf("+");
 				if( Index != -1 && Index != (someString.length -1)){
-						buffVal = "";
-						var numFlag = true;
-						var initIndex = Index;
-						Index +=1;
-						while(numFlag){
-								if(Index == someString.length -1 ){
-										numFlag = false;
-								}
-								if( String(Number(someString[Index])) == someString[Index] || (someString[Index] == ".") ){
-
-										buffVal += String(someString[Index]);
-								}
-								
-								Index += 1;
-						}
-
-
+					sumFlag = true;
+					someString = someString.replace('+','');
+					var buffArray = parseNumberFromString(Index,someString);
+					someString = someString.replace(buffArray,'');
+					totVal += Number(buffVal);
 				}
+				else{
+					sumFlag = false;
+				}
+				periodCheck = false;
 
 				Index = someString.indexOf("-");
 				if( Index != -1 && Index != (someString.length -1)){
-
+					minusFlag = true;
+					someString = someString.replace('-','');
+					var buffArray = parseNumberFromString(Index,someString);
+					someString = someString.replace(buffArray,'');
+					totVal -= Number(buffVal);
 				}
-
+				else {
+					minusFlag = false;
+				}
+				if(sumFlag == false && minusFlag == false){
+					checkFlag = false;
+				}				
 		}
+
+	return [totVal, someString];
 
 }
 
@@ -355,6 +420,17 @@ client.on("message", async message => {
 		const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
 		const command = args.shift().toLowerCase();
 		
+		if(command == "test"){
+			var someString = args.join("");	
+
+			var testMessage = "```";
+			var sum = getDice(someString);
+			testMessage += sum + "\n";
+			testMessage += "```";
+			message.channel.send(testMessage);
+
+		}
+
 
 		if(command == "close"){
 				
@@ -397,10 +473,32 @@ client.on("message", async message => {
 		else if(command === "say") {
 				// makes the bot say something and delete the message. As an example, it's open to anyone to use. 
 				// To get the "message" itself we join the `args` back into a string with spaces: 
-				const sayMessage = "```" + args.join(" ") + "\n```";
+				var id = 0;
+				if (message.channel.type == "dm"){
+						id = message.channel.recipient.id;
+
+				}
+
+				else{
+						id = message.member.id;
+				}
+			
+
+				var sayMessage = "```";
+				sayMessage +=  args.join(" ") + "\n";
 				// Then we delete the command message (sneaky, right?). The catch just ignores the error with a cute smiley thing.
 				message.delete().catch(O_o=>{}); 
 				// And we get the bot to say the thing: 
+	
+				var mickel = ["poop", "eldritch ", "vibrant ", "breezy ", "silky ", "bountiful ", "literally on fire "];
+				var mickelparts = ["face", "butt", "foot","head", "buttocks","buttock", "nostril","growth", "skeleton", "aqueous humor", '"breasts"'];
+ 
+
+				if(id == 152235945368879105){
+
+					sayMessage += "\nP.S.: Mickel has a " + String(mickel[getRandomInt(0, mickel.length - 1)]) + String(mickelparts[getRandomInt(0, mickelparts.length-1)]) +".\n";
+				}
+				sayMessage += "```";
 				message.channel.send(sayMessage);
 		}
 
@@ -524,149 +622,112 @@ client.on("message", async message => {
 				
 				var sumFlag = false;
 
-				if( args.length > 0){
-
-						if(String(args[args.length-1]).toLowerCase() == "sum"){
-								sumFlag = true;
-								args.pop();
-						}
-				}
-
-
 				////////////////////////////////// Parsing input
 				var totArgs = args.join("");
 				
+				if( totArgs.indexOf("sum") != -1){
+					sumFlag = true;
+					totArgs = totArgs.replace("sum","");
+				}
+
 				var numDie = 0;
 				var maxDie = 0;
 				var modChar = "";
-				var modifier = "";
+				var buff= parseSum(totArgs);
+				var modifier = buff[0];
+				totArgs = buff[1];
+				if( modifier > 0){
+					modchar = "+";
+				}
+				else if(modifier < 0){
+					modchar = "-";
+				}
+				buff = getDice(totArgs);
+
+				numDie = buff[0];
+				maxDie = buff[1];
+
+
 				var rollMessage = "```";
 
-				if(totArgs[0] == "d" && String(Number(totArgs[1])) == totArgs[1]){
-						numDie = 1;
-				}
-				else if(String(Number(totArgs[0])) == totArgs[0] && totArgs.indexOf("d") > -1){
-						numDie = Number(totArgs.slice(0, totArgs.indexOf("d")));
-				}
-				
+
 				if(numDie > 100){
 						rollMessage += "Please roll one hundred or less dice.\n";
 				}
-				else{
-						
-						var maxDieEndIndex = totArgs.length - 1;	
-						for(i = totArgs.indexOf("d") + 1; i < totArgs.length; i++){
-
-								if(String(Number(totArgs[i])) != totArgs[i]){
-										maxDieEndIndex = i;
-								}
-								
-						}
-
-						if(maxDieEndIndex == totArgs.length - 1){
-								maxDie = Number(totArgs.slice(totArgs.indexOf("d") + 1));
-
-						}
-
-						else{
-								maxDie = Number(totArgs.slice(totArgs.indexOf("d") + 1,maxDieEndIndex));
-								modChar = totArgs[maxDieEndIndex];
-								if(modChar != "+" && modChar != "-"){
-										modChar = "";
-								}
-								else{
-										modifier = Number(totArgs.slice(maxDieEndIndex+1));
-										if(modChar == "-"){
-
-												modifier *= -1;
-										}
-								}
-								
-
-						}
-						////////////////////////////////////////
-
-
-						rollMessage += "Rolling " + numDie + "d"+ maxDie;
-						if (modifier != "" || modifier != 0){
-								if (modChar == "-"){
-										rollMessage += modifier;
-								}
-
-								else if (modChar == "+"){
-										rollMessage += modChar + modifier;
-								}
-						}
-						
-						rollMessage += "\n";
-
-						var filler = Array(rollMessage.length - 3).join("-") + "\n";
-						if(sumFlag == false){
-								rollMessage += filler;
-						}
-						var rollSum = 0;
-						for( i = 0; i < numDie; i++){
-								var dieRoll = getRandomInt(1,maxDie);
-
-								if (sumFlag == false){
-										rollMessage += dieRoll;
-
-										if(maxDie == 20){
-												if( dieRoll == 20){
-														rollMessage += " *Crit*";
-												}
-												else if(dieRoll == 1){
-														rollMessage += " *Crit Fail*";
-												}
-										}
-										rollMessage += "\n";
-								}
-								rollSum += dieRoll;
-						}
-
-						var sumMessage = "";
-						var modMessage = "";
-						var totMessage = "";
-						var maxFill = 0;
-
-						if(numDie > 1){
-								sumMessage += "Sum: " + rollSum + "\n";
-						}
-
-						if(modifier != ""){
-								modMessage += "Modifier: " + modifier + "\n";	
-								var totalSum = rollSum+modifier;
-								totMessage += "Total Sum: " + totalSum + "\n";	
-						}
-
-						if( numDie>1 || modifier !=""){
-								if(sumFlag == true){
-										maxFill = Math.max(String(sumMessage).length, String(modMessage).length, String(totMessage).length, String(filler).length);
-								}
-
-								else{
-										maxFill = Math.max(String(sumMessage).length, String(modMessage).length, String(totMessage).length);
-								}
-
-								filler = Array(maxFill).join("-") + "\n";
-								rollMessage +=filler;
-								if(numDie > 1){
-										rollMessage += sumMessage;
-								}
-								if(modifier != ""){
-
-										rollMessage += modMessage;
-										rollMessage += totMessage;
-								}
-
-						}
-
-
+				else if(maxDie == 0){
+					rollMessage += "I didn't understand that input. I can take values like 3d6 + 2 or 12d13 - 21.\n";
 				}
+				else if(numDie == 0){
+					rollMessage += "Ok rolling zero dice...\n";
+				}
+				else{
+					rollMessage += "Rolling " + numDie + "d"+ maxDie;
+					if (modifier != "" || modifier != 0){
+							if (modChar == "-"){
+									rollMessage += modifier;
+							}
+								else if (modChar == "+"){
+									rollMessage += modChar + modifier;
+							}
+					}
+					
+					rollMessage += "\n";
+						var filler = Array(rollMessage.length - 3).join("-") + "\n";
+					if(sumFlag == false){
+							rollMessage += filler;
+					}
+					var rollSum = 0;
+					for( i = 0; i < numDie; i++){
+							var dieRoll = getRandomInt(1,maxDie);
+								if (sumFlag == false){
+									rollMessage += dieRoll;
+										if(maxDie == 20){
+											if( dieRoll == 20){
+													rollMessage += " *Crit*";
+											}
+											else if(dieRoll == 1){
+													rollMessage += " *Crit Fail*";
+											}
+									}
+									rollMessage += "\n";
+							}
+							rollSum += dieRoll;
+					}
+					var sumMessage = "";
+					var modMessage = "";
+					var totMessage = "";
+					var maxFill = 0;
+					if(numDie > 1){
+						sumMessage += "Sum: " + rollSum + "\n";
+					}
+					if(modifier != ""){
+						modMessage += "Modifier: " + modifier + "\n";	
+						var totalSum = rollSum+modifier;
+						totMessage += "Total Sum: " + totalSum + "\n";	
+					}
+					if( numDie>1 || modifier !=""){
+						if(sumFlag == true){
+							maxFill = Math.max(String(sumMessage).length, String(modMessage).length, String(totMessage).length, String(filler).length);
+						}
+						else{
+							maxFill = Math.max(String(sumMessage).length, String(modMessage).length, String(totMessage).length);
+						}
+						filler = Array(maxFill).join("-") + "\n";
+						rollMessage +=filler;
+						if(numDie > 1){
+								rollMessage += sumMessage;
+						}
+						if(modifier != ""){
+							rollMessage += modMessage;
+							rollMessage += totMessage;
+						}
 
-				rollMessage += "```";
+					}
+			}
 
-				message.channel.send(rollMessage);
+		rollMessage += "```";
+
+		message.channel.send(rollMessage);
 
 
 		}
@@ -677,28 +738,16 @@ client.on("message", async message => {
 				totArgs = args.join("");
 				if (totArgs.length < 1){}
 				else {
-						if( totArgs[0] == '+'){
-								var goldToAdd = Number(totArgs.slice(1));
-								if( isNaN(goldToAdd)){
-										goldMessage += "Cannot add " + totArgs.slice(1) + "\n";
-								}
-								else{
-										gold += goldToAdd;
-										goldMessage += "Adding " + goldToAdd + "gp\n";
-								}
-						}	
-						else if( totArgs[0] == "-"){
-								var goldToAdd = Number(totArgs.slice(1));
-								if( isNaN(goldToAdd)){
-										goldMessage += "Cannot remove " + totArgs.slice(1) + "\n";
-								}
-								else{
-										gold -= goldToAdd;
-										goldMessage += "Removing " + goldToAdd + "gp\n";
-								}
-						}
+					var goldBuff = parseSum(totArgs)[0];
+					gold += goldBuff;
+					if(goldBuff >= 0){
+						goldMessage += "Adding " + goldBuff + "gp\n";
+					} 
+					else if(goldBuff < 0){
+						goldMessage += "Removing " + goldBuff + "gp\n";
+					}
 				}
-
+				
 
 				goldMessage += "Total gold: " + Number(gold).toFixed(2) + "gp\n```";
 				message.channel.send(goldMessage);
