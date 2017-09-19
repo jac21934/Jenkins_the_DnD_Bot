@@ -12,7 +12,10 @@ const client = new Discord.Client();
 var players = []; 
 var gold = goldFile.gold;
 var restrictPlay = false;
-
+ 
+var voiceChannel = null; 
+var dispatcher = null;
+const broadcast = client.createVoiceBroadcast();
 
 
 function set(id, args){
@@ -358,21 +361,6 @@ function PlayStream(streamUrl) {
 
 
 
-// Load up the discord.js library
-
-
-
-// This is your client. Some people call it `bot`, some people call it `self`, 
-// some might call it `cootchie`. Either way, when you see `client.something`, or `bot.something`,
-// this is what we're refering to. Your client.
-
-// config.token contains the bot's token
-// config.prefix contains the message prefix.
-
-var voiceChannel = null; 
-var dispatcher = null;
-const broadcast = client.createVoiceBroadcast();
-
 client.on("ready", () => {
 
 		voiceChannel = client.channels.find('name', 'The Game');
@@ -461,13 +449,10 @@ client.on("message", async message => {
 						file: "./Faerun_map.jpg" 
 				});
 		}
-		// Let's go with a few common example commands! Feel free to delete or change those.
 
 		else if(command === "ping") {
-				// Calculates ping between sending a message and editing it, giving a nice round-trip latency.
-				// The second ping is an average latency between the bot and the websocket server (one-way, not round-trip)
 				const m = await message.channel.send("Ping?");
-				m.edit("```Pong! Latency is ${m.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(client.ping)}ms```");
+				m.edit("```Latency is ${m.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(client.ping)}ms```");
 		}
 		
 		else if(command === "say") {
@@ -623,7 +608,7 @@ client.on("message", async message => {
 				var sumFlag = false;
 
 				////////////////////////////////// Parsing input
-				var totArgs = args.join("");
+				var totArgs = args.join("").toLowerCase();
 				
 				if( totArgs.indexOf("sum") != -1){
 					sumFlag = true;
@@ -758,12 +743,13 @@ client.on("message", async message => {
 		else if(command === "help") {
 
 				var helpMessage = "```help       --      Shows this text\n\n"
-						+ "roll       --      Give a number of die with modifier to roll and show result (1d4 + 10 or 5d17 - 5).\n"
-						+ "                   Put sum at the end if you don't want to see the indivicual rolls.\n\n"
-						+ "gold       --      Shows the party's gold. Can be added and subtracted from.\n\n"
+						+ "roll       --      Give a number of die with modifier(s) to roll and show result (1d4 + 10 - 5 or 5d17 - 5).\n"
+						+ "                   Put sum at the end if you don't want to see the individual rolls.\n\n"
+						+ "gold       --      Shows the party's gold. Can be added and subtracted from ( +100 - 50 +...).\n\n"
 						+ "stats      --      Shows your charaster's stats and modifiers. You can also give me the first name\n"
 						+ "                   of someone to see their stats\n\n"
 						+ "skills     --      Shows your character's skills, proficiencies and modifiers.\n\n"
+						+ "defs       --      A list of everyone's defensive and combat related stats.\n\n"
 						+ "map        --      Shows a map of Faerun.\n\n"
 						+ "players    --      Lists all players names, levels, and classes.\n\n"
 						+ "set        --      Give the name of something and the value to change it to (gold 100 or STR 18).\n\n"
