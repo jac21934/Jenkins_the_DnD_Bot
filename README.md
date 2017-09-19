@@ -3,7 +3,7 @@ Jenkins is a discord bot that helps me dm. He still under construction, but can 
 ## Dependencies
 Jenkins needs:
 
- node/nodejs if you are on windows or linux
+ node(windows)/nodejs(linux) version > 8.0
 
  npm
  
