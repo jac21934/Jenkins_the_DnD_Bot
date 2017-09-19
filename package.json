@@ -1,0 +1,16 @@
+{
+  "name": "Jenkins_the_DnD_Bot",
+  "version": "1.0.0",
+  "description": "A helpful DnD bot names Jenkins.",
+  "main": "app.js",
+  "author": "Jacob Carroll",
+  "dependencies": {
+    "discord.js": "^11.2.1",
+    "discord.js-music": "^1.0.3",
+    "fs": "0.0.1-security",
+    "node-gyp": "^3.6.2",
+    "opusscript": "0.0.3",
+    "rebuild": "^0.1.2",
+    "ytdl-core": "^0.17.1"
+  }
+}
