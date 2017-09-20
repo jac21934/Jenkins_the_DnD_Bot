@@ -409,13 +409,34 @@ client.on("message", async message => {
 		const command = args.shift().toLowerCase();
 		
 		if(command == "test"){
+			var test = [ "one", "two", "three"];
+			jsontest = JSON.stringify(test);
+			var id = 0;
+			if (message.channel.type == "dm"){
+					id = message.channel.recipient.id;
+			}
+			else{
+				id = message.member.id;
+			}
+
 			var someString = args.join("");	
 
 			var testMessage = "```";
-			var sum = getDice(someString);
-			testMessage += sum + "\n";
+			var Arr = "";
+			
+			
+			for(i=0; i<players.length;i++){
+				if(id == players[i].getId() || (String(args[0]).toLowerCase() == players[i].getName() )){
+					players[i].setNotes(test);
+					testMessage += players[i].getName() + " " + players[i].getNotes();
+				}
+			}
 			testMessage += "```";
 			message.channel.send(testMessage);
+
+
+
+		save();
 
 		}
 
@@ -572,8 +593,8 @@ client.on("message", async message => {
 								playerName = players[i].getName().toLowerCase();
 
 								if( playerName.indexOf(" ") > -1){
-										if( playerName.slice(0, playerName.indexOf(" ")) == args[0].toLowerCase()){
-												var skillsMessage = getSkillsMessage(i);
+										if( playerName.slice(0, playerName.indexOf(" ")) == args[0].toLowerCase()  ){
+												var skillsMessage = players[i].getSkillsMessage();
 												message.channel.send(skillsMessage);
 												break;
 										}
@@ -581,7 +602,7 @@ client.on("message", async message => {
 								
 								name = String(args.join(" ")).toLowerCase();
 								if (name == players[i].getName().toLowerCase()){
-										var skillsMessage = getSkillsMessage(i);
+										var skillsMessage = players[i].getSkillsMessage();
 										message.channel.send(skillsMessage);
 										break;
 								}
@@ -592,7 +613,7 @@ client.on("message", async message => {
 				else{
 						for(i=0; i< players.length;i++){
 								if (id == players[i].getId()){
-										var skillsMessage = getSkillsMessage(i);
+										var skillsMessage = players[i].getSkillsMessage();
 										message.channel.send(skillsMessage);
 										break;
 								}
