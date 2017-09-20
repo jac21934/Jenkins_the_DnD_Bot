@@ -726,10 +726,10 @@ client.on("message", async message => {
 					var goldBuff = parseSum(totArgs)[0];
 					gold += goldBuff;
 					if(goldBuff >= 0){
-						goldMessage += "Adding " + goldBuff + "gp\n";
+						goldMessage += "Adding " + Number(goldBuff).toFixed(2) + "gp\n";
 					} 
 					else if(goldBuff < 0){
-						goldMessage += "Removing " + goldBuff + "gp\n";
+						goldMessage += "Removing " + Number(goldBuff).toFixed(2) + "gp\n";
 					}
 				}
 				
