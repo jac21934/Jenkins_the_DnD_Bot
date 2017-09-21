@@ -17,6 +17,12 @@ var voiceChannel = null;
 var dispatcher = null;
 const broadcast = client.createVoiceBroadcast();
 
+function addAditionalModifier(id, args){
+
+
+
+}
+
 
 function set(id, args){
 
@@ -199,10 +205,15 @@ var commands = {
 		"test" : {
 				permissions: "any",
 				description: "A testbed function for adding new functionality to Jenkins. Use with caution.",
-				process: function(client, message, args, id=0){
-						var testMessage = "";
-						messageSend(message, testMessage);
-						save();
+				process: function(client, message, args, id){
+						for(i = 0; i < players.length; i++){
+								if(id == players[i].getId()){
+										players[i].setInitadd(Number(args[0]));
+										players[i].setMods();
+										
+//										messageSend(message, testMessage);
+								}
+						}
 				}
 				
 		},

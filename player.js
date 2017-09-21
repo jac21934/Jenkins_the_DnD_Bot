@@ -64,8 +64,57 @@ function Player() {
 		this._intimprof		= 0;
 		this._performprof	= 0;	
 		this._persprof		= 0;
+		//additional modifiers
+		this._stradd = 0;
+		this._dexadd = 0;
+		this._conadd = 0;
+		this._intadd = 0;
+		this._wisadd = 0;
+		this._chaadd = 0;
+		//modifiers
+
+		this.profbonusadd=0;
+		//Armor stuff
+		this._acadd  = 0;
+		this._initadd = 0;	
+		this._spdadd = 0;
+		this._peradd = 0;
+		this._hpadd = 0;
+		//skills
+		//strength
+		this._strsavadd	= 0;
+		this._athadd		= 0;
+		//dex
+		this._dexsavadd 	= 0;
+		this._acroadd		= 0;
+		this._sleightadd 	= 0;
+		this._stealthadd 	= 0;
+		//con
+		this._consavadd	= 0;
+		//int
+		this._intsavadd	= 0;
+		this._arcanaadd	= 0;
+		this._historyadd	= 0;
+		this._investadd	= 0;
+		this._natureadd	= 0;
+		this._religionadd	= 0;
+
+		//wisdom
+		this._wissavadd	= 0;
+		this._animaladd	= 0;
+		this._insightadd	= 0;
+		this._medicineadd	= 0;
+		this._peradd		= 0;
+		this._survadd		= 0;
+		//cha
+		this._chasavadd	= 0;
+		this._deceptadd	= 0;
+		this._intimadd		= 0;
+		this._performadd	= 0;	
+		this._persadd		= 0;
 
 		//Notes:
+		
 		this._notes			="0";	
 }
 
@@ -221,6 +270,126 @@ Player.prototype = {
 		getPersprof: function() {
 				return  this._persprof;
 		},
+		getStradd: function(){
+				return this._stradd;
+		},
+		getDexadd: function(){
+				return this._dexadd;
+		},
+		getConadd: function(){
+				return this._conadd;
+		},
+		getIntadd: function(){
+				return this._intadd;
+		},
+		getWisadd: function(){
+				return this._wisadd;
+		},
+		getChaadd: function(){
+				return this._chaadd;
+		},
+
+		getProfbonusadd: function(){
+				return this._profbonusadd;
+		},
+
+		getAcadd: function(){
+				return this._acadd;
+		},
+		getInitadd: function(){
+				return this._initadd;
+		},
+		getSpdadd: function(){
+				return this._spdadd;
+		},
+		getHpadd: function(){
+				return this._hpadd;
+		},
+		getPeradd: function(){
+				return this._peradd;
+		},
+		///////
+		getStrsavadd: function(){
+				return this._strsavadd;
+		},
+		getAthadd: function(){
+				return this._athadd;
+		},
+		//dex
+		getDexsavadd: function(){
+				return this._dexsavadd;
+		},
+		getAcroadd: function(){
+				return this._acroadd;
+		},	
+		getSleightadd: function(){
+				return this._sleightadd;
+		},
+		getStealthadd: function(){
+				return this._stealthadd;
+		},
+		//con
+		getConsavadd: function(){
+				return this._consavadd;
+		},
+		//int
+		getIntsavadd: function(){
+				return this._intsavadd;
+		},
+		getArcanaadd: function(){
+				return this._arcanaadd;
+		},
+		getHistoryadd: function(){
+				return this._historyadd;
+		},
+		getInvestadd: function(){
+				return this._investadd;
+		},
+		getNatureadd: function(){
+				return this._natureadd;
+		},
+		getReligionadd: function(){
+				return this._religionadd;
+		},
+		//wisdom
+		getWissavadd: function(){
+				return this._wissavadd;
+		},	
+		getAnimaladd: function(){
+				return this._animaladd;
+		},
+		getInsightadd: function(){
+				return this._insightadd;
+		},
+		getMedicineadd: function(){
+				return this._medicineadd;
+		},
+		getPeradd: function() {
+				return  this._peradd;
+		},
+		getSurvadd: function() {
+				return this._survadd;
+		},
+
+		//cha
+		getChasavadd: function() {
+				return this._chasavadd;
+		},
+		getDeceptadd: function() {
+				return this._deceptadd;
+		},
+		getIntimadd: function() {
+				return this._intimadd;
+		},
+		getPerformadd: function() {
+				return this._performadd;
+		},
+		getPersadd: function() {
+				return this._persadd;
+		},
+
+		//////
+		
 		getNotes:   function(){
 				return this._notes;
 		},
@@ -253,23 +422,7 @@ Player.prototype = {
 		setCha: function(cha){
 				this._cha = cha;
 		},
-		setMods: function(){
 
-				this._strmod = Number(Math.floor((this.getStr() - 10)/2));
-				this._dexmod = Number(Math.floor((this.getDex() - 10)/2));
-
-				this._conmod = Number(Math.floor((this.getCon() - 10)/2));
-				this._intmod = Number(Math.floor((this.getInt() - 10)/2));
-
-				this._wismod = Number(Math.floor((this.getWis() - 10)/2));
-				this._chamod = Number(Math.floor((this.getCha() - 10)/2));
-
-				this._profbonus = Math.floor((this.getLevel() + 7)/4);
-				
-				this._per = 10 + this.getWismod() + this.getProfbonus() * this.getPerprof();
-
-				//console.log(this.getPer());
-		},
 
 		setAc: function(ac){
 				this._ac = ac;
@@ -287,9 +440,128 @@ Player.prototype = {
 		setPerprof: function(perprof){
 				this._perprof = perprof;
 		},
+		//modifiers
+		setStradd: function(str){
+				this._stradd = str;
+		},
+		setDexadd: function(dex){
+				this._dexadd = dex;
+		},
+		setConadd: function(con){
+				this._conadd = con;
+		},
+		setIntadd: function(int){
+				this._intadd = int;
+		},
+		setWisadd: function(wis){
+				this._wisadd = wis;
+		},
+		setChaadd: function(cha){
+				this._chaadd = cha;
+		},
+		setAcadd: function(acadd){
+				this._acadd = acadd;
+		},
+		setInitadd: function(initadd){
+				this._initadd = initadd;
+		},
+		setSpdadd: function(spdadd){
+				this._spdadd = spdadd;
+		},
+		//HP
+		setHpadd: function(hpadd){
+				this._hpadd = hpadd;
+		},
+		setPeradd: function(peradd){
+				this._peradd = peradd;
+		},
+		///////////////////////////////
+		
+		setStrsavadd: function(strsavadd){
+				this._strsavadd = strsavadd;
+		},
+		setAthadd: function(athadd){
+				this._athadd = athadd;
+		},
+		setDexsavadd: function(dexsavadd){
+				this._dexsavadd = dexsavadd;
+		},
+		setAcroadd: function(acroadd){
+				this._acroadd = acroadd;
+		},	
+		setSleightadd: function(sleightadd){
+				this._sleightadd = sleightadd;
+		},
+		setStealthadd: function(stealthadd){
+				this._stealthadd = stealthadd;
+		},
+		setConsavadd: function(consavadd){
+				this._consavadd = consavadd;
+		},
+		setIntsavadd: function(intsavadd){
+				this._intsavadd = intsavadd;
+		},
+		setArcanaadd: function(arcanaadd){
+				this._arcanaadd = arcanaadd;
+		},
+		setHistoryadd: function(historyadd){
+				this._historyadd = historyadd;
+		},
+		setInvestadd: function(investadd){
+				this._investadd = investadd;
+		},
+		setNatureadd: function(natureadd){
+				this._natureadd = natureadd;
+		},
+		setReligionadd: function(religionadd){
+				this._religionadd = religionadd;
+		},
+		//wisdom
+		setWissavadd: function(wissavadd){
+				this._wissavadd = wissavadd;
+		},	
+		setAnimaladd: function(animaladd){
+				this._animaladd = animaladd;
+		},
+		setInsightadd: function(insightadd){
+				this._insightadd = insightadd;
+		},
+		setMedicineadd: function(medicineadd){
+				this._medicineadd = medicineadd;
+		},
+		setPeradd: function(peradd){
+				this._peradd = peradd;
+		},
+		setSurvadd: function(survadd){
+				this._survadd = survadd;
+		},
+
+		//cha
+		setChasavadd: function(chasavadd){
+				this._chasavadd = chasavadd;
+		},
+		setDeceptadd: function(deceptadd){
+				this._deceptadd = deceptadd;
+		},
+		setIntimadd: function(intimadd){
+				this._intimadd = intimadd;
+		},
+		setPerformadd: function(performadd){
+				this._performadd = performadd;
+		},
+		setPersadd: function(persadd){
+				this._persadd = persadd;
+		},
+
+
+		/////////////////////////////
+
+		
 		setNotes: function(notes){
 				this._notes = notes;
 		},
+
+		
 		getStatsMessage: function(){
 
 
@@ -318,12 +590,12 @@ Player.prototype = {
 				var deffiller = Array(defHeader.length).join("-") + "\n";
 				
 				statsMessage += messageHeader + messagefiller + defHeader + messagefiller;
-				statsMessage += "STR = " + this.getStr() + " (" + String(this.getStrmod()) + ")\n";
-				statsMessage += "DEX = " + this.getDex() + " (" + String(this.getDexmod()) + ")\n";
-				statsMessage += "CON = " + this.getCon() + " (" + String(this.getConmod()) + ")\n";
-				statsMessage += "INT = " + this.getInt() + " (" + String(this.getIntmod()) + ")\n";
-				statsMessage += "WIS = " + this.getWis() + " (" + String(this.getWismod()) + ")\n";
-				statsMessage += "CHA = " + this.getCha() + " (" + String(this.getChamod()) + ")\n";
+				statsMessage += "STR = " + Number(Number(this.getStr()) + Number(this.getStradd())) + " (" + String(this.getStrmod()) + ")\n";
+				statsMessage += "DEX = " + Number(Number(this.getDex()) + Number(this.getDexadd())) + " (" + String(this.getDexmod()) + ")\n";
+				statsMessage += "CON = " + Number(Number(this.getCon()) + Number(this.getConadd())) + " (" + String(this.getConmod()) + ")\n";
+				statsMessage += "INT = " + Number(Number(this.getInt()) + Number(this.getIntadd())) + " (" + String(this.getIntmod()) + ")\n";
+				statsMessage += "WIS = " + Number(Number(this.getWis()) + Number(this.getWisadd())) + " (" + String(this.getWismod()) + ")\n";
+				statsMessage += "CHA = " + Number(Number(this.getCha()) + Number(this.getChaadd())) + " (" + String(this.getChamod()) + ")\n";
 
 
 				var profMessage = "Proficiency Bonus = " + this.getProfbonus() + "\n";
@@ -345,48 +617,67 @@ Player.prototype = {
 				var messageHeader = this.getName() + Array(space - this.getName().length).join(" ") +  "\n";
 				skillsMessage += messageHeader + Array(messageHeader.length).join("-")  + "\n";
 
-				skillsMessage += "S| STR Saving Throw  |" + tools.getProf(this.getStrsavprof()) + "| (" + String(Number(this.getStrmod() + this.getProfbonus()*this.getStrsavprof())) + ")" +  "\n"; 
-				skillsMessage += "T| Athletics         |" + tools.getProf(this.getAthprof()) + "| (" + String(Number(this.getStrmod() +  this.getProfbonus()*this.getAthprof())) + ")" + "\n"; 	
+				skillsMessage += "S| STR Saving Throw  |" + tools.getProf(this.getStrsavprof()) + "| (" + String(Number(Number(this.getStrmod()) + Number(this.getProfbonus())*Number(this.getStrsavprof()) + Number(this.getStrsavadd()))) + ")" +  "\n"; 
+				skillsMessage += "T| Athletics         |" + tools.getProf(this.getAthprof()) + "| (" + String(Number(Number(this.getStrmod()) +  Number(this.getProfbonus())*Number(this.getAthprof()) + Number(this.getAthadd()))) + ")" + "\n"; 	
 				skillsMessage += "R|                   | |" + "\n"; 
 				skillsMessage += Array(messageHeader.length).join("-")  + "\n"
 				//dex
 
-				skillsMessage += "D| DEX Saving Throw  |" + tools.getProf(this.getDexsavprof()) + "| (" + String(Number(this.getDexmod() +  this.getProfbonus()*this.getDexsavprof())) + ")" + "\n"; 
-				skillsMessage += "E| Acrobatics        |" + tools.getProf(this.getAcroprof()) + "| (" + String(Number(this.getDexmod() +  this.getProfbonus()*this.getAcroprof())) + ")" + "\n"; 	
-				skillsMessage += "X| Sleight of Hand   |" + tools.getProf(this.getSleightprof()) + "| (" + String(Number(this.getDexmod() +  this.getProfbonus()*this.getSleightprof())) + ")" + "\n"; 
-				skillsMessage += " | Stealth           |" + tools.getProf(this.getStealthprof()) + "| (" + String(Number(this.getDexmod() +  this.getProfbonus()*this.getStealthprof())) + ")" +"\n"; 
+				skillsMessage += "D| DEX Saving Throw  |" + tools.getProf(this.getDexsavprof()) + "| (" + String(Number(Number(this.getDexmod()) +  Number(this.getProfbonus())*Number(this.getDexsavprof()) + Number(this.getDexsavadd()))) + ")" + "\n"; 
+				skillsMessage += "E| Acrobatics        |" + tools.getProf(this.getAcroprof()) + "| (" + String(Number(Number(this.getDexmod()) +  Number(this.getProfbonus())*Number(this.getAcroprof()) + Number(this.getAcroadd()))) + ")" + "\n"; 	
+				skillsMessage += "X| Sleight of Hand   |" + tools.getProf(this.getSleightprof()) + "| (" + String(Number(Number(this.getDexmod()) +  Number(this.getProfbonus())*Number(this.getSleightprof()) + Number(this.getSleightadd()))) + ")" + "\n"; 
+				skillsMessage += " | Stealth           |" + tools.getProf(this.getStealthprof()) + "| (" + String(Number(Number(this.getDexmod()) +  Number(this.getProfbonus())*Number(this.getStealthprof()) + Number(this.getStealthadd()))) + ")" +"\n"; 
 				skillsMessage += Array(messageHeader.length).join("-")  + "\n"
 				//con
-				skillsMessage += "C| CON Saving Throw  |" + tools.getProf(this.getConsavprof()) + "| (" + String(Number(this.getConmod() +  this.getProfbonus()*this.getConsavprof())) + ")" + "\n"; 
+				skillsMessage += "C| CON Saving Throw  |" + tools.getProf(this.getConsavprof()) + "| (" + String(Number(Number(this.getConmod()) +  Number(this.getProfbonus())*Number(this.getConsavprof()) + Number(this.getConsavadd()))) + ")" + "\n"; 
 				skillsMessage += "O|                   | |" + "\n"; 	
 				skillsMessage += "N|                   | |" + "\n"; 
 				skillsMessage += Array(messageHeader.length).join("-")  + "\n"
 				//int
-				skillsMessage += "I| INT Saving Throw  |" + tools.getProf(this.getIntsavprof()) + "| (" + String(Number(this.getIntmod() +  this.getProfbonus()*this.getIntsavprof())) + ")" + "\n"; 
-				skillsMessage += "N| Arcana            |" + tools.getProf(this.getArcanaprof()) + "| (" + String(Number(this.getIntmod() +  this.getProfbonus()*this.getArcanaprof())) + ")" + "\n"; 	
-				skillsMessage += "T| History           |" + tools.getProf(this.getHistoryprof()) + "| (" + String(Number(this.getIntmod() +  this.getProfbonus()*this.getHistoryprof())) + ")" + "\n"; 
-				skillsMessage += " | Investigation     |" + tools.getProf(this.getInvestprof()) + "| (" + String(Number(this.getIntmod() +  this.getProfbonus()*this.getInvestprof())) + ")" + "\n"; 
-				skillsMessage += " | Nature            |" + tools.getProf(this.getNatureprof()) + "| (" + String(Number(this.getIntmod() +  this.getProfbonus()*this.getNatureprof())) + ")" + "\n"; 
-				skillsMessage += " | Religion          |" + tools.getProf(this.getReligionprof()) + "| (" + String(Number(this.getIntmod() +  this.getProfbonus()*this.getReligionprof())) + ")" + "\n"; 		
+				skillsMessage += "I| INT Saving Throw  |" + tools.getProf(this.getIntsavprof()) + "| (" + String(Number(Number(this.getIntmod()) +  Number(this.getProfbonus())*Number(this.getIntsavprof()) + Number(this.getIntsavadd()))) + ")" + "\n"; 
+				skillsMessage += "N| Arcana            |" + tools.getProf(this.getArcanaprof()) + "| (" + String(Number(Number(this.getIntmod()) +  Number(this.getProfbonus())*Number(this.getArcanaprof()) + Number(this.getArcanaadd()))) + ")" + "\n"; 	
+				skillsMessage += "T| History           |" + tools.getProf(this.getHistoryprof()) + "| (" + String(Number(Number(this.getIntmod()) +  Number(this.getProfbonus())*Number(this.getHistoryprof()) + Number(this.getHistoryadd()))) + ")" + "\n"; 
+				skillsMessage += " | Investigation     |" + tools.getProf(this.getInvestprof()) + "| (" + String(Number(Number(this.getIntmod()) +  Number(this.getProfbonus())*Number(this.getInvestprof()) + Number(this.getInvestadd()))) + ")" + "\n"; 
+				skillsMessage += " | Nature            |" + tools.getProf(this.getNatureprof()) + "| (" + String(Number(Number(this.getIntmod()) +  Number(this.getProfbonus())*Number(this.getNatureprof()) + Number(this.getNatureadd()))) + ")" + "\n"; 
+				skillsMessage += " | Religion          |" + tools.getProf(this.getReligionprof()) + "| (" + String(Number(Number(this.getIntmod()) +  Number(this.getProfbonus())*Number(this.getReligionprof()) + Number(this.getReligionadd()))) + ")" + "\n"; 		
 				skillsMessage += Array(messageHeader.length).join("-")  + "\n"
 				//wis
-				skillsMessage += "W| WIS Saving Throw  |" + tools.getProf(this.getWissavprof()) + "| (" + String(Number(this.getWismod() +  this.getProfbonus()*this.getWissavprof())) + ")"+ "\n"; 
-				skillsMessage += "I| Animal Handling   |" + tools.getProf(this.getAnimalprof()) + "| (" + String(Number(this.getWismod() +  this.getProfbonus()*this.getAnimalprof())) + ")"+ "\n"; 	
-				skillsMessage += "S| Insight           |" + tools.getProf(this.getInsightprof()) + "| (" + String(Number(this.getWismod() +  this.getProfbonus()*this.getInsightprof())) + ")"+ "\n"; 
-				skillsMessage += " | Medicine          |" + tools.getProf(this.getMedicineprof()) + "| (" + String(Number(this.getWismod() +  this.getProfbonus()*this.getMedicineprof())) + ")"+ "\n"; 
-				skillsMessage += " | Perception        |" + tools.getProf(this.getPerprof()) + "| (" + String(Number(this.getWismod() +  this.getProfbonus()*this.getPerprof())) + ")"+ "\n"; 	
-				skillsMessage += " | Survival          |" + tools.getProf(this.getSurvprof()) + "| (" + String(Number(this.getWismod() +  this.getProfbonus()*this.getSurvprof())) + ")"+ "\n"; 	
+				skillsMessage += "W| WIS Saving Throw  |" + tools.getProf(this.getWissavprof()) + "| (" + String(Number(Number(this.getWismod()) +  Number(this.getProfbonus())*Number(this.getWissavprof()) + Number(this.getWissavadd()))) + ")"+ "\n"; 
+				skillsMessage += "I| Animal Handling   |" + tools.getProf(this.getAnimalprof()) + "| (" + String(Number(Number(this.getWismod()) +  Number(this.getProfbonus())*Number(this.getAnimalprof()) + Number(this.getAnimaladd()))) + ")"+ "\n"; 	
+				skillsMessage += "S| Insight           |" + tools.getProf(this.getInsightprof()) + "| (" + String(Number(Number(this.getWismod()) +  Number(this.getProfbonus())*Number(this.getInsightprof()) + Number(this.getInsightadd()))) + ")"+ "\n"; 
+				skillsMessage += " | Medicine          |" + tools.getProf(this.getMedicineprof()) + "| (" + String(Number(Number(this.getWismod()) +  Number(this.getProfbonus())*Number(this.getMedicineprof()) + Number(this.getMedicineadd()))) + ")"+ "\n"; 
+				skillsMessage += " | Perception        |" + tools.getProf(this.getPerprof()) + "| (" + String(Number(Number(this.getWismod()) +  Number(this.getProfbonus())*Number(this.getPerprof()) + Number(this.getPeradd()))) + ")"+ "\n"; 	
+				skillsMessage += " | Survival          |" + tools.getProf(this.getSurvprof()) + "| (" + String(Number(Number(this.getWismod()) +  Number(this.getProfbonus())*Number(this.getSurvprof()) + Number(this.getSurvadd()))) + ")"+ "\n"; 	
 				skillsMessage += Array(messageHeader.length).join("-")  + "\n"
 				//cha
-				skillsMessage += "C| CHA Saving Throw  |" + tools.getProf(this.getChasavprof()) + "| (" + String(Number(this.getChamod() +  this.getProfbonus()*this.getChasavprof())) + ")"+ "\n"; 
-				skillsMessage += "H| Deception         |" + tools.getProf(this.getDeceptprof()) + "| (" + String(Number(this.getChamod() +  this.getProfbonus()*this.getDeceptprof())) + ")"+  "\n"; 	
-				skillsMessage += "A| Intimidation      |" + tools.getProf(this.getIntimprof()) + "| (" + String(Number(this.getChamod() +  this.getProfbonus()*this.getIntimprof())) + ")"+  "\n"; 
-				skillsMessage += " | Performance       |" + tools.getProf(this.getPerformprof()) + "| (" + String(Number(this.getChamod() +  this.getProfbonus()*this.getPerformprof())) + ")"+  "\n"; 
-				skillsMessage += " | Persuasion        |" + tools.getProf(this.getPersprof()) + "| (" + String(Number(this.getChamod() +  this.getProfbonus()*this.getPersprof())) + ")"+  "\n"; 	
+				skillsMessage += "C| CHA Saving Throw  |" + tools.getProf(this.getChasavprof()) + "| (" + String(Number(Number(this.getChamod()) +  Number(this.getProfbonus())*Number(this.getChasavprof()) + Number(this.getChasavadd()))) + ")"+ "\n"; 
+				skillsMessage += "H| Deception         |" + tools.getProf(this.getDeceptprof()) + "| (" + String(Number(Number(this.getChamod()) +  Number(this.getProfbonus())*Number(this.getDeceptprof()) + Number(this.getDeceptadd()))) + ")"+  "\n"; 	
+				skillsMessage += "A| Intimidation      |" + tools.getProf(this.getIntimprof()) + "| (" + String(Number(Number(this.getChamod()) +  Number(this.getProfbonus())*Number(this.getIntimprof()) + Number(this.getIntimadd()))) + ")"+  "\n"; 
+				skillsMessage += " | Performance       |" + tools.getProf(this.getPerformprof()) + "| (" + String(Number(Number(this.getChamod()) +  Number(this.getProfbonus())*Number(this.getPerformprof()) + Number(this.getPerformadd()))) + ")"+  "\n"; 
+				skillsMessage += " | Persuasion        |" + tools.getProf(this.getPersprof()) + "| (" + String(Number(Number(this.getChamod()) +  Number(this.getProfbonus())*Number(this.getPersprof()) + Number(this.getPersadd()))) + ")"+  "\n"; 	
 				skillsMessage += Array(messageHeader.length).join("-")  + "\n"
 
 				return skillsMessage;
-		}
+		},
+		setMods: function(){
+
+				this._strmod = Number(Math.floor((Number(this.getStr()) + Number(this.getStradd()) - 10)/2));
+				this._dexmod = Number(Math.floor((Number(this.getDex()) + Number(this.getDexadd()) - 10)/2));
+				
+				this._conmod = Number(Math.floor((Number(this.getCon()) + Number(this.getConadd()) - 10)/2));
+				this._intmod = Number(Math.floor(( Number(this.getInt()) + Number(this.getIntadd()) - 10)/2));
+
+				this._wismod = Number(Math.floor(( Number(this.getWis()) + Number(this.getWisadd()) - 10)/2));
+				this._chamod = Number(Math.floor(( Number(this.getCha()) + Number(this.getChaadd()) - 10)/2));
+				this._profbonus = Math.floor(( Number(this.getLevel()) + 7)/4) + Number(this.getProfbonusadd());
+				
+				this._per = 10 + Number(this.getWismod()) + ( Number(this.getProfbonus())) * Number(this.getPerprof()) + Number(this.getPeradd());
+				this._ac = Number(this._ac) + Number(this._acadd); 
+				this._hp = Number(this._hp) + Number(this._hpadd);
+				this._init = Number(this._init) + Number(this._initadd);
+				this._spd = Number(this._spd) + Number(this._spdadd);
+				//console.log(this.getPer());
+		},
 
 }
 
