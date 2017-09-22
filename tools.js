@@ -48,6 +48,22 @@ function parseNumberFromString(Index,someString){
 		return Number(buffVal)
 }
 
+function findSpace(someString, index){
+		var spaceIndex = index;
+		for(i = index; i >-1; i--){
+
+				if( someString[i] == " "){
+						spaceIndex = i;
+						break;
+				}
+
+		}
+
+		return spaceIndex;
+		
+
+}
+
 function  parseSum (someString){
 
 		var checkFlag = true;
@@ -138,6 +154,7 @@ function getDice(someString){
 
 module.exports = {
 		getProf,
+		findSpace,
 		getRandomInt,
 		parseNumberFromString,
 		parseSum,

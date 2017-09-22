@@ -659,6 +659,87 @@ Player.prototype = {
 
 				return skillsMessage;
 		},
+
+		getNotesMessage: function(){
+				var notesMessage = "";
+				var notesBuff = this.getNotes();
+				var notesMax = 0;
+				var space = 4;
+				var spaceArr = Array(space).join(" ");
+				var discordMax = 120;
+				var notesArr = [];
+				if(notesBuff.length >0){
+						for(j = 0; j < notesBuff.length;j++){
+								var noteLength = notesBuff[j].length;
+								noteLength += String(j+1).length + 2 + space;
+								if(noteLength > notesMax){
+										notesMax = noteLength;
+								}
+								var arrBuff = notesBuff[j].split("\n");
+								var k = 0;
+								while( k < arrBuff.length) {
+										if( (arrBuff[k].length + String(j+1).length + 2 + space) >= discordMax) {
+												var maxIndex = discordMax - (String(j+1).length + 2 + space);
+												var buffString = "";
+												var newIndex = tools.findSpace(arrBuff[k],maxIndex);
+											// 	if(newIndex == maxIndex || newIndex < maxIndex - 15){ 
+									// 					buffString = arrBuff[k].slice(maxIndex);
+									// 					arrBuff[k] = arrBuff[k].replace(buffString,"-");
+									// 					buffString = "-" + buffString;
+									// 			}
+									// //	
+											//	else{
+												buffString = arrBuff[k].slice(newIndex);
+												arrBuff[k] = arrBuff[k].replace(buffString, "");
+										//		}
+												if( k < arrBuff.length - 1){
+														arrBuff[k+1] = buffString + " " + arrBuff[k+1];
+												}
+												else{
+														arrBuff.push(buffString);
+												}
+												
+												
+
+										}
+										k++;
+								}
+								notesArr.push(arrBuff);
+								if(noteLength > discordMax){
+										
+										
+								}
+								
+								//								notesMessage += "(" + String(Number(j + 1)) + ")   " + notesBuff[j] + "\n\n";
+						}
+						notesMax = Math.min(notesMax,discordMax);
+						
+						notesMessage += this.getName() + Array(Math.floor(notesMax/2 - 4)).join(" ") + "Notes\n";
+						notesMessage += Array(notesMax).join("-") + "\n";
+						for(j = 0; j < notesArr.length;j++){
+								notesMessage += "(" +  String(Number(j + 1)) + ")";
+								var frontSpace = Array(String("(" +  String(Number(j + 1)) + ")").length).join(" ");
+								for(k=0; k < notesArr[j].length;k++){
+										if(k == 0){
+												notesMessage += spaceArr + notesArr[j][k] + "\n";
+										}
+										else{
+												notesMessage += frontSpace + spaceArr + notesArr[j][k] + "\n";
+										}
+								}
+								notesMessage += "\n";
+								//notesMessage += "(" + String(Number(j + 1)) + ")" + Array(space).join(" ") +  notesBuff[j] + "\n\n";
+						}
+						
+				}
+				else{
+						notesMessage = this.getName() + " has no notes saved.\n";
+				}
+
+				return notesMessage;
+
+		},
+		
 		setMods: function(){
 
 				this._strmod = Number(Math.floor((Number(this.getStr()) + Number(this.getStradd()) - 10)/2));
