@@ -680,73 +680,98 @@ var commands = {
 				description: "Shows the list of players.",
 				process: function(client,message,args,id){
 						notesMessage = "";
-						if(args[0] == "add"){
-								args.shift();
-								var note = message.content.replace("\\notes","");
-								note = note.replace("add", "");
-								note = note.replace(/^\s+|\s+$/g, "");
-								for(i = 0; i < players.length; i++){
-										if(players[i].getId() == id){
-												var notesBuff = players[i].getNotes();
-												notesBuff.push(note);
-												players[i].setNotes(notesBuff);
-												notesMessage += "Added to " + players[i].getName() + "'s notes.\n";
-												
-
-										}
-								}
-						}
-						else if (args[0] == "rm" || args[0] == "remove"){
-								if( args.length == 1){
-										notesMessage += "Please specify which note to remove.";
-								}
-								else{
-										for(i = 0; i < players.length; i++){
-												if(players[i].getId() == id){
-														var notesBuff = players[i].getNotes();
-														var newNotes = [];
-														var rmFlag = false;
-														
-														for(j = 0; j < notesBuff.length; j++){
-																var addFlag = true;
-																for(k = 1; k < args.length; k++){
-																		if( args[k] == String(Number(j+1)) ){
-																				addFlag = false;
-																				rmFlag = true;
-																				break;
-																		}
-																		
-																}
-																if(addFlag){
-																		newNotes.push(notesBuff[j]);
-																}
-																else{
-																		notesMessage += "Removing note (" + String(j+1) + ") from " + players[i].getName() + "'s notes.\n";
-																}
-																		
-														}
-														if(rmFlag == false){
-																notesMessage += "I cannot remove notes that do not exist!";
-														}
-
-														players[i].setNotes(newNotes);
-														
-														break;
-												}
-												
-										}
-								}
-						}
-						else{
-
-								for(i = 0; i < players.length; i++){
-										if(players[i].getId() == id){
-												notesMessage = players[i].getNotesMessage();
+						var playerNotes = false;
+						for(i=0; i< players.length;i++){
+								
+								var playerName = players[i].getName().toLowerCase();
+								
+								if( playerName.indexOf(" ") > -1){
+										if( playerName.slice(0, playerName.indexOf(" ")) == args[0].toLowerCase()  ){
+												var notesMessage = players[i].getNotesMessage();
+												playerNotes = true;
 												break;
 										}
 								}
-
+								
+								name = String(args.join(" ")).toLowerCase();
+								if (name == players[i].getName().toLowerCase()){
+										var notesMessage = players[i].getNotesMessage();
+										playerNotes = true;
+										break;
+								}
 						}
+
+						
+						if(playerNotes == false){
+								if(args[0] == "add"){
+										args.shift();
+										var note = message.content.replace("\\notes","");
+										note = note.replace("add", "");
+										note = note.replace(/^\s+|\s+$/g, "");
+										for(i = 0; i < players.length; i++){
+												if(players[i].getId() == id){
+														var notesBuff = players[i].getNotes();
+														notesBuff.push(note);
+														players[i].setNotes(notesBuff);
+														notesMessage += "Added to " + players[i].getName() + "'s notes.\n";
+														
+
+												}
+										}
+								}
+								else if (args[0] == "rm" || args[0] == "remove"){
+										if( args.length == 1){
+												notesMessage += "Please specify which note to remove.";
+										}
+										else{
+												for(i = 0; i < players.length; i++){
+														if(players[i].getId() == id){
+																var notesBuff = players[i].getNotes();
+																var newNotes = [];
+																var rmFlag = false;
+																
+																for(j = 0; j < notesBuff.length; j++){
+																		var addFlag = true;
+																		for(k = 1; k < args.length; k++){
+																				if( args[k] == String(Number(j+1)) ){
+																						addFlag = false;
+																						rmFlag = true;
+																						break;
+																				}
+																				
+																		}
+																		if(addFlag){
+																				newNotes.push(notesBuff[j]);
+																		}
+																		else{
+																				notesMessage += "Removing note (" + String(j+1) + ") from " + players[i].getName() + "'s notes.\n";
+																		}
+																		
+																}
+																if(rmFlag == false){
+																		notesMessage += "I cannot remove notes that do not exist!";
+																}
+
+																players[i].setNotes(newNotes);
+																
+																break;
+														}
+														
+												}
+										}
+								}
+								else{
+
+										for(i = 0; i < players.length; i++){
+												if(players[i].getId() == id){
+														notesMessage = players[i].getNotesMessage();
+														break;
+												}
+										}
+
+								}
+						}
+						
 						
 						
 						messageSend(message,notesMessage);
