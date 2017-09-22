@@ -318,7 +318,7 @@ var commands = {
 		},
 		"skills":{
 				permissions: "any",
-				description: "Shows skills and modifiers for players.",
+				description: "Shows your character's skills, proficiencies and modifiers. You can give me the first name of someone to see their notes",
 				process: function(client,message,args,id){
 						if( args.length > 0){
 								for(i=0; i< players.length;i++){
@@ -359,7 +359,7 @@ var commands = {
 		},
 		"roll":{
 				permissions: "any",
-				description: "Rolls arbitrary dice with the ability to add arbitrary amounts of modifiers.",
+				description: "Give a number of die with modifier(s) to roll and show result, (1d4 + 10 - 5 or 5d17 - 5). Put sum at the end if you don't want to see the individual rolls.",
 				process: function(client,message,args,id){
 						
 						var sumFlag = false;
@@ -477,7 +477,7 @@ var commands = {
 		},
 		"gold":{
 				permissions: "any",
-				description: "Displays party gold, and allows players to add and subtract from the total.",
+				description: "Shows the party's gold. Can be added and subtracted from (i.e. +100 - 50 +...).",
 				process: function(client,message,args,id){
 						
 						var goldMessage = "";
@@ -515,7 +515,9 @@ var commands = {
 								+ "                   ( +100 - 50 +...).\n\n"
 								+ "stats      --      Shows your charaster's stats and modifiers. You can also give me the\n"
 								+ "                   first name of someone to see their stats\n\n"
-								+ "skills     --      Shows your character's skills, proficiencies and modifiers.\n\n"
+								+ "skills     --      Shows your character's skills, proficiencies and modifiers.\n"
+								+ "                   You can give me the first name of someone to see their notes\n\n"
+								+ 'notes      --      You can "add" or "remove"/"rm" notes about your characters.\n\n'
 								+ "defs       --      A list of everyone's defensive and combat related stats.\n\n"
 								+ "map        --      Shows a map of Faerun.\n\n"
 								+ "players    --      Lists all players names, levels, and classes.\n\n"
@@ -538,7 +540,7 @@ var commands = {
 		},
 		"play":{
 				permissions: restrictPlay,
-				description: " Give end of youtube address (everything after watch?v=) to play audio.",
+				description: "Give end of youtube address (everything after watch?v=) to play audio.",
 				process: function(client,message,args,id=0){
 						if( args.length >= 1){
 								const streamOptions = {seek: 0, volume: 1};
@@ -555,7 +557,7 @@ var commands = {
 		},
 		"stop":{
 				permissions: restrictPlay,
-				description: " Give end of youtube address (everything after watch?v=) to play audio.",
+				description: "Stops audio.",
 				process: function(client,message,args,id=0){
 						var stopMessage = "Stopping stream.";
 						messageSend(message, stopMessage);
@@ -564,7 +566,7 @@ var commands = {
 		},
 		"pause":{
 				permissions: restrictPlay,
-				description: " Give end of youtube address (everything after watch?v=) to play audio.",
+				description: "Pauses audio.",
 				process: function(client,message,args,id=0){
 						var pauseMessage = "Pausing stream.";
 						messageSend(message, pauseMessage);
@@ -573,7 +575,7 @@ var commands = {
 		},
 		"resume":{
 				permissions: restrictPlay,
-				description: " Give end of youtube address (everything after watch?v=) to play audio.",
+				description: "Resumes audio.",
 				process: function(client,message,args,id=0){
 						var resumeMessage = "Resuming stream.";
 						messageSend(message, resumeMessage);
@@ -642,7 +644,7 @@ var commands = {
 		
 		"defs":{
 				permissions: "any",
-				description: "Shows the list of players.",
+				description: "Shows the list of players' defenses.",
 				process: function(client,message,args,id=0){
 						var defsMessage= "";
 						
@@ -677,7 +679,7 @@ var commands = {
 		},
 		"notes":{
 				permissions: "any",
-				description: "Shows the list of players.",
+				description: 'You can "add" or "remove"/"rm" notes about your characters. You can also give me the first name of any players to view their notes.',
 				process: function(client,message,args,id){
 						notesMessage = "";
 						var playerNotes = false;
@@ -786,6 +788,70 @@ function checkMessageForCommand(message, isEdit) {
 		
 		const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
 		const command = args.shift().toLowerCase();
+
+		if(command == "help") {
+				var dashSpace = "--      ";
+				var frontLength = 11;
+				var helpMessage = "";
+				helpMessage +=	"help" + Array(frontLength - String("help").length).join(" ") + dashSpace + "Shows this text.\n\n";
+				for( com in commands){
+						if( commands.hasOwnProperty(com) && commands[com].description != "") {
+								var discordMax = 120;
+								var descLength = String(commands[com].description).length;
+								var descArr = [];
+								descLength += frontLength + dashSpace.length;
+								var arrBuff = String(commands[com].description).split("\n");
+								
+								var k = 0;
+								while( k < arrBuff.length) {
+								 		if( (arrBuff[k].length + frontLength +dashSpace.length) >= discordMax) {
+								 				var maxIndex = discordMax - (frontLength+ dashSpace.length);
+												var buffString = "";
+												var newIndex = tools.findSpace(arrBuff[k],maxIndex);
+												// 	if(newIndex == maxIndex || newIndex < maxIndex - 15){ 
+												// 					buffString = arrBuff[k].slice(maxIndex);
+												// 					arrBuff[k] = arrBuff[k].replace(buffString,"-");
+												// 					buffString = "-" + buffString;
+												// 			}
+												// //	
+												//	else{
+												buffString = arrBuff[k].slice(newIndex);
+												arrBuff[k] = arrBuff[k].replace(buffString, "");
+												//		}
+												if( k < arrBuff.length - 1){
+														arrBuff[k+1] = buffString + " " + arrBuff[k+1];
+												}
+												else{
+														arrBuff.push(buffString);
+												}
+												
+												
+												
+								 		}
+										k++;
+								}
+								
+								helpMessage +=	String(com) + Array(frontLength - String(com).length).join(" ");
+								var frontSpace = Array(frontLength).join(" ");
+								for(k=0; k < arrBuff.length;k++){
+						 				if(k == 0){
+						 						helpMessage += dashSpace + arrBuff[k] + "\n";
+						 				}
+						 				else{
+												helpMessage += frontSpace + Array(dashSpace.length).join(" ")  + arrBuff[k] + "\n";
+						 				}
+					   		}
+								helpMessage += "\n";
+								//notesMessage += "(" + String(Number(j + 1)) + ")" + Array(space).join(" ") +  notesBuff[j] + "\n\n";
+						}
+						
+						
+						
+				}
+				messageSend(message,helpMessage);
+				return;
+					
+		}
 		var cmd = commands[command];
 		if(String(cmd) == "undefined"){
 				return;
@@ -800,7 +866,7 @@ function checkMessageForCommand(message, isEdit) {
 		else{
 				id = message.member.id;
 		}
-		
+
 		if(true){
 				try{
 						cmd.process(client,message,args,id);
@@ -817,7 +883,7 @@ function checkMessageForCommand(message, isEdit) {
 				msgTxt = "You do not have the neccesarry permissions for this command.\n";
 				messageSend(message,msgTxt);
 		}
-		
+
 }
 
 
