@@ -5,6 +5,7 @@
   "main": "app.js",
   "author": "Jacob Carroll",
   "dependencies": {
+    "child_process": "^1.0.2",
     "discord.js": "^11.2.1",
     "discord.js-music": "^1.0.3",
     "fs": "0.0.1-security",

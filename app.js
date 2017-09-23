@@ -218,10 +218,32 @@ var commands = {
 				permissions: "administrator",
         description: "Turns me off. Needs admin permissions.",
         process: function(client, message, args, id=0) {
-	 					process.exit(0);	
-
+						client.destroy().then(function(){
+								process.exit(0);	
+						});
 				}
     },
+		"reboot": {
+				permissions: "any",
+        description: "Reboots me.",
+        process: function(client, message, args, id=0) {
+						const { spawn } = require('child_process');
+
+						
+						client.destroy().then(function(){
+								const child = spawn('nodejs', ['app.js'], {
+										detached: true,
+										stdio: ['ignore']
+								});
+								
+								child.unref();
+								
+
+								process.exit(0);	
+						});
+				}
+    },
+		
 		"save": {
 				permissions: "any",
         description: "Saves all player profiles and gold.",
@@ -503,42 +525,7 @@ var commands = {
 				
 				
 		},
-		"help":{
-				permissions: "any",
-				description: "Shows help text.",
-				process: function(client,message,args,id=0){
-						
-						var helpMessage = "help       --      Shows this text\n\n"
-								+ "roll       --      Give a number of die with modifier(s) to roll and show result \n"
-						    + "                   (1d4 + 10 - 5 or 5d17 - 5). Put sum at the end if you don't want\n" 
-								+ "                   to see the individual rolls.\n\n"
-								+ "gold       --      Shows the party's gold. Can be added and subtracted from\n"
-								+ "                   ( +100 - 50 +...).\n\n"
-								+ "stats      --      Shows your charaster's stats and modifiers. You can also give me the\n"
-								+ "                   first name of someone to see their stats\n\n"
-								+ "skills     --      Shows your character's skills, proficiencies and modifiers.\n"
-								+ "                   You can give me the first name of someone to see their notes\n\n"
-								+ 'notes      --      You can "add" or "remove"/"rm" notes about your characters.\n\n'
-								+ "defs       --      A list of everyone's defensive and combat related stats.\n\n"
-								+ "map        --      Shows a map of Faerun.\n\n"
-								+ "players    --      Lists all players names, levels, and classes.\n\n"
-								+ "set        --      Give the name of something and the value to change it to\n"
-								+ "                   (gold 100 or STR 18).\n\n"
-								+ "play       --      Give end of youtube address (everything after watch?v=) to play audio.\n\n"
-								+ "stop       --      Stops audio.\n\n"
-								+ "pause      --      Pauses audio.\n\n"
-								+ "resume     --      Resumes audio.\n\n"
-								+ "save       --      Saves all profiles and current gold.\n\n"
-								+ "close      --      Shuts me down. Needs admin privileges.\n";		
-						
-						
-						
-						messageSend(message, helpMessage);
-						
-						
-				}
-				
-		},
+		
 		"play":{
 				permissions: restrictPlay,
 				description: "Give end of youtube address (everything after watch?v=) to play audio.",
