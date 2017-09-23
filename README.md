@@ -15,5 +15,6 @@ Jenkins needs:
  
  child_process from npm
  
+ opusscript from npm
  
  ffmpeg
