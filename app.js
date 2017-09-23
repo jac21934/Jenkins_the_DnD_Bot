@@ -375,6 +375,7 @@ var commands = {
 						var numDie = 0;
 						var maxDie = 0;
 						var modChar = "";
+						
 						var buff= tools.parseSum(totArgs);
 						var modifier = Number(buff[0]);
 						totArgs = buff[1];

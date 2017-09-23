@@ -16,35 +16,61 @@ function	getRandomInt(min, max) {
 		return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
 }
 
+function breakStringatChar(someString,someChar){
+		var Arr = [somString];
+		var i = 0;
+		while(i < Arr.length){
+				for(j = 0; j < Arr[i].length;j++){
+						if(Arr[i][j] == someChar){
+
+
+						}
+				}
+				i++;
+				
+		}
+		
+		
+}
+
 function parseNumberFromString(Index,someString){
 		var periodCheck = false;	
 		buffVal = "";
 		var numFlag = true;
 		var initIndex = Index;
 		while(numFlag){
-				if( String(Number(someString[Index])) == someString[Index] 
-						|| ((someString[Index] == '.') && periodCheck == false) ){
-						if(String(someString[Index]) == '.'){
-								periodCheck = true;
-								if(buffVal.length == 0){
-										buffVal += "0";
-								}
+				if( String(Number(someString[Index])) == someString[Index] ){
+						buffVal += String(someString[Index])
+					//	console.log(someString[Index] + " is a number.") 
+
+				}
+				else if((someString[Index] == '.') && (periodCheck == false) ){
+						periodCheck = true;
+						if(buffVal.length == 0){
+								buffVal += "0";
 						}
 						buffVal += String(someString[Index]);
-					//	console.log(buffVal);
+			//			console.log(someString[Index] + " is a period.") 
+
 				}
 				else{
+				//		console.log(someString[Index] + " is not a number.") 
+
 						numFlag = false;
-						Index -=1;
+				//		Index -=1;
+						break;
 				}
 				if(Index == someString.length -1 ){
+					//	console.log(someString[Index] + " is the last digit.") 
+
 						numFlag = false;
-						Index -=1;
+				//		Index -=1;
+						break;
 				}
 				Index += 1;
 
 		}
-
+//		console.log("I'm Out!");
 		return Number(buffVal)
 }
 
@@ -76,16 +102,24 @@ function  parseSum (someString){
 		while(checkFlag){
 				Index = someString.indexOf("+");
 				if( Index != -1 && Index != (someString.length -1)){
+					
 						bufVal = "";
 						sumFlag = true;
 						var buffArray = parseNumberFromString(Index+1,someString);
+												
 						if(String(buffArray)[0] == "0" && someString[Index+1] == "."){
 								bufVal = String(buffArray).replace("0","");
 						}
 						else{
 								bufVal = buffArray;
 						}
-						someString = someString.replace("+" + bufVal,'');
+						if(someString.indexOf("+" + bufVal) > -1){
+								
+								someString = someString.replace("+" + bufVal,'');
+						}
+						else{
+								someString = someString.replace("+",'');
+						}
 						totVal += Number(buffVal);
 				}
 				else{
@@ -104,7 +138,13 @@ function  parseSum (someString){
 						else{
 								bufVal = buffArray;
 						}
-						someString = someString.replace("-" + bufVal,'');
+						if(someString.indexOf("-" + bufVal) > -1){
+								
+								someString = someString.replace("-" + bufVal,'');
+						}
+						else{
+								someString = someString.replace("-",'');
+						}
 						totVal -= Number(buffVal);
 							
 				}
