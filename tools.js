@@ -16,22 +16,6 @@ function	getRandomInt(min, max) {
 		return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
 }
 
-function breakStringatChar(someString,someChar){
-		var Arr = [somString];
-		var i = 0;
-		while(i < Arr.length){
-				for(j = 0; j < Arr[i].length;j++){
-						if(Arr[i][j] == someChar){
-
-
-						}
-				}
-				i++;
-				
-		}
-		
-		
-}
 
 function parseNumberFromString(Index,someString){
 		var periodCheck = false;	
