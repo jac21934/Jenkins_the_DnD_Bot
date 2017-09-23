@@ -252,6 +252,11 @@ var commands = {
 						const { spawn } = require('child_process');
 						messageSend(message,"Updating from git repo.");
 
+						var fetch = spawn('git', ['fetch']);
+						fetch.stdout.on('data',function(data){
+								console.log(data.toString());
+						});
+						
 						
 						client.destroy().then(function(){
 								const child = spawn('nodejs', ['app.js'], {
