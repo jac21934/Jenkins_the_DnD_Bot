@@ -1,3 +1,22 @@
+var aliases = require("./aliases.json");
+
+function parseStringForStat(someString){
+		var stat = "";
+		console.log("here");
+		for(alias in aliases){
+				console.log(alias);
+				for(i = 0; i < aliases[alias].length; i++){
+//						console.log(aliases[alias][i]);
+						if(someString.indexOf(aliases[alias][i]) >-1){
+								stat = alias;
+								return stat;
+						}
+				}
+		}
+		return stat;
+}
+
+
 function	getProf(prof){
 		var profChar = " ";
 		if(Number(prof) == 1){
@@ -178,6 +197,7 @@ function getDice(someString){
 
 module.exports = {
 		getProf,
+		parseStringForStat,
 		findSpace,
 		getRandomInt,
 		parseNumberFromString,
