@@ -8,6 +8,7 @@
     "child_process": "^1.0.2",
     "discord.js": "^11.2.1",
     "discord.js-music": "^1.0.3",
+    "ffmpeg": "0.0.4",
     "fs": "0.0.1-security",
     "node-gyp": "^3.6.2",
     "opusscript": "0.0.3",
