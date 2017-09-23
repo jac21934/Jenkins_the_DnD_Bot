@@ -1,0 +1,12 @@
+{
+		"str":["STR", "strength"],
+		"dex":["DEX", "dexterity"],
+		"con":["CON", "constitution"],
+		"int":["INT", "intelligence"],
+		"wis":["WIS", "wisdom"],
+		"cha":["CHA", "charisma"],
+		"ac":["AC", "armor class"],
+		"init":["INIT", "initiative"],
+		"spd":["SPD", "speed"]
+		
+}
