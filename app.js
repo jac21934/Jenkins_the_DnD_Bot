@@ -195,7 +195,7 @@ var commands = {
     "ping": {
 				permissions: "any",
         description: "responds pong, useful for checking if bot is alive",
-        process: function(client, message, args) {
+        process: function(client, message, args,id) {
             messageSend(message, message.author.username + " pong!");
             if(args.length >0){
 								messageSend(message, "note that \ping takes no arguments!");
@@ -230,10 +230,16 @@ var commands = {
         process: function(client, message, args, id=0) {
 						const { spawn } = require('child_process')
 						messageSend(message,"Rebooting.");
-
 						
 						client.destroy().then(function(){
-								const child = spawn('nodejs', ['app.js'], {
+								var com = "";
+								if(process.platform == "win32"){
+										com = "node";
+								}
+								else if(process.platform == "linux"){
+										com = "nodejs";
+								}
+								const child = spawn(com, ['app.js'], {
 										detached: true,
 										stdio: ['ignore']
 								});
@@ -247,19 +253,26 @@ var commands = {
     },
 		"update": {
 				permissions: "any",
-        description: "Updates from get repo and reboots.",
+				description: "Updates from get repo and reboots.",
         process: function(client, message, args, id=0) {
 						const { spawn } = require('child_process');
 						messageSend(message,"Updating from git repo.");
 
-						var fetch = spawn('git', ['fetch']);
+						var fetch = spawn('git', ['pull']);
 						fetch.stdout.on('data',function(data){
 								console.log(data.toString());
 						});
 						
 						
 						client.destroy().then(function(){
-								const child = spawn('nodejs', ['app.js'], {
+								var com = "";
+								if(process.platform == "win32"){
+										com = "node";
+								}
+								else if(process.platform == "linux"){
+										com = "nodejs";
+								}
+								const child = spawn(com, ['app.js'], {
 										detached: true,
 										stdio: ['ignore']
 								});
@@ -865,7 +878,7 @@ function checkMessageForCommand(message, isEdit) {
 				}
 				messageSend(message,helpMessage);
 				return;
-					
+				
 		}
 		var cmd = commands[command];
 		if(String(cmd) == "undefined"){
