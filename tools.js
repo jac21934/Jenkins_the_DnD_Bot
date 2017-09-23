@@ -1,3 +1,12 @@
+var aliases = require("./aliases.json");
+
+function parseStringForStat(string){
+		var stat = "";
+
+		return stat;
+}
+
+
 function	getProf(prof){
 		var profChar = " ";
 		if(Number(prof) == 1){
