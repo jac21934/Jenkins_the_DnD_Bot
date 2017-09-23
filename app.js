@@ -18,8 +18,6 @@ var dispatcher = null;
 const broadcast = client.createVoiceBroadcast();
 
 
-var com = require("./commands.js")
-
 function addAditionalModifier(id, args){
 
 
