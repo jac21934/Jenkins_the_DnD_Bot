@@ -218,6 +218,7 @@ var commands = {
 				permissions: "administrator",
         description: "Turns me off. Needs admin permissions.",
         process: function(client, message, args, id=0) {
+						messageSend(message,"Shutting down.");
 						client.destroy().then(function(){
 								process.exit(0);	
 						});
@@ -227,7 +228,8 @@ var commands = {
 				permissions: "any",
         description: "Reboots me.",
         process: function(client, message, args, id=0) {
-						const { spawn } = require('child_process');
+						const { spawn } = require('child_process')
+						messageSend(message,"Rebooting.");
 
 						
 						client.destroy().then(function(){
@@ -243,7 +245,27 @@ var commands = {
 						});
 				}
     },
-		
+		"update": {
+				permissions: "any",
+        description: "Updates from get repo and reboots.",
+        process: function(client, message, args, id=0) {
+						const { spawn } = require('child_process');
+						messageSend(message,"Updating from git repo.");
+
+						
+						client.destroy().then(function(){
+								const child = spawn('nodejs', ['app.js'], {
+										detached: true,
+										stdio: ['ignore']
+								});
+								
+								child.unref();
+								
+
+								process.exit(0);	
+						});
+				}
+    },		
 		"save": {
 				permissions: "any",
         description: "Saves all player profiles and gold.",
