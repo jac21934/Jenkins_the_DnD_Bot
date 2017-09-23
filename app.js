@@ -434,6 +434,8 @@ var commands = {
 	process: function(client,message,args,id){
 	    
 	    var sumFlag = false;
+	    var advFlag = false;
+	    var disFlag = false;
 
 	    ////////////////////////////////// Parsing input
 	    var totArgs = args.join("").toLowerCase();
@@ -442,6 +444,16 @@ var commands = {
 		sumFlag = true;
 		totArgs = totArgs.replace("sum","");
 	    }
+	    else if(totArgs.indexOf("adv") != -1)
+	    {
+		advFlag = true;
+		totArgs = totArgs.replace("adv","");
+	    }
+	    else if(totArgs.indexOf("dis") != -1)
+	    {
+		disFlag = true;
+		totArgs = totArgs.replace("dis","");
+	    }	
 
 	    var numDie = 0;
 	    var maxDie = 0;
@@ -474,9 +486,14 @@ var commands = {
 	    else if(numDie == 0){
 		rollMessage += "Ok rolling zero dice...\n";
 	    }
+	    else if(((numDie != 1) || (maxDie != 20)) && (advFlag || disFlag))
+	    {
+		rollMessage += "You can only roll 1d20 with advantage or disadvantage right now.";
+	    }
 	    else{
 		
 		rollMessage += "Rolling " + numDie + "d"+ maxDie;
+	
 		if (Number(modifier) != 0){
 		    if (modifier < 0){
 			rollMessage += modifier;
@@ -485,7 +502,16 @@ var commands = {
 			rollMessage += "+" + modifier;
 		    }
 		}
-		
+	
+		if(advFlag)
+		{
+		    rollMessage += " with advantage";
+		}
+		if(disFlag)
+		{
+		    rollMessage += " with disadvantage";
+		}
+	
 		rollMessage += "\n";
 		var filler = Array(rollMessage.length).join("-") + "\n";
 		if(sumFlag == false){
@@ -494,6 +520,7 @@ var commands = {
 		var rollSum = 0;
 		for( i = 0; i < numDie; i++){
 		    var dieRoll = tools.getRandomInt(1,maxDie);
+		    var dieRollNew = tools.getRandomInt(1,maxDie);
 		    if (sumFlag == false){
 			rollMessage += dieRoll;
 			if(maxDie == 20){
@@ -505,30 +532,66 @@ var commands = {
 			    }
 			}
 			rollMessage += "\n";
+			if (advFlag || disFlag)
+			{
+			    rollMessage += dieRollNew;
+			    if(maxDie == 20){
+				if( dieRollNew == 20){
+				    rollMessage += " *Crit*";
+				}
+				else if(dieRollNew == 1){
+				    rollMessage += " *Crit Fail*";
+				}
+			    }
+			    rollMessage += "\n";
+			}
+			if(advFlag)
+			{
+			    dieRoll = Math.max(dieRoll, dieRollNew);
+			}
+			else if(disFlag)
+			{
+			    dieRoll = Math.min(dieRoll, dieRollNew);
+			}
 		    }
 		    rollSum += dieRoll;
 		}
 		var sumMessage = "";
 		var modMessage = "";
 		var totMessage = "";
+		var advMessage = "";
 		var maxFill = 0;
 		if(numDie > 1){
 		    sumMessage += "Sum: " + rollSum + "\n";
 		}
+
+		if(advFlag)
+		{
+		    advMessage += "Max: " + dieRoll + "\n";
+		}
+		if(disFlag)
+		{
+		    advMessage += "Min: " + dieRoll + "\n";
+		}
+
 		if(modifier != ""){
 		    modMessage += "Modifier: " + modifier + "\n";	
 		    var totalSum = rollSum+modifier;
 		    totMessage += "Total Sum: " + totalSum + "\n";	
 		}
-		if( numDie>1 || modifier !=""){
+		if( numDie>1 || modifier !="" || disFlag || advFlag){
 		    if(sumFlag == true){
-			maxFill = Math.max(String(sumMessage).length, String(modMessage).length, String(totMessage).length, String(filler).length);
+			maxFill = Math.max(String(sumMessage).length, String(modMessage).length, String(totMessage).length, String(filler).length, String(advMessage).length);
 		    }
 		    else{
-			maxFill = Math.max(String(sumMessage).length, String(modMessage).length, String(totMessage).length);
+			maxFill = Math.max(String(sumMessage).length, String(modMessage).length, String(totMessage).length, String(advMessage).length);
 		    }
 		    filler = Array(maxFill).join("-") + "\n";
 		    rollMessage +=filler;
+		    if(advFlag || disFlag)
+		    {
+			rollMessage += advMessage;
+		    }
 		    if(numDie > 1){
 			rollMessage += sumMessage;
 		    }
