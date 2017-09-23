@@ -614,7 +614,7 @@ Player.prototype = {
 
 				var skillsMessage = "";
 				var space = 30;
-				var messageHeader = this.getName() + Array(space - this.getName().length).join(" ") +  "\n";
+				var messageHeader = this.getName() + Array((space - this.getName().length) - String("Skills").length).join(" ") + "Skills" +  "\n";
 				skillsMessage += messageHeader + Array(messageHeader.length).join("-")  + "\n";
 
 				skillsMessage += "S| STR Saving Throw  |" + tools.getProf(this.getStrsavprof()) + "| (" + String(Number(Number(this.getStrmod()) + Number(this.getProfbonus())*Number(this.getStrsavprof()) + Number(this.getStrsavadd()))) + ")" +  "\n"; 

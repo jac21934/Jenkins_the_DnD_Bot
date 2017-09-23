@@ -17,6 +17,9 @@ var voiceChannel = null;
 var dispatcher = null;
 const broadcast = client.createVoiceBroadcast();
 
+
+var com = require("./commands.js")
+
 function addAditionalModifier(id, args){
 
 
@@ -192,16 +195,6 @@ function messageSend(message, text,messagefile = ""){
 }
 
 var commands = {
-    "ping": {
-				permissions: "any",
-        description: "responds pong, useful for checking if bot is alive",
-        process: function(client, message, args,id) {
-            messageSend(message, message.author.username + " pong!");
-            if(args.length >0){
-								messageSend(message, "note that \ping takes no arguments!");
-            }
-        }
-    },
     "test" : {
 				permissions: "any",
 				description: "A testbed function for adding new functionality to Jenkins. Use with caution.",
@@ -253,7 +246,7 @@ var commands = {
     },
     "update": {
 				permissions: "any",
-				description: "Updates from get repo and reboots.",
+				description: "Updates from git repo and reboots.",
         process: function(client, message, args, id=0) {
 						const { spawn } = require('child_process');
 						messageSend(message,"Updating from git repo.");
@@ -380,7 +373,7 @@ var commands = {
     },
     "skills":{
 				permissions: "any",
-				description: "Shows your character's skills, proficiencies and modifiers. You can give me the first name of someone to see their notes",
+				description: "Shows your character's skills, proficiencies and modifiers. You can give me the first name of someone to see their skills.",
 				process: function(client,message,args,id){
 						if( args.length > 0){
 								for(i=0; i< players.length;i++){
@@ -421,7 +414,7 @@ var commands = {
     },
 		   "bonuses":{
 				permissions: "any",
-				description: "Shows your character's additional modifiers.",
+				description: "Shows your character's additional modifiers that have been extracted from your notes. You can give me the first name of someone to see their bonuses.",
 				process: function(client,message,args,id){
 						if( args.length > 0){
 								for(i=0; i< players.length;i++){
@@ -777,7 +770,7 @@ var commands = {
     
     "defs":{
 				permissions: "any",
-				description: "Shows the list of players' defenses.",
+				description: "Shows the list of players' defenses and combat related stats.",
 				process: function(client,message,args,id=0){
 						var defsMessage= "";
 						
@@ -812,7 +805,7 @@ var commands = {
     },
     "notes":{
 				permissions: "any",
-				description: 'You can "add" or "remove"/"rm" notes about your characters. You can also give me the first name of any players to view their notes.',
+				description: 'You can "add" or "remove"/"rm" notes about your characters. You can also give me the first name of any players to view their notes. These notes are parsed for any additional modifiers your character recieves, which can be view using '  + config.prefix + 'bonuses command. This means you can give me a note like "My Ring of Names give me +4 to PER/perception" and I will update your stats accordingly.',
 				process: function(client,message,args,id){
 						notesMessage = "";
 						var playerNotes = false;
@@ -939,13 +932,13 @@ function checkMessageForCommand(message, isEdit) {
 				var frontLength = 11;
 				var helpMessage = "";
 				helpMessage +=	"help" + Array(frontLength - String("help").length).join(" ") + dashSpace + "Shows this text.\n\n";
-				for( com in commands){
-						if( commands.hasOwnProperty(com) && commands[com].description != "") {
+				for( com in com.commands){
+						if( com.commands.hasOwnProperty(com) && com.commands[com].description != "") {
 								var discordMax = 120;
-								var descLength = String(commands[com].description).length;
+								var descLength = String(com.commands[com].description).length;
 								var descArr = [];
 								descLength += frontLength + dashSpace.length;
-								var arrBuff = String(commands[com].description).split("\n");
+								var arrBuff = String(com.commands[com].description).split("\n");
 								
 								var k = 0;
 								while( k < arrBuff.length) {
@@ -997,7 +990,7 @@ function checkMessageForCommand(message, isEdit) {
 				return;
 				
     }
-    var cmd = commands[command];
+    var cmd = com.commands[command];
     if(String(cmd) == "undefined"){
 				return;
     }
