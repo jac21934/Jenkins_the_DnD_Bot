@@ -682,16 +682,16 @@ Player.prototype = {
 												var maxIndex = discordMax - (String(j+1).length + 2 + space);
 												var buffString = "";
 												var newIndex = tools.findSpace(arrBuff[k],maxIndex);
-											// 	if(newIndex == maxIndex || newIndex < maxIndex - 15){ 
-									// 					buffString = arrBuff[k].slice(maxIndex);
-									// 					arrBuff[k] = arrBuff[k].replace(buffString,"-");
-									// 					buffString = "-" + buffString;
-									// 			}
-									// //	
-											//	else{
+												// 	if(newIndex == maxIndex || newIndex < maxIndex - 15){ 
+												// 					buffString = arrBuff[k].slice(maxIndex);
+												// 					arrBuff[k] = arrBuff[k].replace(buffString,"-");
+												// 					buffString = "-" + buffString;
+												// 			}
+												// //	
+												//	else{
 												buffString = arrBuff[k].slice(newIndex);
 												arrBuff[k] = arrBuff[k].replace(buffString, "");
-										//		}
+												//		}
 												if( k < arrBuff.length - 1){
 														arrBuff[k+1] = buffString + " " + arrBuff[k+1];
 												}
@@ -739,31 +739,118 @@ Player.prototype = {
 				return notesMessage;
 
 		},
-		
-		setMods: function(){
 
-				this._strmod = Number(Math.floor((Number(this.getStr()) + Number(this.getStradd()) - 10)/2));
-				this._dexmod = Number(Math.floor((Number(this.getDex()) + Number(this.getDexadd()) - 10)/2));
+		parseNotes: function(){
+
+				this.setStradd(0);
+				this.setDexadd(0);
+				this.setConadd(0);
+				this.setIntadd(0);
+				this.setWisadd(0);
+				this.setChaadd(0);
+				this.setAcadd(0);
+				this.setInitadd(0);
+				this.setSpdadd(0);
+				//HP
+				this.setHpadd(0);
+				this.setPeradd(0);
+				///////////////////////////////
 				
-				this._conmod = Number(Math.floor((Number(this.getCon()) + Number(this.getConadd()) - 10)/2));
-				this._intmod = Number(Math.floor(( Number(this.getInt()) + Number(this.getIntadd()) - 10)/2));
-
-				this._wismod = Number(Math.floor(( Number(this.getWis()) + Number(this.getWisadd()) - 10)/2));
-				this._chamod = Number(Math.floor(( Number(this.getCha()) + Number(this.getChaadd()) - 10)/2));
-				this._profbonus = Math.floor(( Number(this.getLevel()) + 7)/4) + Number(this.getProfbonusadd());
+				this.setStrsavadd(0);
+				this.setAthadd(0);
+				this.setDexsavadd(0);
+				this.setAcroadd(0);
+				this.setSleightadd(0);
+				this.setStealthadd(0);
+				this.setConsavadd(0);
+				this.setIntsavadd(0);
+				this.setArcanaadd(0);
+				this.setHistoryadd(0);
+				this.setInvestadd(0);
+				this.setNatureadd(0);
+				this.setReligionadd(0);
+				//wisdom
+				this.setWissavadd(0);
+				this.setAnimaladd(0);
+				this.setInsightadd(0);
+				this.setMedicineadd(0);
+				this.setPeradd(0);
+				this.setSurvadd(0);
 				
-				this._per = 10 + Number(this.getWismod()) + ( Number(this.getProfbonus())) * Number(this.getPerprof()) + Number(this.getPeradd());
-				this._ac = Number(this._ac) + Number(this._acadd); 
-				this._hp = Number(this._hp) + Number(this._hpadd);
-				this._init = Number(this._init) + Number(this._initadd);
-				this._spd = Number(this._spd) + Number(this._spdadd);
-				//console.log(this.getPer());
-		},
-
-}
+				//cha
+				this.setChasavadd(0);
+				this.setDeceptadd(0);
+				this.setIntimadd(0);
+				this.setPerformadd(0); 
+				this.setPersadd(0);
 
 
-module.exports = Player;
+				
+				for(i = 0; i < this._notes.length;i++){
+						var buffString = tools.parseStringForStat(this._notes[i]);
+						var buffSum = tools.parseSum(this._notes[i]);
+						switch(buffString){
+						case "str":
+								this.setStradd(buffSum);
+								break;
+						case "dex":
+								this.setDexadd(buffSum);
+								break;
+								this.setConadd(buffSum);
+								break;
+						case "int":
+								this.setIntadd(buffSum);
+								break;
+						case "wis" :
+								this.setWisadd(buffSum);
+								break;
+						case "cha":
+								this.setChaadd(buffSum);
+								break;
+						case "ac":
+								this.setAcadd(buffSum);
+								break;
+						case "init":
+								this.setInitadd(buffSum);
+								break;
+						case "spd":
+								this.setSpdadd(buffSum);
+								break;
+						//case :
+	
+						default:
+
+						}
+				}
+
+						
+
+				},
+				
+				setMods(){
+
+						this._strmod = Number(Math.floor((Number(this.getStr()) + Number(this.getStradd()) - 10)/2));
+						this._dexmod = Number(Math.floor((Number(this.getDex()) + Number(this.getDexadd()) - 10)/2));
+						
+						this._conmod = Number(Math.floor((Number(this.getCon()) + Number(this.getConadd()) - 10)/2));
+						this._intmod = Number(Math.floor(( Number(this.getInt()) + Number(this.getIntadd()) - 10)/2));
+
+						this._wismod = Number(Math.floor(( Number(this.getWis()) + Number(this.getWisadd()) - 10)/2));
+						this._chamod = Number(Math.floor(( Number(this.getCha()) + Number(this.getChaadd()) - 10)/2));
+						this._profbonus = Math.floor(( Number(this.getLevel()) + 7)/4) + Number(this.getProfbonusadd());
+						
+						this._per = 10 + Number(this.getWismod()) + ( Number(this.getProfbonus())) * Number(this.getPerprof()) + Number(this.getPeradd());
+						this._ac = Number(this._ac) + Number(this._acadd); 
+						this._hp = Number(this._hp) + Number(this._hpadd);
+						this._init = Number(this._init) + Number(this._initadd);
+						this._spd = Number(this._spd) + Number(this._spdadd);
+						//console.log(this.getPer());
+				},
+
+		}
+
+
+		module.exports = Player;
 
 
 
