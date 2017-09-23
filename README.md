@@ -13,4 +13,7 @@ Jenkins needs:
  
  fs from npm
  
+ child_process from npm
+ 
+ 
  ffmpeg
