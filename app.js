@@ -214,15 +214,6 @@ var commands = {
 				}
 				
     },
-    "jontest" : {
-				permissions: "any",
-				description: "Jon created this to make sure everything works.",
-				process: function(client, message, args, id){
-						var jonMessage = "Jon made this!";
-						messageSend(message, jonMessage);
-				}
-				
-    },
     "close": {
 				permissions: "administrator",
         description: "Turns me off. Needs admin permissions.",
@@ -428,6 +419,48 @@ var commands = {
 						
 				}
     },
+		   "bonuses":{
+				permissions: "any",
+				description: "Shows your character's additional modifiers.",
+				process: function(client,message,args,id){
+						if( args.length > 0){
+								for(i=0; i< players.length;i++){
+										
+										
+										playerName = players[i].getName().toLowerCase();
+										
+										if( playerName.indexOf(" ") > -1){
+												if( playerName.slice(0, playerName.indexOf(" ")) == args[0].toLowerCase()  ){
+														var bonusMessage = players[i].getBonusMessage();
+														messageSend(message,bonusMessage);
+														break;
+												}
+										}
+										
+										name = String(args.join(" ")).toLowerCase();
+										if (name == players[i].getName().toLowerCase()){
+												var bonusMessage = players[i].getBonusMessage();
+												messageSend(message,bonusMessage);
+												break;
+										}
+								}
+								
+						}
+						
+						else{
+								for(i=0; i< players.length;i++){
+										if (id == players[i].getId()){
+												var bonusMessage = players[i].getBonusMessage();
+												messageSend(message,bonusMessage);
+												break;
+										}
+								}
+						}
+						
+						
+				}
+    },
+ 
     "roll":{
 				permissions: "any",
 				description: "Give a number of die with modifier(s) to roll and show result, (1d4 + 10 - 5 or 5d17 - 5). Put sum at the end if you don't want to see the individual rolls.",
@@ -783,10 +816,11 @@ var commands = {
 				process: function(client,message,args,id){
 						notesMessage = "";
 						var playerNotes = false;
+						
 						if(args.length > 0){
 								for(i=0; i< players.length;i++){
 										var playerName = players[i].getName().toLowerCase();
-										
+																				
 										if( playerName.indexOf(" ") > -1){
 												if( playerName.slice(0, playerName.indexOf(" ")) == args[0].toLowerCase()  ){
 														var notesMessage = players[i].getNotesMessage();
@@ -802,83 +836,94 @@ var commands = {
 												break;
 										}
 								}
+						}
+						
+						else{
+								for(i = 0; i < players.length; i++){
+										if(players[i].getId() == id){
+												notesMessage = players[i].getNotesMessage();
+												playerNotes = true;
+												break;
+										}
+								}
 								
-								if(playerNotes == false){
-										if(args[0] == "add"){
-												args.shift();
-												var note = message.content.replace("\\notes","");
-												note = note.replace("add", "");
-												note = note.replace(/^\s+|\s+$/g, "");
-												for(i = 0; i < players.length; i++){
-														if(players[i].getId() == id){
-																var notesBuff = players[i].getNotes();
-																notesBuff.push(note);
-																players[i].setNotes(notesBuff);
-																notesMessage += "Added to " + players[i].getName() + "'s notes.\n";
-																//			players[i].parseNotes();
-																break;
-														}
-												}
-										}
-										else if (args[0] == "rm" || args[0] == "remove"){
-												if( args.length == 1){
-														notesMessage += "Please specify which note to remove.";
-												}
-												else{
-														for(i = 0; i < players.length; i++){
-																if(players[i].getId() == id){
-																		var notesBuff = players[i].getNotes();
-																		var newNotes = [];
-																		var rmFlag = false;
-																		
-																		for(j = 0; j < notesBuff.length; j++){
-																				var addFlag = true;
-																				for(k = 1; k < args.length; k++){
-																						if( args[k] == String(Number(j+1)) ){
-																								addFlag = false;
-																								rmFlag = true;
-																								break;
-																						}
-																						
-																				}
-																				if(addFlag){
-																						newNotes.push(notesBuff[j]);
-																				}
-																				else{
-																						notesMessage += "Removing note (" + String(j+1) + ") from " + players[i].getName() + "'s notes.\n";
-																				}
-																				
-																		}
-																		if(rmFlag == false){
-																				notesMessage += "I cannot remove notes that do not exist!";
-																		}
-
-																		players[i].setNotes(newNotes);
-																		//			players[i].parseNotes();
-																		break;
-																}
-																
-														}
-												}
-										}
-								}
-								else{
-
-										for(i = 0; i < players.length; i++){
-												if(players[i].getId() == id){
-														notesMessage = players[i].getNotesMessage();
-														break;
-												}
-										}
-
-								}
 						}
 						
 						
 						
+						
+						if(playerNotes == false){
+								if(args[0] == "add"){
+										args.shift();
+										var note = message.content.replace("\\notes","");
+										note = note.replace("add", "");
+										note = note.replace(/^\s+|\s+$/g, "");
+										for(i = 0; i < players.length; i++){
+												if(players[i].getId() == id){
+														var notesBuff = players[i].getNotes();
+														notesBuff.push(note);
+														players[i].setNotes(notesBuff);
+														notesMessage += "Added to " + players[i].getName() + "'s notes.\n";
+														players[i].parseNotes();
+														break;
+												}
+										}
+								}
+								else if (args[0] == "rm" || args[0] == "remove") {
+										if( args.length == 1){
+												notesMessage += "Please specify which note to remove.";
+										}
+										else{
+												for(i = 0; i < players.length; i++){
+														if(players[i].getId() == id){
+																var notesBuff = players[i].getNotes();
+																var newNotes = [];
+																var rmFlag = false;
+																
+																for(j = 0; j < notesBuff.length; j++){
+																		var addFlag = true;
+																		for(k = 1; k < args.length; k++){
+																				if( args[k] == String(Number(j+1)) ){
+																						addFlag = false;
+																						rmFlag = true;
+																						break;
+																				}
+																				
+																		}
+																		if(addFlag){
+																				newNotes.push(notesBuff[j]);
+																		}
+																		else{
+																				notesMessage += "Removing note (" + String(j+1) + ") from " + players[i].getName() + "'s notes.\n";
+																		}
+																		
+																}
+																if(rmFlag == false){
+																		notesMessage += "I cannot remove notes that do not exist!";
+																}
+																
+																players[i].setNotes(newNotes);
+																players[i].parseNotes();
+																break;
+														}
+														
+												}
+										}
+								}
+								else{
+										for(i = 0; i < players.length; i++){
+												if(players[i].getId() == id){
+														notesMessage = players[i].getNotesMessage();
+												}
+										}
+										
+								}
+						}
+						
+						
 						messageSend(message,notesMessage);
 				}
-    }
+		}
 }
 function checkMessageForCommand(message, isEdit) {
     //filter for prefix and bots

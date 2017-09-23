@@ -659,6 +659,55 @@ Player.prototype = {
 
 				return skillsMessage;
 		},
+		getBonusMessage: function(){
+
+				var bonusMessage = "";
+				var space = 30;
+				var messageHeader = this.getName() + Array((space - this.getName().length) - String("Bonuses").length).join(" ") + "Bonuses" +  "\n";
+				bonusMessage += messageHeader + Array(messageHeader.length).join("-")  + "\n";
+				
+				bonusMessage += "S| STR Saving Throw  | ("  + String(Number(this.getStrsavadd())) + ")" +  "\n"; 
+				bonusMessage += "T| Athletics         | (" + String(Number(this.getAthadd())) + ")" + "\n"; 	
+				bonusMessage += "R|                   |" + "\n"; 
+				bonusMessage += Array(messageHeader.length).join("-")  + "\n"
+				//dex
+				
+				bonusMessage += "D| DEX Saving Throw  | (" + String(Number(this.getDexsavadd()))  + ")" + "\n"; 
+				bonusMessage += "E| Acrobatics        | (" + String(Number(this.getAcroadd()))  + ")" + "\n"; 	
+				bonusMessage += "X| Sleight of Hand   | (" + String(Number(this.getSleightadd()))  + ")" + "\n"; 
+				bonusMessage += " | Stealth           | (" + String(Number(this.getStealthadd())) + ")" +"\n"; 
+				bonusMessage += Array(messageHeader.length).join("-")  + "\n"
+				//con
+				bonusMessage += "C| CON Saving Throw  | (" + String(Number(this.getConsavadd())) + ")" + "\n"; 
+				bonusMessage += "O|                   |" + "\n"; 	
+				bonusMessage += "N|                   |" + "\n"; 
+				bonusMessage += Array(messageHeader.length).join("-")  + "\n"
+				//int
+				bonusMessage += "I| INT Saving Throw  | (" + String(Number(this.getIntsavadd()))  + ")" + "\n"; 
+				bonusMessage += "N| Arcana            | (" + String(Number(this.getArcanaadd()))  + ")" + "\n"; 	
+				bonusMessage += "T| History           | (" + String(Number(this.getHistoryadd()))  + ")" + "\n"; 
+				bonusMessage += " | Investigation     | (" + String(Number(this.getInvestadd()))  + ")" + "\n"; 
+				bonusMessage += " | Nature            | (" + String(Number(this.getNatureadd()))  + ")" + "\n"; 
+				bonusMessage += " | Religion          | (" + String(Number(this.getReligionadd()))  + ")" + "\n"; 		
+				bonusMessage += Array(messageHeader.length).join("-")  + "\n"
+				//wis
+				bonusMessage += "W| WIS Saving Throw  | (" + String(Number(this.getWissavadd()))  + ")"+ "\n"; 
+				bonusMessage += "I| Animal Handling   | (" + String(Number(this.getAnimaladd()))  + ")"+ "\n"; 	
+				bonusMessage += "S| Insight           | (" + String(Number(this.getInsightadd()))  + ")"+ "\n"; 
+				bonusMessage += " | Medicine          | (" + String(Number(this.getMedicineadd())) + ")"+ "\n"; 
+				bonusMessage += " | Perception        | (" + String(Number(this.getPeradd())) + ")"+ "\n"; 	
+				bonusMessage += " | Survival          | (" + String(Number(this.getSurvadd()))  + ")"+ "\n"; 	
+				bonusMessage += Array(messageHeader.length).join("-")  + "\n"
+				//cha
+				bonusMessage += "C| CHA Saving Throw  | (" + String(Number(this.getChasavadd()))  + ")"+ "\n"; 
+				bonusMessage += "H| Deception         | (" + String(Number(this.getDeceptadd()))  + ")"+  "\n"; 	
+				bonusMessage += "A| Intimidation      | (" + String(Number(this.getIntimadd())) + ")"+  "\n"; 
+				bonusMessage += " | Performance       | (" + String(Number(this.getPerformadd()))  + ")"+  "\n"; 
+				bonusMessage += " | Persuasion        | (" + String(Number(this.getPersadd())) + ")"+  "\n"; 	
+				bonusMessage += Array(messageHeader.length).join("-")  + "\n"
+
+				return bonusMessage;
+		},
 
 		getNotesMessage: function(){
 				var notesMessage = "";
@@ -784,11 +833,21 @@ Player.prototype = {
 				this.setPerformadd(0); 
 				this.setPersadd(0);
 
-
 				
-				for(i = 0; i < this._notes.length;i++){
-						var buffString = tools.parseStringForStat(this._notes[i]);
-						var buffSum = tools.parseSum(this._notes[i]);
+				var notes = this.getNotes();
+				console.log(notes);
+				if(notes.length == 0){
+						console.log("No Notes!");
+						return;
+				}
+				for(noteBuff in notes){
+						note = notes[noteBuff].trim().split(/ +/g).join("");
+						console.log("Note " + note + " :" + note);
+						var buffString = tools.parseStringForStat(String(notes[noteBuff]));
+
+						var buffArr = tools.parseSum(String(note));
+						var buffSum = buffArr[0];
+						
 						switch(buffString){
 						case "str":
 								this.setStradd(buffSum);
@@ -816,41 +875,115 @@ Player.prototype = {
 						case "spd":
 								this.setSpdadd(buffSum);
 								break;
-						//case :
-	
+						case "hp":
+								this.setHpadd(buffSum);
+								break;
+						case "strsav":
+								this.setStrsavadd(buffSum);
+								break;
+						case "ath" :
+								this.setAthadd(buffSum);
+								break;
+						case "dexsav" :
+								this.setDexsavadd(buffSum);
+								break;
+						case "acr" :
+								this.setAcroadd(buffSum);
+								break;
+						case "soh":
+								this.setSleightadd(buffSum);
+								break;
+						case "ste":
+								this.setStealthadd(buffSum);
+								break;
+						case "consav" :
+								this.setConsavadd(buffSum);
+								break;
+						case "intsav" :
+								this.setIntsavadd(buffSum);
+								break;
+						case "arc" :
+								this.setArcanaadd(buffSum);
+								break;
+						case "his" :
+								this.setHistoryadd(buffSum);
+								break;
+						case "inv":
+								this.setInvestadd(buffSum);
+								break;
+						case "nat"  :
+								this.setNatureadd(buffSum);
+								break;
+						case "rel" :
+								this.setReligionadd(buffSum);
+								break;
+						case "wissav":
+								//wisdom
+								this.setWissavadd(buffSum);
+								break;
+						case "ani":
+								this.setAnimaladd(buffSum);
+								break;
+						case "ins":
+								this.setInsightadd(buffSum);
+								break;
+						case "med":
+								this.setMedicineadd(buffSum);
+								break;
+						case "per":
+								this.setPeradd(buffSum);
+								break;;
+						case "sur" :
+								this.setSurvadd(buffSum);
+								break;
+						case "chasav" :
+								this.setChasavadd(buffSum);
+								break;
+						case "dec" :
+								this.setDeceptadd(buffSum);
+								break;
+						case "intim":
+								this.setIntimadd(buffSum);
+								break;
+						case "perf" :
+								this.setPerformadd(buffSum);
+								break;
+						case "pers" : 
+								this.setPersadd(buffSum);
+								break;
 						default:
 
 						}
 				}
-
-						
-
-				},
 				
-				setMods(){
+				this.setMods();
 
-						this._strmod = Number(Math.floor((Number(this.getStr()) + Number(this.getStradd()) - 10)/2));
-						this._dexmod = Number(Math.floor((Number(this.getDex()) + Number(this.getDexadd()) - 10)/2));
-						
-						this._conmod = Number(Math.floor((Number(this.getCon()) + Number(this.getConadd()) - 10)/2));
-						this._intmod = Number(Math.floor(( Number(this.getInt()) + Number(this.getIntadd()) - 10)/2));
+		},
+		
+		setMods(){
 
-						this._wismod = Number(Math.floor(( Number(this.getWis()) + Number(this.getWisadd()) - 10)/2));
-						this._chamod = Number(Math.floor(( Number(this.getCha()) + Number(this.getChaadd()) - 10)/2));
-						this._profbonus = Math.floor(( Number(this.getLevel()) + 7)/4) + Number(this.getProfbonusadd());
-						
-						this._per = 10 + Number(this.getWismod()) + ( Number(this.getProfbonus())) * Number(this.getPerprof()) + Number(this.getPeradd());
-						this._ac = Number(this._ac) + Number(this._acadd); 
-						this._hp = Number(this._hp) + Number(this._hpadd);
-						this._init = Number(this._init) + Number(this._initadd);
-						this._spd = Number(this._spd) + Number(this._spdadd);
-						//console.log(this.getPer());
-				},
+				this._strmod = Number(Math.floor((Number(this.getStr()) + Number(this.getStradd()) - 10)/2));
+				this._dexmod = Number(Math.floor((Number(this.getDex()) + Number(this.getDexadd()) - 10)/2));
+				
+				this._conmod = Number(Math.floor((Number(this.getCon()) + Number(this.getConadd()) - 10)/2));
+				this._intmod = Number(Math.floor(( Number(this.getInt()) + Number(this.getIntadd()) - 10)/2));
 
-		}
+				this._wismod = Number(Math.floor(( Number(this.getWis()) + Number(this.getWisadd()) - 10)/2));
+				this._chamod = Number(Math.floor(( Number(this.getCha()) + Number(this.getChaadd()) - 10)/2));
+				this._profbonus = Math.floor(( Number(this.getLevel()) + 7)/4) + Number(this.getProfbonusadd());
+				
+				this._per = 10 + Number(this.getWismod()) + ( Number(this.getProfbonus())) * Number(this.getPerprof()) + Number(this.getPeradd());
+				this._ac = Number(this._ac) + Number(this._acadd); 
+				this._hp = Number(this._hp) + Number(this._hpadd);
+				this._init = Number(this._init) + Number(this._initadd);
+				this._spd = Number(this._spd) + Number(this._spdadd);
+				//console.log(this.getPer());
+		},
+
+}
 
 
-		module.exports = Player;
+module.exports = Player;
 
 
 

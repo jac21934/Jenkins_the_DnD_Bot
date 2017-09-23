@@ -2,9 +2,7 @@ var aliases = require("./aliases.json");
 
 function parseStringForStat(someString){
 		var stat = "";
-		console.log("here");
 		for(alias in aliases){
-				console.log(alias);
 				for(i = 0; i < aliases[alias].length; i++){
 //						console.log(aliases[alias][i]);
 						if(someString.indexOf(aliases[alias][i]) >-1){
@@ -102,6 +100,7 @@ function  parseSum (someString){
 		var totVal = 0;
 		var bufVal = "";
 		var bufbufVal;
+		console.log("someString: " + someString);
 		while(checkFlag){
 				Index = someString.indexOf("+");
 				if( Index != -1 && Index != (someString.length -1)){
@@ -123,6 +122,8 @@ function  parseSum (someString){
 						else{
 								someString = someString.replace("+",'');
 						}
+						console.log(someString);
+
 						totVal += Number(buffVal);
 				}
 				else{
@@ -158,8 +159,8 @@ function  parseSum (someString){
 						checkFlag = false;
 				}				
 		}
-
-		return [totVal, someString];
+	//	console.log("totVal: " + totVal);
+ 		return [totVal, someString];
 
 }
 

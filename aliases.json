@@ -1,4 +1,10 @@
 {
+		"strsav":["STRSAV", "strength save", "strength saving throw"],
+		"dexsav":["DEXSAV", "dexterity save", "dexterity saving throw"],
+		"consav":["CONSAV", "constitution save", "constitution saving throw"],
+		"intsav":["INTSAV", "intelligence save", "intelligence saving throw"],
+		"wissav":["WISSAV", "wisdom save", "wisdom saving throw"],
+		"chasav":["CHASAV", "charisma save", "charisma saving throw"],
 		"str":["STR", "strength"],
 		"dex":["DEX", "dexterity"],
 		"con":["CON", "constitution"],
@@ -8,12 +14,7 @@
 		"ac":["AC", "armor class"],
 		"init":["INIT", "initiative"],
 		"spd":["SPD", "speed"],
-		"strsav":["STRSAV", "strength save"],
-		"dexsav":["DEXSAV", "dexterity save"],
-		"consav":["CONSAV", "constitution save"],
-		"intsav":["INTSAV", "intelligence save"],
-		"wissav":["WISSAV", "wisdom save"],
-		"chasav":["CHASAV", "charisma save"],
+		"hp":["HP", "hit points"],
 		"acr":["ACR", "acrobatics"],
 		"ani":["ANI", "animal handling"],
 		"arc":["ARC", "arcana"],
@@ -30,6 +31,7 @@
 		"rel":["REL", "religion"],
 		"soh":["SOH", "sleight of hand"],
 		"ste":["STE", "stealth"],
-		"sur":["SUR", "survival"]
+		"sur":["SUR", "survival"],
+		"ins":["INS", "insight"]
 
 }
