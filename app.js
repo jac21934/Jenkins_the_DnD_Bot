@@ -930,13 +930,13 @@ function checkMessageForCommand(message, isEdit) {
 				var frontLength = 11;
 				var helpMessage = "";
 				helpMessage +=	"help" + Array(frontLength - String("help").length).join(" ") + dashSpace + "Shows this text.\n\n";
-				for( com in com.commands){
-						if( com.commands.hasOwnProperty(com) && com.commands[com].description != "") {
+				for( com in commands){
+						if( commands.hasOwnProperty(com) && commands[com].description != "") {
 								var discordMax = 120;
-								var descLength = String(com.commands[com].description).length;
+								var descLength = String(commands[com].description).length;
 								var descArr = [];
 								descLength += frontLength + dashSpace.length;
-								var arrBuff = String(com.commands[com].description).split("\n");
+								var arrBuff = String(commands[com].description).split("\n");
 								
 								var k = 0;
 								while( k < arrBuff.length) {
@@ -988,7 +988,7 @@ function checkMessageForCommand(message, isEdit) {
 				return;
 				
     }
-    var cmd = com.commands[command];
+    var cmd = commands[command];
     if(String(cmd) == "undefined"){
 				return;
     }
