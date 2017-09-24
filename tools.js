@@ -182,6 +182,7 @@ function  parseSum (someString){
     //	console.log("totVal: " + totVal);
     return [totVal, someString];
 
+
 }
 
 
