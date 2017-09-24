@@ -107,7 +107,7 @@ function  parseSum (someString){
 		var totVal = 0;
 		var bufVal = "";
 		var bufbufVal;
-		console.log("someString: " + someString);
+	//	console.log("someString: " + someString);
 		while(checkFlag){
 				Index = someString.indexOf("+");
 				if( Index != -1 && Index != (someString.length -1)){
