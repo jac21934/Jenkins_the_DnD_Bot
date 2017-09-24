@@ -234,103 +234,103 @@ function getModFromString(players, id, stat)
 	    switch(stat){
 		//base stats
 	    case "str":
-		modifier = players[i].getStrmod() + players[i].getStradd();;
+		modifier = players[i].getStrmod() + players[i].getStradd();
 		break;
 	    case "dex":
-		modifier = players[i].getDexmod() + players[i].getDexadd();;
+		modifier = players[i].getDexmod() + players[i].getDexadd();
 		break;
 	    case "con":
-		modifier = players[i].getConmod() + players[i].getConadd();;
+		modifier = players[i].getConmod() + players[i].getConadd();
 		break;
 	    case "int":
-		modifier = players[i].getIntmod()  + players[i].getIntadd();;
+		modifier = players[i].getIntmod()  + players[i].getIntadd();
 		break;
 	    case "wis":
-		modifier = players[i].getWismod() + players[i].getWisadd();;
+		modifier = players[i].getWismod() + players[i].getWisadd();
 		break;
 	    case "cha":
-		modifier = players[i].getChamod() + players[i].getChaadd();;
+		modifier = players[i].getChamod() + players[i].getChaadd();
 		break;
 		//strength skills
 	    case "strsav":
-		modifier = players[i].getStrmod() + players[i].getProfbonus * players[i].getStrsavprof + players[i].getStrsavadd();;
+		modifier = players[i].getStrmod() + players[i].getProfbonus() * players[i].getStrsavprof() + players[i].getStrsavadd();
 		break;
 	    case "ath":
-		modifier = players[i].getStrmod() + players[i].getProfbonus * players[i].getAthprof + players[i].getAthadd();;
+		modifier = players[i].getStrmod() + players[i].getProfbonus() * players[i].getAthprof + players[i].getAthadd();
 		break;
 		//dex skills
 	    case "dexsav":
-		modifier = players[i].getDexmod() + Number(players[i].getProfbonus()) * players[i].getDexsavprof() + players[i].getDexadd();;
+		modifier = players[i].getDexmod() + players[i].getProfbonus() * players[i].getDexsavprof() + players[i].getDexadd();
 		break;
 	    case "init":
 		modifier = players[i].getInit();
 		break;
 	    case "acr":
-		modifier = players[i].getDexmod() + Number(players[i].getProfbonus()) * players[i].getAcroprof() + players[i].getAcroadd();
+		modifier = players[i].getDexmod() + players[i].getProfbonus() * players[i].getAcroprof() + players[i].getAcroadd();
 		break;
 	    case "soh":
-		modifier = players[i].getDexmod() + Number(players[i].getProfbonus()) * players[i].getSleightprof() + players[i].getSleightadd();;
+		modifier = players[i].getDexmod() + players[i].getProfbonus() * players[i].getSleightprof() + players[i].getSleightadd();
 		break;
 	    case "ste":
-		modifier = players[i].getDexmod() + Number(players[i].getProfbonus()) * players[i].getStealthprof() + players[i].getStealthadd();;
+		modifier = players[i].getDexmod() + players[i].getProfbonus() * players[i].getStealthprof() + players[i].getStealthadd();
 		break;
 		//con skills
 	    case "consav":
-		modifier = players[i].getConmod() + Number(players[i].getProfbonus()) * players[i].getConsavprof() + players[i].getConsavadd();;
+		modifier = players[i].getConmod() + players[i].getProfbonus() * players[i].getConsavprof() + players[i].getConsavadd();
 		break;
 		//int skills
 	    case "intsav":
-		modifier = players[i].getIntmod() + Number(players[i].getProfbonus()) * players[i].getIntsavprof() + players[i].getIntsavadd();;
+		modifier = players[i].getIntmod() + players[i].getProfbonus() * players[i].getIntsavprof() + players[i].getIntsavadd();
 		break;
 	    case "arc":
-		modifier = players[i].getIntmod() + Number(players[i].getProfbonus()) * players[i].getArcanaprof() + players[i].getArcanaadd();;
+		modifier = players[i].getIntmod() + players[i].getProfbonus() * players[i].getArcanaprof() + players[i].getArcanaadd();
 		break;
 	    case "his":
-		modifier = players[i].getIntmod() + Number(players[i].getProfbonus()) * players[i].getHistoryprof() + players[i].getHistoryadd();;
+		modifier = players[i].getIntmod() + players[i].getProfbonus() * players[i].getHistoryprof() + players[i].getHistoryadd();
 		break;
 	    case "inv":
-		modifier = players[i].getIntmod() + Number(players[i].getProfbonus()) * players[i].getInvestprof() + players[i].getInvestadd();;
+		modifier = players[i].getIntmod() + players[i].getProfbonus() * players[i].getInvestprof() + players[i].getInvestadd();
 		break;
 	    case "rel":
-		modifier = players[i].getIntmod() + Number(players[i].getProfbonus()) * players[i].getReligionprof() + players[i].getReligionadd();;
+		modifier = players[i].getIntmod() + players[i].getProfbonus() * players[i].getReligionprof() + players[i].getReligionadd();
 		break;
 	    case "nat":
-		modifier = players[i].getIntmod() + Number(players[i].getProfbonus()) * players[i].getNatureprof() + players[i].getNatureadd();;
+		modifier = players[i].getIntmod() + players[i].getProfbonus() * players[i].getNatureprof() + players[i].getNatureadd();
 		break;
 		//wis skills
 	    case "wissav":
-		modifier = players[i].getWismod() + Number(players[i].getProfbonus()) * players[i].getWissavprof() + players[i].getWissavadd();;
+		modifier = players[i].getWismod() + players[i].getProfbonus() * players[i].getWissavprof() + players[i].getWissavadd();
 		break;
 	    case "ani":
-		modifier = players[i].getWismod() + Number(players[i].getProfbonus()) * players[i].getAnimalprof() + players[i].getAnimaladd();;
+		modifier = players[i].getWismod() + players[i].getProfbonus() * players[i].getAnimalprof() + players[i].getAnimaladd();
 		break;
 	    case "ins":
-		modifier = players[i].getWismod() + Number(players[i].getProfbonus()) * players[i].getInsightprof() + players[i].getInsightadd();;
+		modifier = players[i].getWismod() + players[i].getProfbonus() * players[i].getInsightprof() + players[i].getInsightadd();
 		break;
 	    case "med":
-		modifier = players[i].getWismod() + Number(players[i].getProfbonus()) * players[i].getMedicineprof() + players[i].getMedicineadd();;
+		modifier = players[i].getWismod() + players[i].getProfbonus() * players[i].getMedicineprof() + players[i].getMedicineadd();
 		break;
 	    case "per":
-		modifier = players[i].getWismod() + Number(players[i].getProfbonus()) * players[i].getPerprof() + players[i].getPeradd();;
+		modifier = players[i].getWismod() + players[i].getProfbonus() * players[i].getPerprof() + players[i].getPeradd();
 		break;
 	    case "sur":
-		modifier = players[i].getWismod() + Number(players[i].getProfbonus()) * players[i].getSurvprof() + players[i].getSurvadd();;
+		modifier = players[i].getWismod() + players[i].getProfbonus() * players[i].getSurvprof() + players[i].getSurvadd();
 		break;
 		//cha skills
 	    case "chasav":
-		modifier = players[i].getChamod() + Number(players[i].getProfbonus()) * players[i].getChasavprof() + players[i].getChasavadd();;
+		modifier = players[i].getChamod() + players[i].getProfbonus() * players[i].getChasavprof() + players[i].getChasavadd();
 		break;
 	    case "dec":
-		modifier = players[i].getChamod() + Number(players[i].getProfbonus()) * players[i].getDeceptprof() + players[i].getAcroadd();;
+		modifier = players[i].getChamod() + players[i].getProfbonus() * players[i].getDeceptprof() + players[i].getAcroadd();
 		break;
 	    case "intim":
-		modifier = players[i].getChamod() + Number(players[i].getProfbonus()) * players[i].getIntimprof() + players[i].getIntimadd();;
+		modifier = players[i].getChamod() + players[i].getProfbonus() * players[i].getIntimprof() + players[i].getIntimadd();
 		break;
 	    case "perf":
-		modifier = players[i].getChamod() + Number(players[i].getProfbonus()) * players[i].getPerformprof() + players[i].getPerformadd();;
+		modifier = players[i].getChamod() + players[i].getProfbonus() * players[i].getPerformprof() + players[i].getPerformadd();
 		break;
 	    case "pers":
-		modifier = players[i].getChamod() + Number(players[i].getProfbonus()) * players[i].getPersprof() + players[i].getPersadd();;
+		modifier = players[i].getChamod() + players[i].getProfbonus() * players[i].getPersprof() + players[i].getPersadd();
 		break;
 	    default:
 		break;

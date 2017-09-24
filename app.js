@@ -511,7 +511,7 @@ var commands = {
 		rollMessage += "Please roll one hundred or less dice.\n";
 	    }
 	    else if(maxDie == 0){
-		rollMessage += "I didn't understand that input. I can take values like 3d6 + 2 or 12d13 - 21.\n";
+		rollMessage += "I didn't understand that input. I can take values like 3d6 + 2 or 12d13 - 21 or strength.\n";
 	    }
 	    else if(numDie == 0){
 		rollMessage += "Ok rolling zero dice...\n";
