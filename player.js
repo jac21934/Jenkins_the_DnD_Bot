@@ -388,7 +388,7 @@ Player.prototype = {
 				return this._persadd;
 		},
 
-		//////
+
 		
 		getNotes:   function(){
 				return this._notes;
@@ -842,7 +842,7 @@ Player.prototype = {
 				}
 				for(noteBuff in notes){
 						note = notes[noteBuff].trim().split(/ +/g).join("");
-						console.log("Note " + note + " :" + note);
+				//		console.log("Note " + note + " :" + note);
 						var buffString = tools.parseStringForStat(String(notes[noteBuff]));
 
 						var buffArr = tools.parseSum(String(note));

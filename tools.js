@@ -9,6 +9,13 @@ function parseStringForStat(someString){
 								stat = alias;
 								return stat;
 						}
+						else{
+								var re = new RegExp(aliases[alias][i]);
+								if( someString.match(re) != null){
+										stat = alias;
+										return stat;
+								}
+						}
 				}
 		}
 		return stat;
