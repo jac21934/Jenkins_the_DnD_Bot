@@ -1,5 +1,73 @@
 var aliases = require("./aliases.json");
 
+function getAliases(){
+		var aliasMessage = "";
+		var space = 28;
+		var discordMax = 140;
+		for(alias in aliases){
+				var messageBuff = "";
+				var aliasHeader= aliases[alias][0] + Array(space - aliases[alias][0].length).join(" ") + '--   "' +alias + '"   '; ;
+
+				for(i = 0; i < aliases[alias].length; i++){
+						if(aliases[alias][i][0] != "\\"){
+								messageBuff += '"' +  aliases[alias][i] + '"   ';
+						}
+
+				}
+					
+				if((messageBuff.length + aliasHeader.length) > discordMax){
+						var maxIndex = discordMax - (messageBuff.length + aliasHeader.length);
+						var buffString = "";
+						var newIndex = breakOnCharSpace(messageBuff,maxIndex, '"');
+						// 	if(newIndex == maxIndex || newIndex < maxIndex - 15){ 
+						// 					buffString = arrBuff[k].slice(maxIndex);
+						// 					arrBuff[k] = arrBuff[k].replace(buffString,"-");
+						// 					buffString = "-" + buffString;
+						// 			}
+						// //	
+						//	else{
+						buffString = messageBuff.slice(newIndex);
+						messageBuff = messageBuff.replace(buffString, "");
+						//		}
+						
+						messageBuff += "\n" +Array(space + String('--   ').length).join(" ") +  buffString; 
+						
+				}
+
+
+				aliasMessage += aliasHeader + messageBuff + "\n";;
+
+
+		}
+		console.log(aliasMessage);
+		return aliasMessage;
+}
+function breakUpString(someString){
+
+		var buffArr = someString.split("\n");
+		console.log(buffArr);
+		var charMax = 1999;
+		var Arr = [];
+		var buffString = buffArr[0] + "\n";
+
+		for(i = 0; i < buffArr.length;i++){
+				console.log(buffString.length)
+				if(buffString.length + buffArr[i].length < charMax){
+						buffString += buffArr[i] + "\n";
+				}
+				else{
+						Arr.push(buffString);
+						buffString = "";
+				}
+
+		}
+//		console.log(Arr);
+		return Arr;
+	
+
+}
+
+
 function parseStringForStat(someString){
 //	<<<<<<< Updated upstream
     var stat = "";
@@ -106,6 +174,23 @@ function findSpace(someString, index){
 
     }
 
+    return spaceIndex;
+    
+
+}
+
+function breakOnCharSpace(someString, index, char){
+    var spaceIndex = index;
+    for(i = index; i >-1; i--){
+
+				if( someString[i] == char && i > 0 ){
+						if(someString[i-1] == " "){
+								spaceIndex = i-1;
+								break;
+						}
+				}
+    }
+		
     return spaceIndex;
     
 
@@ -344,6 +429,7 @@ function getModFromString(players, id, stat)
 
 
 module.exports = {
+		getAliases,
     getProf,
     parseStringForStat,
     findSpace,
@@ -351,6 +437,7 @@ module.exports = {
     parseNumberFromString,
     parseSum,
     getDice,
+		breakUpString,
     getModFromString
 }
 
