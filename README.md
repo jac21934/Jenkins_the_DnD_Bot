@@ -9,7 +9,7 @@ Jenkins can do a whole lot of things, including:
 * Jenkins can record and calculate all of the primary ability scores and dervived skills of the Players Characters with the \stats and \skills commands.
 
 \stats Example
-Torvold                      Level 5                      Barbarian
+```Torvold                      Level 5                      Barbarian
 -------------------------------------------------------------------
 AC = 15   |   INIT = 2   |   SPD = 40   |   PER = 14   |   HP = 51
 -------------------------------------------------------------------
@@ -20,10 +20,10 @@ INT = 9 (-1)
 WIS = 12 (1)
 CHA = 13 (1)
 ---------------------
-Proficiency Bonus = 3
+Proficiency Bonus = 3```
 
 \skills example
-Torvold                Skills
+```Torvold                Skills
 -----------------------------
 S| STR Saving Throw  |*| (6)
 T| Athletics         |*| (6)
@@ -57,7 +57,7 @@ H| Deception         | | (1)
 A| Intimidation      |*| (4)
  | Performance       | | (1)
  | Persuasion        | | (1)
------------------------------
+-----------------------------```
 
 
 * Jenkins can roll arbitrary dice with arbitrary modifiers (\roll 8d13 + 26 - 2 for instance) or can pull up a particular character's ability scores and modifiers when told to roll for any ability or skill ('\roll str' or  '\roll strength' for instance). 
