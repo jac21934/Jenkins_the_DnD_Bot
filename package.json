@@ -1,6 +1,6 @@
 {
   "name": "Jenkins_the_DnD_Bot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A helpful DnD bot names Jenkins.",
   "main": "app.js",
   "author": "Jacob Carroll",
