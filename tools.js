@@ -18,7 +18,7 @@ function getAliases(){
 				if((messageBuff.length + aliasHeader.length) > discordMax){
 						var maxIndex = discordMax - (messageBuff.length + aliasHeader.length);
 						var buffString = "";
-						var newIndex = breakOnCharSpace(messageBuff,maxIndex, '"');
+						var newIndex = breakOnCharSpace(messageBuff,maxIndex, '"', ' ');
 						// 	if(newIndex == maxIndex || newIndex < maxIndex - 15){ 
 						// 					buffString = arrBuff[k].slice(maxIndex);
 						// 					arrBuff[k] = arrBuff[k].replace(buffString,"-");
@@ -35,31 +35,34 @@ function getAliases(){
 				}
 
 
-				aliasMessage += aliasHeader + messageBuff + "\n";;
+				aliasMessage += aliasHeader + messageBuff + "\n\n";
 
 
 		}
-		console.log(aliasMessage);
 		return aliasMessage;
 }
-function breakUpString(someString){
+function breakUpString(someString, someBreak){
 
-		var buffArr = someString.split("\n");
-		console.log(buffArr);
-		var charMax = 1999;
+		var buffArr = someString.split(someBreak);
+		var charMax = 2000;
 		var Arr = [];
-		var buffString = buffArr[0] + "\n";
+		var buffString = "";//buffArr[0] + "\n";
 
 		for(i = 0; i < buffArr.length;i++){
-				console.log(buffString.length)
+				console.log(i);
+				console.log(buffArr[i]);
 				if(buffString.length + buffArr[i].length < charMax){
-						buffString += buffArr[i] + "\n";
+						buffString += buffArr[i] + someBreak;
 				}
 				else{
 						Arr.push(buffString);
-						buffString = "";
+						buffString = buffArr[i] + someBreak;
 				}
 
+		}
+		if(Arr[Arr.length-1] != String(buffString)){
+
+				Arr.push(buffString);
 		}
 //		console.log(Arr);
 		return Arr;
@@ -179,12 +182,12 @@ function findSpace(someString, index){
 
 }
 
-function breakOnCharSpace(someString, index, char){
+function breakOnCharSpace(someString, index, char, breakchar){
     var spaceIndex = index;
     for(i = index; i >-1; i--){
 
 				if( someString[i] == char && i > 0 ){
-						if(someString[i-1] == " "){
+						if(someString[i-1] == breakchar){
 								spaceIndex = i-1;
 								break;
 						}

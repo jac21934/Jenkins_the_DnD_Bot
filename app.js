@@ -41,17 +41,17 @@ function set(id, args){
 								if (id == players[i].getId()){
 										
 										switch(statBuff){
-										case "name":
+										case "nm":
 												var name = args.shift();
 												name = name.join(" ");
 												players[i].setName(name);
 												message += "Setting name to " + name + ".\n";
 												break;
-										case "level":
+										case "lvl":
 												players[i].setLevel(args[1]);
 												message += "Setting level to " + args[1] + ".\n";
 												break;
-										case "class":
+										case "cls":
 												players[i].setClass(args[1]);
 												message += "Setting class to " + args[1] + ".\n";
 												break;
@@ -201,8 +201,8 @@ var commands = {
 				description: "A testbed function for adding new functionality to Jenkins. Use with caution.",
 				process: function(client, message, args, id){
 						if(args.length >0){
-								var testString = args.join("");
-								var testMessage = "I found " +tools.parseStringForStat(testString);
+								var testString = Array(Number(args[0])).join("-");
+								var testMessage = testString;
 								messageSend(message,testMessage);
 						}
 				}
@@ -650,12 +650,14 @@ var commands = {
 				process: function(client,message,args,id){
 
 						var aliasMessage = tools.getAliases();
-						var Arr = tools.breakUpString(aliasMessage);
+
+						var Arr = tools.breakUpString(aliasMessage, "\n\n");
+						console.log(Arr);
 						for(i = 0; i < Arr.length;i++){
 								
 								messageSend(message, Arr[i]);
 						}
-				}
+				 }
 		},
 		
     "gold":{
@@ -956,7 +958,7 @@ function checkMessageForCommand(message, isEdit) {
 				helpMessage +=	"help" + Array(frontLength - String("help").length).join(" ") + dashSpace + "Shows this text.\n\n";
 				for( com in commands){
 						if( commands.hasOwnProperty(com) && commands[com].description != "") {
-								var discordMax = 120;
+								var discordMax = config.discordWidth;
 								var descLength = String(commands[com].description).length;
 								var descArr = [];
 								descLength += frontLength + dashSpace.length;
@@ -1008,7 +1010,18 @@ function checkMessageForCommand(message, isEdit) {
 						
 						
 				}
-				messageSend(message,helpMessage);
+				var arr = tools.breakUpString(helpMessage, "\n\n");
+				console.log(arr.length);
+	//			message.channel.send("```");
+				
+				for(i=0; i < arr.length;i++){
+						messageSend(message, String(arr[i]));
+				}
+		//		message.channel.send("```");
+
+				
+				
+//				messageSend(message,helpMessage);
 				return;
 				
     }

@@ -975,7 +975,7 @@ Player.prototype = {
 				this._per = 10 + Number(this.getWismod()) + ( Number(this.getProfbonus())) * Number(this.getPerprof()) + Number(this.getPeradd());
 				this._ac = Number(this._ac) + Number(this._acadd); 
 				this._hp = Number(this._hp) + Number(this._hpadd);
-				this._init = Number(this._init) + Number(this._initadd);
+				this._init = Number(this.getDexmod()) + Number(this._initadd);
 				this._spd = Number(this._spd) + Number(this._spdadd);
 				//console.log(this.getPer());
 		},
