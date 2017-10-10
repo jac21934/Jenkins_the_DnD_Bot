@@ -342,7 +342,7 @@ function getModFromString(players, id, stat)
 		modifier = players[i].getStrmod() + players[i].getProfbonus() * players[i].getStrsavprof() + players[i].getStrsavadd();
 		break;
 	    case "ath":
-		modifier = players[i].getStrmod() + players[i].getProfbonus() * players[i].getAthprof + players[i].getAthadd();
+					modifier = players[i].getStrmod() + players[i].getProfbonus() * players[i].getAthprof() + players[i].getAthadd();
 		break;
 		//dex skills
 	    case "dexsav":

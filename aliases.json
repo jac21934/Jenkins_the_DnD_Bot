@@ -1,4 +1,7 @@
 {
+		"name":["\\bname\\b"],
+		"level":["\\blevel\\b"],
+		"class":["\\bclass\\b"],
 		"strsav":["strength saving throw", "STRSAV", "strength save" ,"\\bstrsav\\b", "strengthsave", "strengthsavingthrow"],
 		"dexsav":["dexterity saving throw", "DEXSAV", "dexterity save", "\\bdexsav\\b","dexteritysave","dexteritysavingthrow"],
 		"consav":["constitution saving throw","CONSAV", "constitution save", "\\bconsav\\b","constitutionsave","constitutionsavingthrow"],
