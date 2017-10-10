@@ -118,7 +118,7 @@ function set(id, args){
 function save(callback){
     var json = "";
     for(i=0; i < players.length; i++){
-				json = JSON.stringify(players[i]);
+				json = JSON.stringify(players[i], null, '\t');
 				var name = players[i].getName().split(" ");
 				name = name.join("_");
 
