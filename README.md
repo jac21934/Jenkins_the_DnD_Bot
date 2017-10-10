@@ -8,7 +8,7 @@ Jenkins can do a whole lot of things, including:
 
 * Jenkins can record and calculate all of the primary ability scores and dervived skills of the Players Characters with the \stats and \skills commands.
 
-\stats Example
+Example of \stats: 
 ```
 Torvold                      Level 5                      Barbarian
 -------------------------------------------------------------------
@@ -24,7 +24,7 @@ CHA = 13 (1)
 Proficiency Bonus = 3
 ```
 
-\skills example
+Example of \skills 
 ```
 Torvold                Skills
 -----------------------------
