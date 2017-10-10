@@ -35,10 +35,12 @@ function set(id, args){
 						message += "Setting gold to " + Number(gold).toFixed(2) + "gp.";
 				}
 				else{
+						var statBuff = tools.parseStringForStat(String(args[0]));
+						console.log(statBuff);
 						for(i=0; i< players.length;i++){
 								if (id == players[i].getId()){
 										
-										switch(String(args[0]).toLowerCase()){
+										switch(statBuff){
 										case "name":
 												var name = args.shift();
 												name = name.join(" ");
