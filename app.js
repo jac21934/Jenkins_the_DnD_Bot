@@ -691,15 +691,46 @@ var commands = {
 						totArgs = args.join("");
 						if (totArgs.length < 1){}
 						else {
-								var goldBuff = Number(tools.parseSum(totArgs)[0]);
-								gold = Number(Number(gold) +  Number(goldBuff));
-								if(goldBuff >= 0){
-										goldMessage += "Adding " + Number(goldBuff).toFixed(2) + "gp\n";
-								} 
-								else if(goldBuff < 0){
-										goldMessage += "Removing " + Number(goldBuff).toFixed(2) + "gp\n";
+								if(tools.parseStringForStat(args.join(" ")) == "div"){
+
+										var numPlayers = players.length - 1;
+
+										var divGold = Number(gold/numPlayers).toFixed(2);
+										goldMessage += "Dividing " + Number(gold).toFixed(2) + "gp amongst the party into " + tools.inWords(numPlayers) + " parts of " + divGold + "gp.\n";
+										var divMessage = Array(goldMessage.length).join("-");
+										goldMessage += divMessage + '\n';
+										var max = 0;
+										for(i = 0; i < players.length; i++){
+												if(players[i].getId() != config.DM_ID){
+														players[i].setGold(Number(players[i].getGold() + divGold).toFixed(2));
+														var buffMessage = "Adding " + divGold + " to " + players[i].getName() + "'s gold.\n" 
+														if (buffMessage.length > max){
+																max = buffMessage.length;
+														}
+														goldMessage += buffMessage
+												}
+										}
+
+										max = Math.max(max, String("Total gold: " + Number(gold).toFixed(2) + "gp\n").length);
+										divMessage = Array(max).join("-");
+										goldMessage += divMessage + '\n';
+												
+											
+										
+										
+								}
+								else{
+										var goldBuff = Number(tools.parseSum(totArgs)[0]);
+										gold = Number(Number(gold) +  Number(goldBuff));
+										if(goldBuff >= 0){
+												goldMessage += "Adding " + Number(goldBuff).toFixed(2) + "gp\n";
+										} 
+										else if(goldBuff < 0){
+												goldMessage += "Removing " + Number(goldBuff).toFixed(2) + "gp\n";
+										}
 								}
 						}
+				
 						
 						goldMessage += "Total gold: " + Number(gold).toFixed(2) + "gp\n";
 						messageSend(message,goldMessage);
@@ -822,11 +853,11 @@ var commands = {
 						var regionSize = 25;
 						var maxSize = 0;
 						
-						var playersHeader = "Name" + Array(regionSize - String("Name").length).join(" ") + "Level" + Array(regionSize - String("Level").length).join(" ") + "Class" + "\n"; 
+						var playersHeader = "Name" + Array(regionSize - String("Name").length).join(" ") + "Level" + Array(regionSize - String("Level").length).join(" ") + "Class" + Array(regionSize - String("Class").length).join(" ") + "Gold" +  "\n"; 
 						
 						for(i = 0; i < players.length; i++){
 								if(players[i].getClass() != "Dungeon Master"){
-										buffMessage += players[i].getName() + Array(regionSize - String(players[i].getName()).length).join(" ") + "Level " + players[i].getLevel() + Array(regionSize - String("Level " + players[i].getLevel()).length).join(" ") + players[i].getClass() + "\n"; 
+										buffMessage += players[i].getName() + Array(regionSize - String(players[i].getName()).length).join(" ") + "Level " + players[i].getLevel() + Array(regionSize - String("Level " + players[i].getLevel()).length).join(" ") + players[i].getClass() + Array(regionSize - String(players[i].getClass()).length).join(" ") + players[i].getGold() + "gp" +  "\n"; 
 										
 										if(players[i].getClass().length > maxSize){
 												maxSize = players[i].getClass().length;
@@ -836,7 +867,7 @@ var commands = {
 								}	
 						}
 						
-						playersMessage += playersHeader + Array(2*regionSize + maxSize -1).join("-") + "\n" + buffMessage;
+						playersMessage += playersHeader + Array(3*regionSize + maxSize -1).join("-") + "\n" + buffMessage;
 						
 						messageSend(message, playersMessage);
 						

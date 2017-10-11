@@ -1,9 +1,10 @@
 var aliases = require("./aliases.json");
+var config = require("./config.json");
 
 function getAliases(){
 		var aliasMessage = "";
 		var space = 28;
-		var discordMax = 140;
+		var discordMax = config.discordWidth;
 		for(alias in aliases){
 				var messageBuff = "";
 				var aliasHeader= aliases[alias][0] + Array(space - aliases[alias][0].length).join(" ") + '--   "' +alias + '"   '; ;
@@ -102,6 +103,16 @@ function parseStringForStat(someString){
     return stat;
 }
 
+
+
+
+function inWords (num) {
+		var a = ['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
+		
+    if (num > 19) return num.toString();
+		else return a[num];
+		
+}
 
 function	getProf(prof){
     var profChar = " ";
@@ -429,6 +440,7 @@ function getModFromString(players, id, stat)
 
 
 module.exports = {
+		inWords,
 		getAliases,
     getProf,
     parseStringForStat,
