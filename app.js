@@ -311,7 +311,7 @@ var commands = {
 				description: "Shows a map of Faerun.",
 				process: function(client, message, args, id=0){
 						mapMessage = "A Map of Faerun\n";
-						mapFile = "./Faerun_map.jpg";
+						mapFile = "./map.jpg";
 						messageSend(message,mapMessage,mapFile);
 				}
 				
@@ -573,7 +573,7 @@ var commands = {
 								}
 								else{
 										rollMessage += "\n";
-					
+										
 								}
 								var filler = Array(rollMessage.length).join("-") + "\n";
 								if(sumFlag == false){
@@ -702,11 +702,17 @@ var commands = {
 										var max = 0;
 										for(i = 0; i < players.length; i++){
 												if(players[i].getId() != config.DM_ID){
-														players[i].setGold(Number(players[i].getGold() + divGold).toFixed(2));
+														console.log(players[i].getGold());
+														console.log(divGold);
+														players[i].setGold(Number(Number(players[i].getGold()) +Number( divGold)).toFixed(2));
+														console.log(players[i].getGold());
+
 														var buffMessage = "Adding " + divGold + " to " + players[i].getName() + "'s gold.\n" 
 														if (buffMessage.length > max){
 																max = buffMessage.length;
 														}
+
+														
 														goldMessage += buffMessage
 												}
 										}
@@ -715,11 +721,78 @@ var commands = {
 										max = Math.max(max, String("Total gold: " + Number(gold).toFixed(2) + "gp\n").length);
 										divMessage = Array(max).join("-");
 										goldMessage += divMessage + '\n';
-												
-											
+										
+										
 										
 										
 								}
+								else if( tools.parseStringForStat(args.join(" ")) == "give"){
+										for(k = 0; k < players.length; k++){
+												//			console.log(i + " " + players[i].getName() + " " + players[i].getGold());
+
+												if(id == players[k].getId()){
+														var giveGold = 0;
+														var index = tools.findNumberIndex(args.join(" "));
+														if( index == -1){
+																var re = new RegExp("\\ball\\b");
+																if( args.join(" ").match(re) != null){
+																		giveGold = players[k].getGold();
+																}
+																else{
+																		goldMessage += "Please state how much gold you want to give to the party.\n"
+																		messageSend(message, goldMessage);
+																		return;
+																}
+														}
+														else{
+																giveGold = tools.parseNumberFromString(index, args.join(" "));
+														}
+														if(giveGold > players[k].getGold()){
+																giveGold = players[k].getGold();
+														}
+														players[k].setGold(Number(Number(players[k].getGold()) - Number( giveGold)).toFixed(2));
+														gold = Number(Number(gold) +  Number(giveGold));
+														goldMessage += players[k].getName() + " has given " + String(Number(giveGold).toFixed(2)) + "gp to the party.\n";
+														break;
+												}
+												
+												
+										}
+								}
+								else if( tools.parseStringForStat(args.join(" ")) == "take"){
+										for(k = 0; k < players.length; k++){
+												//			console.log(i + " " + players[i].getName() + " " + players[i].getGold());
+
+												if(id == players[k].getId()){
+														var takeGold = 0;
+														var index = tools.findNumberIndex(args.join(" "));
+														if( index == -1){
+																var re = new RegExp("\\ball\\b");
+																if( args.join(" ").match(re) != null){
+																		takeGold = gold;
+																}
+																else{
+																		goldMessage += "Please state how much gold you want to take from the party.\n"
+																		messageSend(message, goldMessage);
+																		return;
+																}
+														}
+														else{
+																takeGold = tools.parseNumberFromString(index, args.join(" "));
+														}
+														if(takeGold > gold){
+																takeGold = gold;
+														}
+														players[k].setGold(Number(Number(players[k].getGold()) + Number( takeGold)).toFixed(2));
+														gold = Number(Number(gold) -  Number(takeGold));
+														goldMessage += players[k].getName() + " has taken " + String(Number(takeGold).toFixed(2)) + "gp from the party.\n";
+														break;
+												}
+												
+												
+										}
+								}
+								
 								else{
 										var goldBuff = Number(tools.parseSum(totArgs)[0]);
 										gold = Number(Number(gold) +  Number(goldBuff));
@@ -731,7 +804,7 @@ var commands = {
 										}
 								}
 						}
-				
+						
 						
 						goldMessage += "Total gold: " + Number(gold).toFixed(2) + "gp\n";
 						messageSend(message,goldMessage);
@@ -858,7 +931,7 @@ var commands = {
 						
 						for(i = 0; i < players.length; i++){
 								if(players[i].getClass() != "Dungeon Master"){
-										buffMessage += players[i].getName() + Array(regionSize - String(players[i].getName()).length).join(" ") + "Level " + players[i].getLevel() + Array(regionSize - String("Level " + players[i].getLevel()).length).join(" ") + players[i].getClass() + Array(regionSize - String(players[i].getClass()).length).join(" ") + players[i].getGold() + "gp" +  "\n"; 
+										buffMessage += players[i].getName() + Array(regionSize - String(players[i].getName()).length).join(" ") + "Level " + players[i].getLevel() + Array(regionSize - String("Level " + players[i].getLevel()).length).join(" ") + players[i].getClass() + Array(regionSize - String(players[i].getClass()).length).join(" ") + String(Number(players[i].getGold()).toFixed(2)) + "gp" +  "\n"; 
 										
 										if(players[i].getClass().length > maxSize){
 												maxSize = players[i].getClass().length;

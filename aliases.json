@@ -3,6 +3,8 @@
 		"lvl":["level"],
 		"cls":["class", "\\bcls\\b"],
 		"div":["divide", "\\bdiv\\b"],
+		"give":["\\bgive\\b"],
+		"take":["\\btake\\b"],
 		"mygold": ["my gold", "\\bmygold\\b"],
 		"strsav":["strength saving throw", "STRSAV", "strength save" ,"\\bstrsav\\b", "strengthsave", "strengthsavingthrow"],
 		"dexsav":["dexterity saving throw", "DEXSAV", "dexterity save", "\\bdexsav\\b","dexteritysave","dexteritysavingthrow"],

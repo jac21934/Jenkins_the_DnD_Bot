@@ -1,0 +1,7 @@
+{ "token"  : "Your token here",
+  "prefix" : "\\",
+	"debug"  : "true",
+	"DM_ID"  : "Your ID here",
+	"discordWidth" : 90,
+	"discordMax": 1800
+}

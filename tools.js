@@ -7,8 +7,15 @@ function getAliases(){
 		var discordMax = config.discordWidth;
 		for(alias in aliases){
 				var messageBuff = "";
-				var aliasHeader= aliases[alias][0] + Array(space - aliases[alias][0].length).join(" ") + '--   "' +alias + '"   '; ;
-
+				var aliasHeader = "";
+				if(aliases[alias][0][0] != "\\"){
+						aliasHeader= aliases[alias][0] + Array(space - aliases[alias][0].length).join(" ") + '--   "' +alias + '"   '; ;
+				}
+				else{
+						aliasHeader= alias + Array(space - String(alias).length).join(" ") + '--   "' + alias + '"   '; ;
+				}
+				
+				
 				for(i = 0; i < aliases[alias].length; i++){
 						if(aliases[alias][i][0] != "\\"){
 								messageBuff += '"' +  aliases[alias][i] + '"   ';
@@ -45,7 +52,7 @@ function getAliases(){
 function breakUpString(someString, someBreak){
 
 		var buffArr = someString.split(someBreak);
-		var charMax = 2000;
+		var charMax = config.discordMax;
 		var Arr = [];
 		var buffString = "";//buffArr[0] + "\n";
 
@@ -132,6 +139,18 @@ function	getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
 }
 
+function findNumberIndex(someString){
+		for(i = 0; i < someString.length; i++){
+				console.log(someString[i]);
+				if(String(Number(someString[i])) == someString[i]){
+						
+						return i;
+				}
+				
+		}
+		return -1;
+
+}
 
 function parseNumberFromString(Index,someString){
     var periodCheck = false;	
@@ -446,6 +465,7 @@ module.exports = {
     parseStringForStat,
     findSpace,
     getRandomInt,
+		findNumberIndex,
     parseNumberFromString,
     parseSum,
     getDice,
