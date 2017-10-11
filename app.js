@@ -710,6 +710,7 @@ var commands = {
 														goldMessage += buffMessage
 												}
 										}
+										gold = 0;
 
 										max = Math.max(max, String("Total gold: " + Number(gold).toFixed(2) + "gp\n").length);
 										divMessage = Array(max).join("-");
