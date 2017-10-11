@@ -2,6 +2,7 @@
 		"nm":["name"],
 		"lvl":["lvl"],
 		"cls":["cls"],
+		"mygold": ["my gold", "mygold"],
 		"strsav":["strength saving throw", "STRSAV", "strength save" ,"\\bstrsav\\b", "strengthsave", "strengthsavingthrow"],
 		"dexsav":["dexterity saving throw", "DEXSAV", "dexterity save", "\\bdexsav\\b","dexteritysave","dexteritysavingthrow"],
 		"consav":["constitution saving throw","CONSAV", "constitution save", "\\bconsav\\b","constitutionsave","constitutionsavingthrow"],

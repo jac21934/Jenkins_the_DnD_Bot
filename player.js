@@ -10,6 +10,8 @@ function Player() {
 		//Player Level
 		this._level = 0;
 		this._class = "";
+		this._gold = 0;
+		this._inv = 0;
 		//Stats
 		this._str = 0;
 		this._dex = 0;
@@ -133,7 +135,10 @@ Player.prototype = {
 		},
 		getClass: function(){
 				return this._class;
-		},	
+		},
+		getGold: function(){
+				return this._gold;
+		},
 		getStr: function(){
 				return this._str;
 		},
@@ -403,7 +408,10 @@ Player.prototype = {
 		},
 		setClass: function(Class){
 				this._class = Class;
-		},	
+		},
+		setGold: function(gold){
+				this._gold = gold;
+		},
 		setStr: function(str){
 				this._str = str;
 		},

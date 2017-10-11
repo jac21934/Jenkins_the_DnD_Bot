@@ -35,12 +35,16 @@ function set(id, args){
 						message += "Setting gold to " + Number(gold).toFixed(2) + "gp.";
 				}
 				else{
-						var statBuff = tools.parseStringForStat(String(args[0]));
+						var statBuff = tools.parseStringForStat(String(args.join(" ")));
 						console.log(statBuff);
 						for(i=0; i< players.length;i++){
 								if (id == players[i].getId()){
 										
 										switch(statBuff){
+										case "mygold":
+												players[i].setGold(Number(args[args.length-1]));
+												message += "Setting " + players[i].getName() + "'s gold to " + args[args.length-1] + ".\n";
+												break;
 										case "nm":
 												var name = args.shift();
 												name = name.join(" ");
@@ -48,52 +52,52 @@ function set(id, args){
 												message += "Setting name to " + name + ".\n";
 												break;
 										case "lvl":
-												players[i].setLevel(args[1]);
-												message += "Setting level to " + args[1] + ".\n";
+												players[i].setLevel(args[args.length-1]);
+												message += "Setting level to " + args[args.length-1] + ".\n";
 												break;
 										case "cls":
-												players[i].setClass(args[1]);
-												message += "Setting class to " + args[1] + ".\n";
+												players[i].setClass(args[args.length-1]);
+												message += "Setting class to " + args[args.length-1] + ".\n";
 												break;
 										case "str":
-												players[i].setStr(args[1]);
-												message += "Setting STR to " + args[1] + ".\n";
+												players[i].setStr(args[args.length-1]);
+												message += "Setting STR to " + args[args.length-1] + ".\n";
 												break;
 										case "dex":
-												players[i].setDex(args[1]);
-												message += "Setting DEX to " + args[1] + ".\n";
+												players[i].setDex(args[args.length-1]);
+												message += "Setting DEX to " + args[args.length-1] + ".\n";
 												break;
 										case "con":
-												players[i].setCon(args[1]);
-												message += "Setting CON to " + args[1] + ".\n";
+												players[i].setCon(args[args.length-1]);
+												message += "Setting CON to " + args[args.length-1] + ".\n";
 												break;
 										case "int":
-												players[i].setInt(args[1]);
-												message += "Setting INT to " + args[1] + ".\n";
+												players[i].setInt(args[args.length-1]);
+												message += "Setting INT to " + args[args.length-1] + ".\n";
 												break;
 										case "wis":
-												players[i].setWis(args[1]);
-												message += "Setting WIS to " + args[1] + ".\n";
+												players[i].setWis(args[args.length-1]);
+												message += "Setting WIS to " + args[args.length-1] + ".\n";
 												break;
 										case "cha":
-												players[i].setCha(args[1]);
-												message += "Setting CHA to " + args[1] + ".\n";
+												players[i].setCha(args[args.length-1]);
+												message += "Setting CHA to " + args[args.length-1] + ".\n";
 												break;
 										case "ac":
-												players[i].setAc(args[1]);
-												message += "Setting AC to " + args[1] + ".\n";
+												players[i].setAc(args[args.length-1]);
+												message += "Setting AC to " + args[args.length-1] + ".\n";
 												break;
 										case "init":
-												players[i].setInit(args[1]);
-												message += "Setting INIT to " + args[1] + ".\n";
+												players[i].setInit(args[args.length-1]);
+												message += "Setting INIT to " + args[args.length-1] + ".\n";
 												break;
 										case "spd":
-												players[i].setSpd(args[1]);
-												message += "Setting SPD to " + args[1] + ".\n";
+												players[i].setSpd(args[args.length-1]);
+												message += "Setting SPD to " + args[args.length-1] + ".\n";
 												break;
 										case "hp":
-												players[i].setHp(args[1]);
-												message += "Setting HP to " + args[1] + ".\n";
+												players[i].setHp(args[args.length-1]);
+												message += "Setting HP to " + args[args.length-1] + ".\n";
 												break;
 										default:
 												message += "Invalid argument " + args[0] + ".\n"
@@ -207,10 +211,10 @@ function messageSend(message, text, messagefile = "", breakChar = '\n'){
 				}
 		}
 }
-		var commands = {
-				"test" : {
-						permissions: "any",
-						description: "A testbed function for adding new functionality to Jenkins. Use with caution.",
+var commands = {
+		"test" : {
+				permissions: "any",
+				description: "A testbed function for adding new functionality to Jenkins. Use with caution.",
 				process: function(client, message, args, id){
 						if(args.length >0){
 								var testString = Array(Number(args[0])).join("-");
@@ -471,6 +475,14 @@ function messageSend(message, text, messagefile = "", breakChar = '\n'){
 				permissions: "any",
 				description: "Give a number of die with modifier(s) to roll and show result, (1d4 + 10 - 5 or 5d17 - 5). Put sum at the end if you don't want to see the individual rolls.",
 				process: function(client,message,args,id){
+						var name = "";
+						for(i=0; i < players.length;i++){
+								if(id == players[i].getId()){
+										name = players[i].getName();
+										break;
+								}
+								
+						}
 						
 						var sumFlag = false;
 						var advFlag = false;
@@ -556,8 +568,13 @@ function messageSend(message, text, messagefile = "", breakChar = '\n'){
 								{
 										rollMessage += " with disadvantage";
 								}
-								
-								rollMessage += "\n";
+								if(name != ""){
+										rollMessage += " for " + name + "\n";
+								}
+								else{
+										rollMessage += "\n";
+					
+								}
 								var filler = Array(rollMessage.length).join("-") + "\n";
 								if(sumFlag == false){
 										rollMessage += filler;
@@ -662,7 +679,7 @@ function messageSend(message, text, messagefile = "", breakChar = '\n'){
 				process: function(client,message,args,id){
 						var aliasMessage = tools.getAliases();
 						messageSend(message, aliasMessage, "", "\n\n");
-				 }
+				}
 		},
 		
     "gold":{
@@ -692,6 +709,39 @@ function messageSend(message, text, messagefile = "", breakChar = '\n'){
 				
 				
     },
+
+		"mygold":{
+				permissions: "any",
+				description: "Shows your personal gold. Can be added and subtracted from (i.e. +100 - 50 +...).",
+				process: function(client,message,args,id){
+						
+						var goldMessage = "";
+						totArgs = args.join("");
+						for(i=0; i < players.length;i++){
+								if(id == players[i].getId()){
+										
+										if (totArgs.length < 1){}
+										else {
+												var goldBuff = Number(tools.parseSum(totArgs)[0]);
+												players[i].setGold(Number(Number(players[i].getGold()) +  Number(goldBuff)));
+												if(goldBuff >= 0){
+														goldMessage += "Adding " + Number(goldBuff).toFixed(2) + "gp\n";
+												} 
+												else if(goldBuff < 0){
+														goldMessage += "Removing " + Number(goldBuff).toFixed(2) + "gp\n";
+												}
+										}
+										
+										goldMessage += players[i].getName() + "'s total gold: " + Number(players[i].getGold()).toFixed(2) + "gp\n";
+										messageSend(message,goldMessage);
+										break;
+										
+								}
+						}
+				}
+    },
+
+		
     
     "play":{
 				permissions: restrictPlay,
@@ -1015,7 +1065,7 @@ function checkMessageForCommand(message, isEdit) {
 						
 						
 				}
-			
+				
 				
 				messageSend(message, helpMessage, "", "\n\n" );
 				return;
