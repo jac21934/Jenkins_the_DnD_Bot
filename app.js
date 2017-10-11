@@ -181,24 +181,36 @@ client.on("ready", () => {
 
 
 });
-function messageSend(message, text,messagefile = ""){
-    var textToSend = "```" + text + "\n```";
-    if(messagefile != ""){
-				message.channel.send(textToSend, {
-						file: messagefile
-				});
-    }
-    else{
+function messageSend(message, text, messagefile = "", breakChar = '\n'){
+		
+		if (text.length > config.discordMax){
 
-				message.channel.send(textToSend);
 
-    }
+				var arr = tools.breakUpString(text, breakChar);
+				
+				for(i=0; i < arr.length;i++){
+						messageSend(message, String(arr[i]));
+				}
+
+		}
+		else{
+				var textToSend = "```" + text + "\n```";		
+				if(messagefile != ""){
+						message.channel.send(textToSend, {
+								file: messagefile
+						});
+				}
+				else{
+						
+						message.channel.send(textToSend);
+						
+				}
+		}
 }
-
-var commands = {
-    "test" : {
-				permissions: "any",
-				description: "A testbed function for adding new functionality to Jenkins. Use with caution.",
+		var commands = {
+				"test" : {
+						permissions: "any",
+						description: "A testbed function for adding new functionality to Jenkins. Use with caution.",
 				process: function(client, message, args, id){
 						if(args.length >0){
 								var testString = Array(Number(args[0])).join("-");
@@ -648,15 +660,8 @@ var commands = {
 				permissions: "any",
 				description: "Shows the aliases of all the different stats and skills that roll and notes can understand.",
 				process: function(client,message,args,id){
-
 						var aliasMessage = tools.getAliases();
-
-						var Arr = tools.breakUpString(aliasMessage, "\n\n");
-						console.log(Arr);
-						for(i = 0; i < Arr.length;i++){
-								
-								messageSend(message, Arr[i]);
-						}
+						messageSend(message, aliasMessage, "", "\n\n");
 				 }
 		},
 		
@@ -1010,18 +1015,9 @@ function checkMessageForCommand(message, isEdit) {
 						
 						
 				}
-				var arr = tools.breakUpString(helpMessage, "\n\n");
-				console.log(arr.length);
-	//			message.channel.send("```");
+			
 				
-				for(i=0; i < arr.length;i++){
-						messageSend(message, String(arr[i]));
-				}
-		//		message.channel.send("```");
-
-				
-				
-//				messageSend(message,helpMessage);
+				messageSend(message, helpMessage, "", "\n\n" );
 				return;
 				
     }

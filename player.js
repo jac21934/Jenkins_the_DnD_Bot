@@ -1,7 +1,7 @@
 
 var fs = require('fs');
 var tools = require("./tools.js"); 
-
+var config = require("./config.json");
 
 
 function Player() {
@@ -715,7 +715,7 @@ Player.prototype = {
 				var notesMax = 0;
 				var space = 4;
 				var spaceArr = Array(space).join(" ");
-				var discordMax = 120;
+				var discordMax = config.discordWidth;
 				var notesArr = [];
 				if(notesBuff.length >0){
 						for(j = 0; j < notesBuff.length;j++){
