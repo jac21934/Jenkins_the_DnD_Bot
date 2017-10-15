@@ -215,12 +215,64 @@ var commands = {
 		"test" : {
 				permissions: "any",
 				description: "A testbed function for adding new functionality to Jenkins. Use with caution.",
-				process: function(client, message, args, id){
-						if(args.length >0){
-								var testString = Array(Number(args[0])).join("-");
-								var testMessage = testString;
-								messageSend(message,testMessage);
+				process: function(client, message, args, id) {
+
+						var sumFlag = false;
+						var advFlag = false;
+						var disFlag = false;
+
+						////////////////////////////////// Parsing input
+						var totArgs = args.join("").toLowerCase();
+						
+						if( totArgs.indexOf("sum") != -1){
+								sumFlag = true;
+								totArgs = totArgs.replace("sum","");
 						}
+						else if(totArgs.indexOf("adv") != -1)
+						{
+								advFlag = true;
+								totArgs = totArgs.replace("adv","");
+						}
+						else if(totArgs.indexOf("dis") != -1)
+						{
+								disFlag = true;
+								totArgs = totArgs.replace("dis","");
+						}	
+
+						var rollMessage = "";
+
+						var numDieArr = [];
+						var maxDieArr = [];
+						var dice = [];
+//////
+						var buffArr = tools.newGetDice(args.join(" ").toLowerCase());
+						dice = buffArr[0];
+
+						for(k = 0; k < dice.length; k++){
+								numDieArr.push(Number(dice[k][0]));
+								maxDieArr.push(Number(dice[k][1]));
+						}
+
+						
+						
+						console.log(dice);
+
+
+						var	buff= tools.parseSum(buffArr[1].replace(/ +/g, ""))
+						var modifier = Number(buff[0])
+						modifier += tools.getModFromString(players,id,tools.parseStringForStat(buffArr[1]));
+						console.log("modifier: " + modifier);
+
+
+					
+
+						rollMessage = tools.getRollMessage(numDieArr,maxDieArr, modifier, players, id, sumFlag, advFlag, disFlag);
+						
+						messageSend(message,rollMessage);
+						
+						
+						
+						
 				}
 				
     },
@@ -506,24 +558,22 @@ var commands = {
 								totArgs = totArgs.replace("dis","");
 						}	
 
+						var rollMessage = "";
+
 						var numDie = 0;
 						var maxDie = 0;
-						var modChar = "";
-						
+						var numDieArr = [];
+						var maxDieArr = [];
+
+					
 						var buff= tools.parseSum(totArgs);
 
 						var modifier = Number(buff[0]);
 						totArgs = buff[1];
 						modifier += tools.getModFromString(players, id, tools.parseStringForStat(totArgs));
 
-						
 
-						if( Number(modifier) > 0){
-								modchar = "+";
-						}
-						else if(Number(modifier) < 0){
-								modchar = "-";
-						}
+						
 						
 						buff = tools.getDice(totArgs);
 
@@ -531,7 +581,6 @@ var commands = {
 						maxDie = Number(buff[1]);
 
 
-						var rollMessage = "";
 
 
 						if(numDie > 100){
@@ -822,13 +871,19 @@ var commands = {
 						
 						var goldMessage = "";
 						totArgs = args.join("");
-						for(i=0; i < players.length;i++){
-								if(id == players[i].getId()){
-										
+						for(k=0; k < players.length;k++){
+								if(id == players[k].getId()){
+										console.log(players[k].getName());
 										if (totArgs.length < 1){}
 										else {
+
+												if( (tools.parseStringForStat(args.join(" ")) == "take") || (tools.parseStringForStat(args.join(" ")) == "give") ){
+														commands["gold"].process(client, message, args, id)
+														return;
+												}
+												
 												var goldBuff = Number(tools.parseSum(totArgs)[0]);
-												players[i].setGold(Number(Number(players[i].getGold()) +  Number(goldBuff)));
+												players[k].setGold(Number(Number(players[k].getGold()) +  Number(goldBuff)));
 												if(goldBuff >= 0){
 														goldMessage += "Adding " + Number(goldBuff).toFixed(2) + "gp\n";
 												} 
@@ -837,7 +892,7 @@ var commands = {
 												}
 										}
 										
-										goldMessage += players[i].getName() + "'s total gold: " + Number(players[i].getGold()).toFixed(2) + "gp\n";
+										goldMessage += players[k].getName() + "'s total gold: " + Number(players[k].getGold()).toFixed(2) + "gp\n";
 										messageSend(message,goldMessage);
 										break;
 										

@@ -181,16 +181,16 @@ Player.prototype = {
 		},
 
 		getAc: function(){
-				return this._ac;
+				return this._ac + this._acadd;
 		},
 		getInit: function(){
-				return this._init;
+				return this._init + this._initadd;
 		},
 		getSpd: function(){
-				return this._spd;
+				return this._spd + this._spdadd;
 		},
 		getHp: function(){
-				return this._hp;
+				return this._hp + this._hpadd;
 		},
 		getPer: function(){
 				return this._per;
@@ -674,6 +674,23 @@ Player.prototype = {
 				var messageHeader = this.getName() + Array((space - this.getName().length) - String("Bonuses").length).join(" ") + "Bonuses" +  "\n";
 				bonusMessage += messageHeader + Array(messageHeader.length).join("-")  + "\n";
 				
+				bonusMessage += "C| HP                | ("  + + String(Number(this.getHpadd())) + ")" +  "\n"; 
+				bonusMessage += "O| AC                | ("  + + String(Number(this.getAcadd())) + ")" +  "\n"; 
+				bonusMessage += "M| INIT              | ("  + + String(Number(this.getInitadd())) + ")" +  "\n"; 
+				bonusMessage += " | SPD               | ("  + + String(Number(this.getSpdadd())) + ")" +  "\n"; 
+			
+				
+				bonusMessage += Array(messageHeader.length).join("-")  + "\n"
+
+				bonusMessage += "A| STR               | ("  + + String(Number(this.getStradd())) + ")" +  "\n"; 
+				bonusMessage += "T| DEX               | ("  + + String(Number(this.getDexadd())) + ")" +  "\n"; 
+				bonusMessage += "T| CON               | ("  + + String(Number(this.getConadd())) + ")" +  "\n"; 
+				bonusMessage += "R| INT               | ("  + + String(Number(this.getIntadd())) + ")" +  "\n"; 
+				bonusMessage += " | WIS               | ("  + + String(Number(this.getWisadd())) + ")" +  "\n"; 
+				bonusMessage += " | CHA               | ("  + + String(Number(this.getChaadd())) + ")" +  "\n"; 
+
+				bonusMessage += Array(messageHeader.length).join("-")  + "\n"
+
 				bonusMessage += "S| STR Saving Throw  | ("  + String(Number(this.getStrsavadd())) + ")" +  "\n"; 
 				bonusMessage += "T| Athletics         | (" + String(Number(this.getAthadd())) + ")" + "\n"; 	
 				bonusMessage += "R|                   |" + "\n"; 
@@ -981,10 +998,10 @@ Player.prototype = {
 				this._profbonus = Math.floor(( Number(this.getLevel()) + 7)/4) + Number(this.getProfbonusadd());
 				
 				this._per = 10 + Number(this.getWismod()) + ( Number(this.getProfbonus())) * Number(this.getPerprof()) + Number(this.getPeradd());
-				this._ac = Number(this._ac) + Number(this._acadd); 
-				this._hp = Number(this._hp) + Number(this._hpadd);
-				this._init = Number(this.getDexmod()) + Number(this._initadd);
-				this._spd = Number(this._spd) + Number(this._spdadd);
+//				this._ac = Number(this._ac) + Number(this._acadd); 
+//				this._hp = Number(this._hp) + Number(this._hpadd);
+//				this._init = Number(this.getDexmod()) + Number(this._initadd);
+//				this._spd = Number(this._spd) + Number(this._spdadd);
 				//console.log(this.getPer());
 		},
 

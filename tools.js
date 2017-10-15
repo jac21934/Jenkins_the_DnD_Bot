@@ -1,5 +1,6 @@
 var aliases = require("./aliases.json");
 var config = require("./config.json");
+var regex = require("./RegEx.json");
 
 function getAliases(){
 		var aliasMessage = "";
@@ -49,6 +50,10 @@ function getAliases(){
 		}
 		return aliasMessage;
 }
+
+
+
+
 function breakUpString(someString, someBreak){
 
 		var buffArr = someString.split(someBreak);
@@ -57,8 +62,6 @@ function breakUpString(someString, someBreak){
 		var buffString = "";//buffArr[0] + "\n";
 
 		for(i = 0; i < buffArr.length;i++){
-				console.log(i);
-				console.log(buffArr[i]);
 				if(buffString.length + buffArr[i].length < charMax){
 						buffString += buffArr[i] + someBreak;
 				}
@@ -110,7 +113,39 @@ function parseStringForStat(someString){
     return stat;
 }
 
-
+function parseAlias(someString){
+    var stat = "";
+		var aliasString = "";
+    for(alias in aliases){
+				for(i = 0; i < aliases[alias].length; i++){
+						//						console.log(aliases[alias][i]);
+						if(someString.indexOf(aliases[alias][i]) >-1){
+								stat = alias;
+								aliasString =  aliases[alias][i];
+								return [stat, aliasString];
+						}
+						else{
+								var re = new RegExp(aliases[alias][i]);
+								if( someString.match(re) != null){
+										stat = alias;
+										aliasString = aliases[alias][i];
+										return [stat, aliasString];
+								}
+						}
+				}
+    }
+		var stat = "";
+    for(alias in aliases){
+				for(i = 0; i < aliases[alias].length; i++){
+						//						console.log(aliases[alias][i]);
+						if(someString.indexOf(aliases[alias][i]) >-1){
+								stat = alias;
+								return [stat, aliasString];
+						}
+				}
+    }
+    return [stat, aliasString];
+}
 
 
 function inWords (num) {
@@ -141,7 +176,7 @@ function	getRandomInt(min, max) {
 
 function findNumberIndex(someString){
 		for(i = 0; i < someString.length; i++){
-				console.log(someString[i]);
+				//				console.log(someString[i]);
 				if(String(Number(someString[i])) == someString[i]){
 						
 						return i;
@@ -235,7 +270,7 @@ function  parseSum (someString){
     var totVal = 0;
     var bufVal = "";
     var bufbufVal;
-    console.log("someString: " + someString);
+		//    console.log("someString: " + someString);
     while(checkFlag){
 				Index = someString.indexOf("+");
 				if( Index != -1 && Index != (someString.length -1)){
@@ -301,6 +336,46 @@ function  parseSum (someString){
 }
 
 
+function newGetDice(someString){
+		var numDie = 0;
+		var dieMax = 0;
+		var dice = [];
+
+
+    if(parseStringForStat(someString) != "")
+    {
+				dice = [[1,20]];
+    }
+		else{
+				
+			//	re = new RegExp("\\b(([1-9])([0-9]*))?d([1-9])([0-9]*)\\b");
+				re = new RegExp(regex.dieCheck);
+				
+				var buff;
+				// console.log(someString.match(re));
+				
+				while((buff = someString.match(re)) != null){
+						//				console.log(someString.match(re));
+						
+						var die = buff[0].split("d");
+						//				console.log(die);
+						if( die[0] == ''){
+								
+								dice.push( [ Number(1) , Number(die[1]) ] );
+						}
+						else{
+								dice.push( [ Number(die[0]) , Number(die[1]) ] );
+								
+						}
+
+						someString = someString.replace(re, "");
+						
+				}
+		}
+
+		return [dice, someString];
+		
+}
 
 function getDice(someString){
     var numDie = 0;
@@ -458,6 +533,219 @@ function getModFromString(players, id, stat)
 }
 
 
+
+
+function getRollMessage(numDieArr, maxDieArr, modifier, players, id, sumFlag, advFlag, disFlag){
+		var rollMessage = "";
+
+		var numDie = 0;
+		var maxCheck = 0;
+					var name = "";
+						for(i=0; i < players.length;i++){
+								if(id == players[i].getId()){
+										name = players[i].getName();
+										break;
+								}
+								
+						}
+								
+
+		for(i = 0; i < numDieArr.length; i++){
+				numDie += Number(numDieArr[i]);
+		}
+
+		for(i = 0; i < maxDieArr.length; i++){
+				maxCheck += Number(maxDieArr[i]);
+		}
+
+		// console.log( advFlag);
+		// console.log(disFlag);
+		
+		if(isNaN(numDie) || isNaN(maxCheck) || (numDieArr.length == 0) || (maxDieArr.length == 0) ){
+		 		rollMessage += "I didn't understand that input. I can take values like 3d6 + 2 or 12d13 - 21 or strength.\n";
+		}
+		else if ( numDieArr.length != maxDieArr.length){
+				rollMessage += "The number of dice vector and number of sides vector have different lengths! I do not know how this happened. Please tell Jacob."; 
+		}
+		else if(numDie > 100){
+				rollMessage += "Please roll one hundred or less dice.\n";
+		}
+		else if(numDie == 0){
+				rollMessage += "Ok rolling zero dice...\n";
+		}
+		else if(((numDieArr.length >1)
+						 || (maxDieArr.length > 1)
+						 || (numDieArr[0] !=1)
+						 || (maxDieArr[0] !=20) )
+						&& (advFlag || disFlag)
+					 ){
+
+				rollMessage += "You can only roll 1d20 with advantage or disadvantage right now.";
+		}
+		else{
+				
+				rollMessage += "Rolling ";
+
+				for(k = 0; k < numDieArr.length; k++){
+						rollMessage	+= numDieArr[k] + "d"+ maxDieArr[k];
+
+						if(numDieArr.length > 2){
+
+								if(k < numDieArr.length - 1){
+										rollMessage += ", ";
+										
+								
+								}
+
+								if( k == numDieArr.length - 2){
+
+										rollMessage += "and ";
+								}
+						}
+						else if(numDieArr.length == 2){
+								if( k < numDieArr.length - 1){
+										rollMessage += " and ";
+								}
+						}
+				}
+				
+				if (Number(modifier) != 0){
+						if (modifier < 0){
+								rollMessage += modifier;
+						}
+						else if (modifier >0){
+								rollMessage += "+" + modifier;
+						}
+				}
+				
+				if(advFlag)
+				{
+						rollMessage += " with advantage";
+				}
+				if(disFlag)
+				{
+						rollMessage += " with disadvantage";
+				}
+				if(name != ""){
+						rollMessage += " for " + name + "\n";
+				}
+				else{
+						rollMessage += "\n";
+						
+				}
+				var filler = Array(rollMessage.length).join("-") + "\n";
+				if(sumFlag == false){
+						rollMessage += filler;
+				}
+				
+				var rollSum = 0;
+				var multiRoll = false
+				if(numDieArr.length > 1){
+						multiRoll = true;
+				}
+				for(j = 0; j < numDieArr.length; j++){
+						if(multiRoll){
+								rollMessage += numDieArr[j] + "d" + maxDieArr[j] + ":\n";
+								rollMessage += Array(String(numDieArr[j] + "d" + maxDieArr[j] + ":").length + 1).join("-") + "\n" ;
+						}
+						for(k = 0; k < numDieArr[j]; k++) {
+								if(multiRoll){
+										rollMessage += "   ";
+								}
+								
+								var dieRoll = getRandomInt(1, maxDieArr[j]);
+
+								if (sumFlag == false) {
+										rollMessage += dieRoll;
+										if(maxDieArr[j] == 20){
+												if( dieRoll == 20){
+														rollMessage += " *Crit*";
+												}
+												else if(dieRoll == 1){
+														rollMessage += " *Crit Fail*";
+												}
+										}
+										rollMessage += "\n";
+										if (advFlag || disFlag)
+										{
+												var dieRollNew = getRandomInt(1, maxDieArr[j]);
+												rollMessage += dieRollNew;
+												if(maxDieArr[j] == 20){
+														if( dieRollNew == 20){
+																rollMessage += " *Crit*";
+														}
+														else if(dieRollNew == 1){
+																rollMessage += " *Crit Fail*";
+														}
+												}
+												rollMessage += "\n";
+										}
+										if(advFlag)
+										{
+												dieRoll = Math.max(dieRoll, dieRollNew);
+										}
+										else if(disFlag)
+										{
+												dieRoll = Math.min(dieRoll, dieRollNew);
+										}
+								}
+								rollSum += dieRoll;
+						}
+						if(multiRoll && (j < numDieArr.length - 1)){
+								rollMessage += "\n";
+						}
+
+				}
+
+				var sumMessage = "";
+				var modMessage = "";
+				var totMessage = "";
+				var advMessage = "";
+				var maxFill = 0;
+				if(numDie > 1){
+						sumMessage += "Sum: " + rollSum + "\n";
+				}
+				if(advFlag)
+				{
+						advMessage += "Max: " + dieRoll + "\n";
+				}
+				if(disFlag)
+				{
+						advMessage += "Min: " + dieRoll + "\n";
+				}
+				if(modifier != ""){
+						modMessage += "Modifier: " + modifier + "\n";	
+						var totalSum = rollSum+modifier;
+						totMessage += "Total Sum: " + totalSum + "\n";	
+				}
+				if( numDie>1 || modifier !="" || disFlag || advFlag){
+						if(sumFlag == true){
+								maxFill = Math.max(String(sumMessage).length, String(modMessage).length, String(totMessage).length, String(filler).length, String(advMessage).length);
+						}
+						else{
+								maxFill = Math.max(String(sumMessage).length, String(modMessage).length, String(totMessage).length, String(advMessage).length);
+						}
+						filler = Array(maxFill).join("-") + "\n";
+						rollMessage +=filler;
+						if(advFlag || disFlag)
+						{
+								rollMessage += advMessage;
+						}
+						if(numDie > 1){
+								rollMessage += sumMessage;
+						}
+						if(modifier != ""){
+								rollMessage += modMessage;
+								rollMessage += totMessage;
+						}
+				}
+		}
+		
+		
+		return rollMessage;
+
+}
+
 module.exports = {
 		inWords,
 		getAliases,
@@ -468,9 +756,11 @@ module.exports = {
 		findNumberIndex,
     parseNumberFromString,
     parseSum,
+		newGetDice,
     getDice,
 		breakUpString,
-    getModFromString
+    getModFromString,
+		getRollMessage
 }
 
 
