@@ -187,6 +187,7 @@ function findNumberIndex(someString){
 
 }
 
+
 function parseNumberFromString(Index,someString){
     var periodCheck = false;	
     buffVal = "";
@@ -258,6 +259,18 @@ function breakOnCharSpace(someString, index, char, breakchar){
 		
     return spaceIndex;
     
+
+}
+
+function parseSumNew(someString){
+		re =  new RegExp(regex.sumCheck);
+		console.log("Here");
+				console.log(re);
+		while((buff = someString.match(re)) != null){
+				console.log( buff);
+				someString = someString.replace(re, "");
+				
+		}
 
 }
 
@@ -614,7 +627,12 @@ function getRollMessage(numDieArr, maxDieArr, modifier, players, id, sumFlag, ad
 								rollMessage += modifier;
 						}
 						else if (modifier >0){
-								rollMessage += "+" + modifier;
+								if(numDieArr.length > 1){
+										rollMessage += " + " + modifier;
+								}
+								else{
+										rollMessage += "+" + modifier;
+								}
 						}
 				}
 				
@@ -755,6 +773,7 @@ module.exports = {
     getRandomInt,
 		findNumberIndex,
     parseNumberFromString,
+		parseSumNew,
     parseSum,
 		newGetDice,
     getDice,

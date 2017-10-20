@@ -216,63 +216,7 @@ var commands = {
 				permissions: "any",
 				description: "A testbed function for adding new functionality to Jenkins. Use with caution.",
 				process: function(client, message, args, id) {
-
-						var sumFlag = false;
-						var advFlag = false;
-						var disFlag = false;
-
-						////////////////////////////////// Parsing input
-						var totArgs = args.join("").toLowerCase();
-						
-						if( totArgs.indexOf("sum") != -1){
-								sumFlag = true;
-								totArgs = totArgs.replace("sum","");
-						}
-						else if(totArgs.indexOf("adv") != -1)
-						{
-								advFlag = true;
-								totArgs = totArgs.replace("adv","");
-						}
-						else if(totArgs.indexOf("dis") != -1)
-						{
-								disFlag = true;
-								totArgs = totArgs.replace("dis","");
-						}	
-
-						var rollMessage = "";
-
-						var numDieArr = [];
-						var maxDieArr = [];
-						var dice = [];
-//////
-						var buffArr = tools.newGetDice(args.join(" ").toLowerCase());
-						dice = buffArr[0];
-
-						for(k = 0; k < dice.length; k++){
-								numDieArr.push(Number(dice[k][0]));
-								maxDieArr.push(Number(dice[k][1]));
-						}
-
-						
-						
-						console.log(dice);
-
-
-						var	buff= tools.parseSum(buffArr[1].replace(/ +/g, ""))
-						var modifier = Number(buff[0])
-						modifier += tools.getModFromString(players,id,tools.parseStringForStat(buffArr[1]));
-						console.log("modifier: " + modifier);
-
-
-					
-
-						rollMessage = tools.getRollMessage(numDieArr,maxDieArr, modifier, players, id, sumFlag, advFlag, disFlag);
-						
-						messageSend(message,rollMessage);
-						
-						
-						
-						
+						tools.parseSumNew(args.join(" "));
 				}
 				
     },
@@ -527,15 +471,7 @@ var commands = {
 				permissions: "any",
 				description: "Give a number of die with modifier(s) to roll and show result, (1d4 + 10 - 5 or 5d17 - 5). Put sum at the end if you don't want to see the individual rolls.",
 				process: function(client,message,args,id){
-						var name = "";
-						for(i=0; i < players.length;i++){
-								if(id == players[i].getId()){
-										name = players[i].getName();
-										break;
-								}
-								
-						}
-						
+
 						var sumFlag = false;
 						var advFlag = false;
 						var disFlag = false;
@@ -547,176 +483,56 @@ var commands = {
 								sumFlag = true;
 								totArgs = totArgs.replace("sum","");
 						}
-						else if(totArgs.indexOf("adv") != -1)
-						{
-								advFlag = true;
-								totArgs = totArgs.replace("adv","");
+						else{
+								if(totArgs.indexOf("adv") != -1)
+								{
+										advFlag = true;
+										totArgs = totArgs.replace("adv","");
+								}
+								if(totArgs.indexOf("dis") != -1)
+								{
+										disFlag = true;
+										totArgs = totArgs.replace("dis","");
+								}	
 						}
-						else if(totArgs.indexOf("dis") != -1)
-						{
-								disFlag = true;
-								totArgs = totArgs.replace("dis","");
-						}	
 
+						if( advFlag && disFlag ){
+								advFlag = false;
+								disFlag = false;
+						}
+						
 						var rollMessage = "";
 
-						var numDie = 0;
-						var maxDie = 0;
 						var numDieArr = [];
 						var maxDieArr = [];
+						var dice = [];
+//////
+						var buffArr = tools.newGetDice(args.join(" ").toLowerCase());
+						dice = buffArr[0];
+
+						for(k = 0; k < dice.length; k++){
+								numDieArr.push(Number(dice[k][0]));
+								maxDieArr.push(Number(dice[k][1]));
+						}
+
+						
+						
+						console.log(dice);
+
+
+						var	buff= tools.parseSum(buffArr[1].replace(/ +/g, ""))
+						var modifier = Number(buff[0])
+						modifier += tools.getModFromString(players,id,tools.parseStringForStat(buffArr[1]));
+						console.log("modifier: " + modifier);
+
 
 					
-						var buff= tools.parseSum(totArgs);
 
-						var modifier = Number(buff[0]);
-						totArgs = buff[1];
-						modifier += tools.getModFromString(players, id, tools.parseStringForStat(totArgs));
-
-
+						rollMessage = tools.getRollMessage(numDieArr,maxDieArr, modifier, players, id, sumFlag, advFlag, disFlag);
 						
-						
-						buff = tools.getDice(totArgs);
-
-						numDie = Number(buff[0]);
-						maxDie = Number(buff[1]);
-
-
-
-
-						if(numDie > 100){
-								rollMessage += "Please roll one hundred or less dice.\n";
-						}
-						else if(maxDie == 0){
-								rollMessage += "I didn't understand that input. I can take values like 3d6 + 2 or 12d13 - 21 or strength.\n";
-						}
-						else if(numDie == 0){
-								rollMessage += "Ok rolling zero dice...\n";
-						}
-						else if(((numDie != 1) || (maxDie != 20)) && (advFlag || disFlag))
-						{
-								rollMessage += "You can only roll 1d20 with advantage or disadvantage right now.";
-						}
-						else{
-								
-								rollMessage += "Rolling " + numDie + "d"+ maxDie;
-								
-								if (Number(modifier) != 0){
-										if (modifier < 0){
-												rollMessage += modifier;
-										}
-										else if (modifier >0){
-												rollMessage += "+" + modifier;
-										}
-								}
-								
-								if(advFlag)
-								{
-										rollMessage += " with advantage";
-								}
-								if(disFlag)
-								{
-										rollMessage += " with disadvantage";
-								}
-								if(name != ""){
-										rollMessage += " for " + name + "\n";
-								}
-								else{
-										rollMessage += "\n";
-										
-								}
-								var filler = Array(rollMessage.length).join("-") + "\n";
-								if(sumFlag == false){
-										rollMessage += filler;
-								}
-								var rollSum = 0;
-								for( i = 0; i < numDie; i++){
-										var dieRoll = tools.getRandomInt(1,maxDie);
-										var dieRollNew = tools.getRandomInt(1,maxDie);
-										if (sumFlag == false){
-												rollMessage += dieRoll;
-												if(maxDie == 20){
-														if( dieRoll == 20){
-																rollMessage += " *Crit*";
-														}
-														else if(dieRoll == 1){
-																rollMessage += " *Crit Fail*";
-														}
-												}
-												rollMessage += "\n";
-												if (advFlag || disFlag)
-												{
-														rollMessage += dieRollNew;
-														if(maxDie == 20){
-																if( dieRollNew == 20){
-																		rollMessage += " *Crit*";
-																}
-																else if(dieRollNew == 1){
-																		rollMessage += " *Crit Fail*";
-																}
-														}
-														rollMessage += "\n";
-												}
-												if(advFlag)
-												{
-														dieRoll = Math.max(dieRoll, dieRollNew);
-												}
-												else if(disFlag)
-												{
-														dieRoll = Math.min(dieRoll, dieRollNew);
-												}
-										}
-										rollSum += dieRoll;
-								}
-								var sumMessage = "";
-								var modMessage = "";
-								var totMessage = "";
-								var advMessage = "";
-								var maxFill = 0;
-								if(numDie > 1){
-										sumMessage += "Sum: " + rollSum + "\n";
-								}
-
-								if(advFlag)
-								{
-										advMessage += "Max: " + dieRoll + "\n";
-								}
-								if(disFlag)
-								{
-										advMessage += "Min: " + dieRoll + "\n";
-								}
-
-								if(modifier != ""){
-										modMessage += "Modifier: " + modifier + "\n";	
-										var totalSum = rollSum+modifier;
-										totMessage += "Total Sum: " + totalSum + "\n";	
-								}
-								if( numDie>1 || modifier !="" || disFlag || advFlag){
-										if(sumFlag == true){
-												maxFill = Math.max(String(sumMessage).length, String(modMessage).length, String(totMessage).length, String(filler).length, String(advMessage).length);
-										}
-										else{
-												maxFill = Math.max(String(sumMessage).length, String(modMessage).length, String(totMessage).length, String(advMessage).length);
-										}
-										filler = Array(maxFill).join("-") + "\n";
-										rollMessage +=filler;
-										if(advFlag || disFlag)
-										{
-												rollMessage += advMessage;
-										}
-										if(numDie > 1){
-												rollMessage += sumMessage;
-										}
-										if(modifier != ""){
-												rollMessage += modMessage;
-												rollMessage += totMessage;
-										}
-
-								}
-						}
-
-
 						messageSend(message,rollMessage);
-
+						
+						
 						
 						
 				}
