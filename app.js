@@ -180,11 +180,8 @@ client.on("ready", () => {
 				players.push(player);
     })
 
-
-
-
-
 });
+
 function messageSend(message, text, messagefile = "", breakChar = '\n'){
 		
 		if (text.length > config.discordMax){
@@ -324,13 +321,13 @@ var commands = {
 						message.delete().catch(O_o=>{}); 
 						// And we get the bot to say the thing: 
 						
-						var mickel = ["poop", "eldritch ", "vibrant ", "breezy ", "silky ", "bountiful ", "literally on fire "];
+						var mickelDescription = ["poop", "eldritch ", "vibrant ", "breezy ", "silky ", "bountiful ", "literally on fire "];
 						var mickelparts = ["face", "butt", "foot","head", "buttocks","buttock", "nostril","growth", "skeleton", "aqueous humor", '"breasts"'];
 						
 						
 						if(id == 152235945368879105){
 								
-								sayMessage += "\nP.S.: Mickel has a " + String(mickel[tools.getRandomInt(0, mickel.length - 1)]) + String(mickelparts[tools.getRandomInt(0, mickelparts.length-1)]) +".\n";
+								sayMessage += "\nP.S.: Mickel has a " + String(mickelDescription[tools.getRandomInt(0, mickel.length - 1)]) + String(mickelparts[tools.getRandomInt(0, mickelparts.length-1)]) +".\n";
 						}
 
 						//	sayMessage = "hello";

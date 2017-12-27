@@ -181,16 +181,16 @@ Player.prototype = {
 		},
 
 		getAc: function(){
-				return this._ac + this._acadd;
+				return Number(this._ac) + Number(this._acadd);
 		},
 		getInit: function(){
-				return this._init + this._initadd;
+				return Number(this._init) + Number(this._initadd);
 		},
 		getSpd: function(){
-				return this._spd + this._spdadd;
+				return Number(this._spd) + Number(this._spdadd);
 		},
 		getHp: function(){
-				return this._hp + this._hpadd;
+				return Number(this._hp) + Number(this._hpadd);
 		},
 		getPer: function(){
 				return this._per;
@@ -872,108 +872,179 @@ Player.prototype = {
 
 						var buffArr = tools.parseSum(String(note));
 						var buffSum = buffArr[0];
+						var buffAdd = 0;
 						
 						switch(buffString){
+//								buffArr = this.getadd(buffSum);
 						case "str":
+								buffArr = this.getStradd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setStradd(buffSum);
 								break;
 						case "dex":
+								buffArr = this.getDexadd()
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setDexadd(buffSum);
 								break;
+						case "con":
+								buffArr = this.getConadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setConadd(buffSum);
 								break;
 						case "int":
+								buffArr = this.getIntadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setIntadd(buffSum);
 								break;
 						case "wis" :
+								buffArr = this.getWisadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setWisadd(buffSum);
 								break;
 						case "cha":
+								buffArr = this.getChaadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setChaadd(buffSum);
 								break;
 						case "ac":
+								buffArr = this.getAcadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setAcadd(buffSum);
 								break;
 						case "init":
+								buffArr = this.getInitadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setInitadd(buffSum);
 								break;
 						case "spd":
+								buffArr = this.getSpdadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setSpdadd(buffSum);
 								break;
 						case "hp":
+								buffArr = this.getHpadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setHpadd(buffSum);
 								break;
 						case "strsav":
+								buffArr = this.getStrsavadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setStrsavadd(buffSum);
 								break;
 						case "ath" :
+								buffArr = this.getAthadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setAthadd(buffSum);
 								break;
 						case "dexsav" :
+								buffArr = this.getDexsavadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setDexsavadd(buffSum);
 								break;
 						case "acr" :
+								buffArr = this.getAcroadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setAcroadd(buffSum);
 								break;
 						case "soh":
+								buffArr = this.getSleightadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setSleightadd(buffSum);
 								break;
 						case "ste":
+								buffArr = this.getStealthadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setStealthadd(buffSum);
 								break;
 						case "consav" :
+								buffArr = this.getConsavadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setConsavadd(buffSum);
 								break;
 						case "intsav" :
+								buffArr = this.getIntsavadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setIntsavadd(buffSum);
 								break;
 						case "arc" :
+								buffArr = this.getArcanaadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setArcanaadd(buffSum);
 								break;
 						case "his" :
+								buffArr = this.getHistoryadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setHistoryadd(buffSum);
 								break;
 						case "inv":
+								buffArr = this.getInvestadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setInvestadd(buffSum);
 								break;
-						case "nat"  :
+						case "nat"  :						
+								buffArr = this.getNatureadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setNatureadd(buffSum);
 								break;
 						case "rel" :
+								buffArr = this.getReligionadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setReligionadd(buffSum);
 								break;
 						case "wissav":
 								//wisdom
+								buffArr = this.getWissavadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setWissavadd(buffSum);
 								break;
 						case "ani":
+								buffArr = this.getAnimaladd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setAnimaladd(buffSum);
 								break;
 						case "ins":
+								buffArr = this.getInsightadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setInsightadd(buffSum);
 								break;
 						case "med":
+								buffArr = this.getMedicineadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setMedicineadd(buffSum);
 								break;
 						case "per":
+								buffArr = this.getPeradd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setPeradd(buffSum);
 								break;;
 						case "sur" :
+								buffArr = this.getSurvadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setSurvadd(buffSum);
 								break;
 						case "chasav" :
+								buffArr = this.getChasavadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setChasavadd(buffSum);
 								break;
 						case "dec" :
+								buffArr = this.getDeceptadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setDeceptadd(buffSum);
 								break;
 						case "intim":
+								buffArr = this.getIntimadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setIntimadd(buffSum);
 								break;
 						case "perf" :
+								buffArr = this.getPerformadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setPerformadd(buffSum);
 								break;
 						case "pers" : 
+								buffArr = this.getPersadd();
+								buffSum = Number(buffSum) + Number(buffArr);
 								this.setPersadd(buffSum);
 								break;
 						default:

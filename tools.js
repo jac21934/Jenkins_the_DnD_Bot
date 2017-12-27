@@ -262,91 +262,103 @@ function breakOnCharSpace(someString, index, char, breakchar){
 
 }
 
-function parseSumNew(someString){
-		re =  new RegExp(regex.sumCheck);
-		console.log("Here");
-				console.log(re);
+function parseSum(someString){
+		var re =  new RegExp(regex.sumCheck);
+		var reSplit = new RegExp(regex.sumPrefix);
+		var buff = someString.match(re);
+		var sum = 0;
 		while((buff = someString.match(re)) != null){
-				console.log( buff);
 				someString = someString.replace(re, "");
+				console.log(buff);
+				
+				var sumBuff = Number(buff[0].replace(reSplit,""));
+				console.log(buff[0])
+				if( buff[0][0] == "-"){
+						sumBuff = -1 * sumBuff;
+				}
+				sum += Number(sumBuff);
 				
 		}
 
+		console.log(sum);
+
+		return [sum.toFixed(2), someString];
+		
 }
 
-function  parseSum (someString){
+// function  parseSum (someString){
 
-    var checkFlag = true;
-    var sumFlag = false;
-    var minusFlag = false;
-    var Index  = 0;
-    var totVal = 0;
-    var bufVal = "";
-    var bufbufVal;
-		//    console.log("someString: " + someString);
-    while(checkFlag){
-				Index = someString.indexOf("+");
-				if( Index != -1 && Index != (someString.length -1)){
+//     var checkFlag = true;
+//     var sumFlag = false;
+//     var minusFlag = false;
+//     var Index  = 0;
+//     var totVal = 0;
+//     var bufVal = "";
+//     var bufbufVal;
+// 		//    console.log("someString: " + someString);
+//     while(checkFlag){
+// 				Index = someString.indexOf("+");
+// 				if( Index != -1 && Index != (someString.length -1)){
 						
-						bufVal = "";
-						sumFlag = true;
-						var buffArray = parseNumberFromString(Index+1,someString);
+// 						bufVal = "";
+// 						sumFlag = true;
+// 						var buffArray = parseNumberFromString(Index+1,someString);
 						
-						if(String(buffArray)[0] == "0" && someString[Index+1] == "."){
-								bufVal = String(buffArray).replace("0","");
-						}
-						else{
-								bufVal = buffArray;
-						}
-						if(someString.indexOf("+" + bufVal) > -1){
+// 						if(String(buffArray)[0] == "0" && someString[Index+1] == "."){
+// 								bufVal = String(buffArray).replace("0","");
+// 						}
+// 						else{
+// 								bufVal = buffArray;
+// 						}
+// 						if(someString.indexOf("+" + bufVal) > -1){
 								
-								someString = someString.replace("+" + bufVal,'');
-						}
-						else{
-								someString = someString.replace("+",'');
-						}
-						console.log(someString);
+// 								someString = someString.replace("+" + bufVal,'');
+// 						}
+// 						else{
+// 								someString = someString.replace("+",'');
+// 						}
+// 						console.log(someString);
 
-						totVal += Number(buffVal);
-				}
-				else{
-						sumFlag = false;
-				}
-				periodCheck = false;
+// 						totVal += Number(buffVal);
+// 				}
+// 				else{
+// 						sumFlag = false;
+// 				}
+// 				periodCheck = false;
 
-				Index = someString.indexOf("-");
-				if( Index != -1 && Index != (someString.length -1)){
-						bufVal = "";
-						minusFlag = true;
-						var buffArray = parseNumberFromString(Index+1,someString);
-						if(String(buffArray)[0] == "0" && someString[Index+1] == "."){
-								bufVal = String(buffArray).replace("0","");
-						}
-						else{
-								bufVal = buffArray;
-						}
-						if(someString.indexOf("-" + bufVal) > -1){
+// 				Index = someString.indexOf("-");
+// 				if( Index != -1 && Index != (someString.length -1)){
+// 						bufVal = "";
+// 						minusFlag = true;
+// 						var buffArray = parseNumberFromString(Index+1,someString);
+// 						if(String(buffArray)[0] == "0" && someString[Index+1] == "."){
+// 								bufVal = String(buffArray).replace("0","");
+// 						}
+// 						else{
+// 								bufVal = buffArray;
+// 						}
+// 						if(someString.indexOf("-" + bufVal) > -1){
 								
-								someString = someString.replace("-" + bufVal,'');
-						}
-						else{
-								someString = someString.replace("-",'');
-						}
-						totVal -= Number(buffVal);
+// 								someString = someString.replace("-" + bufVal,'');
+// 						}
+// 						else{
+// 								someString = someString.replace("-",'');
+// 						}
+// 						totVal -= Number(buffVal);
 						
-				}
-				else {
-						minusFlag = false;
-				}
-				if(sumFlag == false && minusFlag == false){
-						checkFlag = false;
-				}				
-    }
-    //	console.log("totVal: " + totVal);
-    return [totVal, someString];
+// 				}
+// 				else {
+// 						minusFlag = false;
+// 				}
+// 				if(sumFlag == false && minusFlag == false){
+// 						checkFlag = false;
+// 				}				
+//     }
+//     //	console.log("totVal: " + totVal);
+//     return [totVal, someString];
 
 
-}
+// }
 
 
 function newGetDice(someString){
@@ -624,7 +636,12 @@ function getRollMessage(numDieArr, maxDieArr, modifier, players, id, sumFlag, ad
 				
 				if (Number(modifier) != 0){
 						if (modifier < 0){
+								if(numDieArr.length == 1){
 								rollMessage += modifier;
+								}
+								else{
+										rollMessage += " - " + Math.abs(modifier);
+								}
 						}
 						else if (modifier >0){
 								if(numDieArr.length > 1){
@@ -635,6 +652,8 @@ function getRollMessage(numDieArr, maxDieArr, modifier, players, id, sumFlag, ad
 								}
 						}
 				}
+
+			
 				
 				if(advFlag)
 				{
@@ -773,7 +792,7 @@ module.exports = {
     getRandomInt,
 		findNumberIndex,
     parseNumberFromString,
-		parseSumNew,
+//		parseSumNew,
     parseSum,
 		newGetDice,
     getDice,
