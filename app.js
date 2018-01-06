@@ -7,6 +7,8 @@ var Player = require('./player.js');
 const config = require("./config.json");
 var tools = require("./tools.js"); 
 var perm = require("./permissions.json");
+var armor = require("./inventory/armor.json");
+
 
 
 const client = new Discord.Client();
@@ -225,6 +227,79 @@ var commands = {
 				process: function(client,message,args,id){
 						message.edit("Edited!");
 				}
+    },
+    "armor" : {
+				permissions: "any",
+				description: "This command changes the armor you have equipped.",
+				process: function(client, message, args, id) 
+	                        {
+				    var numTypes = Object.keys(armor).length;
+				    var newAC;
+				    var ACdexBuff;
+
+				    if(args[0]=="equip" || args[0]=="unequip")
+				    {
+					var valid_armor = 0;
+					var armor_type;
+					if(args[0]=="unequip")
+					{
+					    armor_type = "_none";
+					}
+					else
+					{
+					    args.shift();
+					    armor_type = "_" + args.join("");
+					}
+					for (ar in armor)
+					{
+					    if(ar == armor_type)
+						valid_armor = 1;
+					}
+					if(valid_armor)
+					{
+					    for(i=0; i < players.length; i++)
+					    {
+						if(id == players[i].getId())
+						{
+						    newAC = armor[armor_type][2];
+						    if(armor[armor_type][3] != "na")
+						    {
+							if(armor[armor_type][3] == "Inf")
+							{
+							    ACdexBuff = players[i].getDexmod();
+							}
+							else
+							{							
+							    ACdexBuff = Math.min(players[i].getDexmod(), armor[armor_type][3]);
+							    newAC = newAC + ACdexBuff;
+							}
+						    }
+						    messageSend(message, "Equipping " + armor[armor_type][0] + " armor on " + players[i].getName() + ".");
+						    messageSend(message, "New AC should be " + newAC);
+						    players[i].setAc(newAC);
+						    
+						}
+					    }		
+					}
+					else
+					{
+					    messageSend(message, "Invalid armor type.");
+					}
+				    }
+				    else if(args[0]=="unequip")
+				    {
+					messageSend(message, "Unequipping armor.");
+				    }
+				    else if(args[0]=="")
+				    {
+					messageSend(message, "Report the armor currently equipped here.");
+				    }
+				    else
+				    {
+					messageSend(message, "Unacceptable arguments for armor command.");
+				    }
+				}
+				
     },
     "close": {
 				permissions: "administrator",
