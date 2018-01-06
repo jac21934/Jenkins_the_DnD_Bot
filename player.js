@@ -117,7 +117,11 @@ function Player() {
 
 		//Notes:
 		
-		this._notes			="0";	
+		this._notes			="0";
+
+		//Inventory:
+		this._inventory = "0";
+		 
 }
 
 
@@ -399,6 +403,10 @@ Player.prototype = {
 				return this._notes;
 		},
 
+		getInventory: function(){
+				return  this._inventory;
+		},
+
 		// Setting functions:
 		setName: function(name){
 				this._name = name;
@@ -569,7 +577,12 @@ Player.prototype = {
 				this._notes = notes;
 		},
 
-		
+		setInventory: function(inventory){
+				this._inventory = inventory;
+		},
+
+
+		///////////////////////////
 		getStatsMessage: function(){
 
 
@@ -1055,6 +1068,99 @@ Player.prototype = {
 				this.setMods();
 
 		},
+
+
+		getInvMessage: function(){
+				var invMessage = "";
+				var invBuff = this.getInventory();
+				var invMax = 0;
+				var space = 4;
+				var spaceArr = Array(space).join(" ");
+				var discordMax = config.discordWidth;
+				var invArr = [];
+				if(invBuff.length >0){
+						for(j = 0; j < invBuff.length;j++){
+								var noteLength = invBuff[j].length;
+								noteLength += String(j+1).length + 2 + space;
+								if(noteLength > invMax){
+										invMax = noteLength;
+								}
+								var arrBuff = invBuff[j].split("\n");
+								var k = 0;
+								while( k < arrBuff.length) {
+										if( (arrBuff[k].length + String(j+1).length + 2 + space) >= discordMax) {
+												var maxIndex = discordMax - (String(j+1).length + 2 + space);
+												var buffString = "";
+												var newIndex = tools.findSpace(arrBuff[k],maxIndex);
+												// 	if(newIndex == maxIndex || newIndex < maxIndex - 15){ 
+												// 					buffString = arrBuff[k].slice(maxIndex);
+												// 					arrBuff[k] = arrBuff[k].replace(buffString,"-");
+												// 					buffString = "-" + buffString;
+												// 			}
+												// //	
+												//	else{
+												buffString = arrBuff[k].slice(newIndex);
+												arrBuff[k] = arrBuff[k].replace(buffString, "");
+												//		}
+												if( k < arrBuff.length - 1){
+														arrBuff[k+1] = buffString + " " + arrBuff[k+1];
+												}
+												else{
+														arrBuff.push(buffString);
+												}
+												
+												
+
+										}
+										k++;
+								}
+								invArr.push(arrBuff);
+								if(noteLength > discordMax){
+										
+										
+								}
+								
+								//								notesMessage += "(" + String(Number(j + 1)) + ")   " + notesBuff[j] + "\n\n";
+						}
+						invMax = Math.min(invMax,discordMax);
+						
+						invMessage += this.getName() + Array(Math.floor(invMax/2 - 4)).join(" ") + "Inventory\n";
+						var headerLength = invMessage.length;
+
+						if(headerLength > invMax){
+								if(headerLength > discordMax){
+										//nothing
+								}
+								else{
+										invMax = headerLength;
+								}
+						}
+						invMessage += Array(invMax).join("-") + "\n";
+						for(j = 0; j < invArr.length;j++){
+								invMessage += "(" +  String(Number(j + 1)) + ")";
+								var frontSpace = Array(String("(" +  String(Number(j + 1)) + ")").length).join(" ");
+								for(k=0; k < invArr[j].length;k++){
+										if(k == 0){
+												invMessage += spaceArr + invArr[j][k] + "\n";
+										}
+										else{
+												invMessage += frontSpace + spaceArr + invArr[j][k] + "\n";
+										}
+								}
+								invMessage += "\n";
+								//invMessage += "(" + String(Number(j + 1)) + ")" + Array(space).join(" ") +  invBuff[j] + "\n\n";
+						}
+						
+				}
+				else{
+						invMessage = this.getName() + " has no items saved.\n";
+				}
+
+				return invMessage;
+
+		},
+
+
 		
 		setMods(){
 
@@ -1071,7 +1177,7 @@ Player.prototype = {
 				this._per = 10 + Number(this.getWismod()) + ( Number(this.getProfbonus())) * Number(this.getPerprof()) + Number(this.getPeradd());
 //				this._ac = Number(this._ac) + Number(this._acadd); 
 //				this._hp = Number(this._hp) + Number(this._hpadd);
-//				this._init = Number(this.getDexmod()) + Number(this._initadd);
+				this._init = Number(this.getDexmod()) + Number(this._initadd);
 //				this._spd = Number(this._spd) + Number(this._spdadd);
 				//console.log(this.getPer());
 		},

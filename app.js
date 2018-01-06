@@ -47,8 +47,16 @@ function set(id, args){
 												message += "Setting " + players[i].getName() + "'s gold to " + args[args.length-1] + ".\n";
 												break;
 										case "nm":
-												var name = args.shift();
-												name = name.join(" ");
+												var name = args;
+												args.shift();
+												console.log(name);
+												if(args.length > 1){
+														name = name.join(" ");
+												}
+												else{
+														name = name[0];
+												}
+												console.log(name);
 												players[i].setName(name);
 												message += "Setting name to " + name + ".\n";
 												break;
@@ -184,9 +192,10 @@ client.on("ready", () => {
 });
 
 function messageSend(message, text, messagefile = "", breakChar = '\n'){
-		
-		if (text.length > config.discordMax){
 
+
+		if (text.length > config.discordMax){
+				console.log(text)
 
 				var arr = tools.breakUpString(text, breakChar);
 				
@@ -212,11 +221,10 @@ function messageSend(message, text, messagefile = "", breakChar = '\n'){
 var commands = {
 		"test" : {
 				permissions: "any",
-				description: "A testbed function for adding new functionality to Jenkins. Use with caution.",
-				process: function(client, message, args, id) {
-						tools.parseSumNew(args.join(" "));
+				description: 'A testbed function for Jenkins.',
+				process: function(client,message,args,id){
+						message.edit("Edited!");
 				}
-				
     },
     "close": {
 				permissions: "administrator",
@@ -725,8 +733,8 @@ var commands = {
 								const streamOptions = {seek: 0, volume: 1};
 								var video_id = args[0];
 								
-								var playMessage = "Playing " + args[0] + "\n";
-								message.channel.send(playMessage);
+								var playMessage = "Playing " + args[0];
+								messageSend(message, playMessage);
 								var stream = ytdl("https://www.youtube.com/watch?v=" + video_id, {filter: 'audioonly'});
 								//console.log("Streaming audio from https://www.youtube.com/watch?v=" + video_id );	
 								dispatcher = client.voiceConnections.first().playStream(stream, streamOptions);
@@ -969,7 +977,121 @@ var commands = {
 						
 						messageSend(message,notesMessage);
 				}
+    },
+		"inv" : {
+				permissions: "any",
+				description: 'You can "add" or "remove"/"rm" items in your characters\' inventory.',
+				process: function(client,message,args,id){
+						invMessage = "";
+						var playerInv = false;
+						
+						if(args.length > 0){
+								for(i=0; i< players.length;i++){
+										var playerName = players[i].getName().toLowerCase();
+										
+										if( playerName.indexOf(" ") > -1){
+												if( playerName.slice(0, playerName.indexOf(" ")) == args[0].toLowerCase()  ){
+														var invMessage = players[i].getInvMessage();
+														playerInv = true;
+														break;
+												}
+										}
+										
+										name = String(args.join(" ")).toLowerCase();
+										if (name == players[i].getName().toLowerCase()){
+												var invMessage = players[i].getInvMessage();
+												playerInv = true;
+												break;
+										}
+								}
+						}
+						
+						else{
+								for(i = 0; i < players.length; i++){
+										if(players[i].getId() == id){
+												invMessage = players[i].getInvMessage();
+												playerInv = true;
+												break;
+										}
+								}
+								
+						}
+						
+						
+						
+						
+						if(playerInv == false){
+								if(args[0] == "add"){
+										args.shift();
+										var inv = message.content.replace("\\inv","");
+										inv = inv.replace("add", "");
+										inv = inv.replace(/^\s+|\s+$/g, "");
+										for(i = 0; i < players.length; i++){
+												if(players[i].getId() == id){
+														var invBuff = players[i].getInventory();
+														invBuff.push(inv);
+														players[i].setInventory(invBuff);
+														invMessage += "Added to " + players[i].getName() + "'s inventory.\n";
+														break;
+												}
+										}
+								}
+								else if (args[0] == "rm" || args[0] == "remove") {
+										if( args.length == 1){
+												invMessage += "Please specify which item to remove.";
+										}
+										else{
+												for(i = 0; i < players.length; i++){
+														if(players[i].getId() == id){
+																var invBuff = players[i].getInventory();
+																var newInv = [];
+																var rmFlag = false;
+																
+																for(j = 0; j < invBuff.length; j++){
+																		var addFlag = true;
+																		for(k = 1; k < args.length; k++){
+																				if( args[k] == String(Number(j+1)) ){
+																						addFlag = false;
+																						rmFlag = true;
+																						break;
+																				}
+																				
+																		}
+																		if(addFlag){
+																				newInv.push(invBuff[j]);
+																		}
+																		else{
+																				invMessage += "Removing item (" + String(j+1) + ") from " + players[i].getName() + "'s inventory.\n";
+																		}
+																		
+																}
+																if(rmFlag == false){
+																		invMessage += "I cannot remove items that do not exist!";
+																}
+																
+																players[i].setInventory(newInv);
+																break;
+														}
+														
+												}
+										}
+								}
+								else{
+										for(i = 0; i < players.length; i++){
+												if(players[i].getId() == id){
+														invMessage = players[i].getInvMessage();
+												}
+										}
+										
+								}
+						}
+						
+						
+						messageSend(message,invMessage);
+				}
     }
+
+		
 }
 function checkMessageForCommand(message, isEdit) {
     //filter for prefix and bots
