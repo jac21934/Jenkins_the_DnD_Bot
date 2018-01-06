@@ -6,6 +6,7 @@ var goldFile = require("./inventory/gold.json");
 var Player = require('./player.js');
 const config = require("./config.json");
 var tools = require("./tools.js"); 
+var perm = require("./permissions.json");
 
 
 const client = new Discord.Client();
@@ -255,7 +256,7 @@ var commands = {
 				}
     },
     "update": {
-				permissions: "any",
+				permissions: "administrator",
 				description: "Updates from git repo and reboots.",
         process: function(client, message, args, id=0) {
 						const { spawn } = require('child_process');
@@ -311,7 +312,7 @@ var commands = {
 
     },
     "say":{
-				permisssions: "any",
+				permissions: "any",
 				description: "Makes me say something.",
 				process: function(client,message,args,id){
 
@@ -766,7 +767,7 @@ var commands = {
 				process: function(client,message,args,id=0){
 						
 						var restrictMessage = "Setting music restrictions from " + restrictPlay + " to ";
- 						restrictPlay = "admin";
+ 						restrictPlay = "administrator";
 						restrictMessage += restrictPlay + "\n"; 
 						messageSend(message,restrictMessage);
 						
@@ -1059,7 +1060,8 @@ function checkMessageForCommand(message, isEdit) {
 				id = message.member.id;
     }
 
-    if(true){
+	
+    if( (cmd.permissions == "administrator" && (perm.admin.indexOf(id) > -1))|| cmd.permissions == "any" ){
 				try{
 						cmd.process(client,message,args,id);
 				} catch(e){
