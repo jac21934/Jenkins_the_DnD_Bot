@@ -271,8 +271,8 @@ var commands = {
 							else
 							{							
 							    ACdexBuff = Math.min(players[i].getDexmod(), armor[armor_type][3]);
-							    newAC = newAC + ACdexBuff;
 							}
+							    newAC = newAC + ACdexBuff;			
 						    }
 						    messageSend(message, "Equipping " + armor[armor_type][0] + " armor on " + players[i].getName() + ".");
 						    messageSend(message, "New AC should be " + newAC);

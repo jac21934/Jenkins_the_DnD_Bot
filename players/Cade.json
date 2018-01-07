@@ -3,7 +3,7 @@
 	"_name": "Cade",
 	"_level": "1",
 	"_class": "Bard",
-	"_gold": 143,
+	"_gold": 48,
 	"_str": "10",
 	"_dex": "15",
 	"_con": "8",
@@ -13,7 +13,7 @@
 	"_ac": 13,
 	"_init": 2,
 	"_spd": 30,
-	"_hp": 7,
+	"_hp": "9",
 	"_per": 13,
 	"_strmod": 0,
 	"_dexmod": 2,
@@ -58,7 +58,9 @@
 		"A Lute.",
 		"A Flute.",
 		"An entertainer's Pack.",
-		"Leather Armor"
+		"Leather Armor",
+		"A dagger",
+		"Cade's Canoe"
 	],
 	"_stradd": 0,
 	"_dexadd": 0,
