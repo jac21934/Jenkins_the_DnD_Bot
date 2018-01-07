@@ -6,6 +6,8 @@ var goldFile = require("./inventory/gold.json");
 var Player = require('./player.js');
 const config = require("./config.json");
 var tools = require("./tools.js"); 
+var regex = require("./RegEx.json");
+
 var perm = require("./permissions.json");
 var armor = require("./inventory/armor.json");
 
@@ -587,29 +589,42 @@ var commands = {
 						var numDieArr = [];
 						var maxDieArr = [];
 						var dice = [];
-//////
-						var buffArr = tools.newGetDice(args.join(" ").toLowerCase());
-						dice = buffArr[0];
+						var modifier = 0;
 
+						totArgs = args.join(" ").toLowerCase();
+						re = new RegExp(regex.statAdditionCheck);
+				
+						var buff;
+						if((buff = totArgs.match(re)) != null){
+								modifier += tools.getModFromString(players,id,tools.parseStringForStat(buff[2]));
+								totArgs = totArgs.replace(buff[0], "");
+								
+						}
+						var buffArr = tools.getDice(totArgs);
+						dice = buffArr[0];
+						
 						for(k = 0; k < dice.length; k++){
 								numDieArr.push(Number(dice[k][0]));
 								maxDieArr.push(Number(dice[k][1]));
 						}
 
 						
-						
-						console.log(dice);
-
-
+				
 						var	buff= tools.parseSum(buffArr[1].replace(/ +/g, ""))
-						var modifier = Number(buff[0])
+						modifier += Number(buff[0])
 						modifier += tools.getModFromString(players,id,tools.parseStringForStat(buffArr[1]));
-						console.log("modifier: " + modifier);
+						
 
+						
+						
+
+						
+						var rollType = tools.parseStringForStat(buffArr[1]);
+				
 
 					
 
-						rollMessage = tools.getRollMessage(numDieArr,maxDieArr, modifier, players, id, sumFlag, advFlag, disFlag);
+						rollMessage = tools.getRollMessage(numDieArr,maxDieArr, modifier, players, id, sumFlag, advFlag, disFlag, rollType);
 						
 						messageSend(message,rollMessage);
 						
@@ -648,10 +663,10 @@ var commands = {
 										var max = 0;
 										for(i = 0; i < players.length; i++){
 												if(players[i].getId() != config.DM_ID){
-														console.log(players[i].getGold());
-														console.log(divGold);
+														//console.log(players[i].getGold());
+														//console.log(divGold);
 														players[i].setGold(Number(Number(players[i].getGold()) +Number( divGold)).toFixed(2));
-														console.log(players[i].getGold());
+														//console.log(players[i].getGold());
 
 														var buffMessage = "Adding " + divGold + " to " + players[i].getName() + "'s gold.\n" 
 														if (buffMessage.length > max){

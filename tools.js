@@ -361,7 +361,7 @@ function parseSum(someString){
 // }
 
 
-function newGetDice(someString){
+function getDice(someString){
 		var numDie = 0;
 		var dieMax = 0;
 		var dice = [];
@@ -402,42 +402,6 @@ function newGetDice(someString){
 		
 }
 
-function getDice(someString){
-    var numDie = 0;
-    var dieMax = 0;
-    /*	while((someString[0] != "d" && someString.length > 1)){
-				someString = someString.replace(someString[0],"");
-				console.log(someString);
-				}*/
-    
-    if(parseStringForStat(someString) != "")
-    {
-				numDie = 1;
-				dieMax = 20;
-    }
-    
-    else 
-    {
-				if( someString[0] == "d"){
-						numDie = 1;
-				}
-				else{
-						numDie=parseNumberFromString(0,someString);
-						someString = someString.replace(numDie, "");
-				}
-				
-				if(someString.length == 0){
-						dieMax = 0;	
-				}		
-				else if( someString[0] == "d"){
-						dieMax=parseNumberFromString(1,someString);
-				}
-				else{
-						dieMax = 0;	
-				}
-    }
-    return [Math.floor(numDie), Math.floor(dieMax)];
-}
 
 function getModFromString(players, id, stat)
 {
@@ -557,10 +521,14 @@ function getModFromString(players, id, stat)
     return modifier;
 }
 
+function toTitleCase(str)
+{
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
 
 
 
-function getRollMessage(numDieArr, maxDieArr, modifier, players, id, sumFlag, advFlag, disFlag){
+function getRollMessage(numDieArr, maxDieArr, modifier, players, id, sumFlag, advFlag, disFlag,rollType){
 		var rollMessage = "";
 
 		var numDie = 0;
@@ -653,7 +621,14 @@ function getRollMessage(numDieArr, maxDieArr, modifier, players, id, sumFlag, ad
 						}
 				}
 
-			
+				if( rollType != ""){
+						for( alias in aliases){
+								if (rollType == alias){
+										rollMessage += " (" + toTitleCase(aliases[alias][0]) + ")";
+								}
+								
+						}
+				}
 				
 				if(advFlag)
 				{
@@ -784,6 +759,7 @@ function getRollMessage(numDieArr, maxDieArr, modifier, players, id, sumFlag, ad
 }
 
 module.exports = {
+		toTitleCase,
 		inWords,
 		getAliases,
     getProf,
@@ -794,7 +770,6 @@ module.exports = {
     parseNumberFromString,
 //		parseSumNew,
     parseSum,
-		newGetDice,
     getDice,
 		breakUpString,
     getModFromString,
