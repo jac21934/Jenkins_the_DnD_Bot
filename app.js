@@ -595,8 +595,8 @@ var commands = {
 						re = new RegExp(regex.statAdditionCheck);
 				
 						var buff;
-						if((buff = totArgs.match(re)) != null){
-								modifier += tools.getModFromString(players,id,tools.parseStringForStat(buff[2]));
+						while((buff = totArgs.match(re)) != null){
+								modifier += tools.getModFromString(players,id,tools.parseStringForStat(buff[3]));
 								totArgs = totArgs.replace(buff[0], "");
 								
 						}
