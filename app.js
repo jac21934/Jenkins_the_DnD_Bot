@@ -1,4 +1,7 @@
 const Discord = require("discord.js");
+const client = new Discord.Client();
+
+
 const ytdl = require("ytdl-core");
 var fs = require('fs');
 
@@ -10,10 +13,9 @@ var regex = require("./RegEx.json");
 
 var perm = require("./permissions.json");
 var armor = require("./inventory/armor.json");
+var spells =  require("./inventory/spells.json");
 
 
-
-const client = new Discord.Client();
 var players = []; 
 var gold = goldFile.gold;
 var restrictPlay = "any";
@@ -199,8 +201,7 @@ function messageSend(message, text, messagefile = "", breakChar = '\n'){
 
 
 		if (text.length > config.discordMax){
-				console.log(text)
-
+	
 				var arr = tools.breakUpString(text, breakChar);
 				
 				for(i=0; i < arr.length;i++){
@@ -209,14 +210,14 @@ function messageSend(message, text, messagefile = "", breakChar = '\n'){
 
 		}
 		else{
-				var textToSend = "```" + text + "\n```";		
+				var textToSend = "```\n" + text + "\n```";		
+//				var textToSend = text;
 				if(messagefile != ""){
 						message.channel.send(textToSend, {
 								file: messagefile
 						});
 				}
 				else{
-						
 						message.channel.send(textToSend);
 						
 				}
@@ -227,9 +228,102 @@ var commands = {
 				permissions: "any",
 				description: 'A testbed function for Jenkins.',
 				process: function(client,message,args,id){
-						message.edit("Edited!");
+				
+						messageSend(message,"I do nothing!");
 				}
-    },
+		},
+		"spell" : {
+				permissions: "any",
+				description: 'Give me a spell name (or part of one) to learn more about that spell.',
+				process: function(client,message,args,id){
+						spellMessage = "";
+						if(args.length > 0){
+								var spellFound = false;;
+								totArgs = args.join(" ").toLowerCase();
+								for( spell in spells){
+										if( spells[spell]["name"].toLowerCase().indexOf(totArgs) == 0){
+												spellFound = true;
+
+												spellMessage += String(spells[spell]["name"]) + "\n";
+												var spellBuff = ""
+												
+												spellBuff += "Level: " + spells[spell]["level"] + "\n";
+												spellBuff += "School: " + tools.toTitleCase(spells[spell]["school"]) + "\n";
+												spellBuff += "Components: "
+												if(spells[spell]["components"]["material"] == true){
+														spellBuff += "M";
+												}
+												if(spells[spell]["components"]["material"] == true
+													 && (spells[spell]["components"]["somatic"] == true
+															 || spells[spell]["components"]["verbal"] == true)){
+
+														spellBuff += ", ";
+												}
+
+												if(spells[spell]["components"]["somatic"] == true){
+														spellBuff += "S";
+												}
+												
+												if(spells[spell]["components"]["somatic"] == true
+													 && spells[spell]["components"]["verbal"] == true){
+														
+														spellBuff += ", ";
+												}
+
+												if(spells[spell]["components"]["verbal"] == true){
+														spellBuff += "V";
+												}
+
+												if(spells[spell]["components"]["material"] == false
+													 && spells[spell]["components"]["somatic"] == false
+													 && spells[spell]["components"]["verbal"] == false){
+														
+														spellBuff += "None";
+												}
+												spellBuff += "\n";
+
+												var re = new RegExp(regex.costCheck);
+												if(spells[spell]["components"]["materials_needed"] != null){
+														var matList = spells[spell]["components"]["materials_needed"];
+														for(var j = 0; j < matList.length;j++){
+																rebuff = matList[j].match(re);
+																if(rebuff != null){
+																		console.log(rebuff);
+																		spellBuff += "Cost: " + rebuff[0] + "\n";
+																		break;
+																}
+														}
+														
+														//.match(re);
+												}
+												
+												spellBuff += "Range: " + spells[spell]["range"] + "\n";
+												
+												var maxWidth = Math.max(tools.getMaxWidth(spellBuff)+1,spellMessage.length);
+												maxWidth = Math.min(maxWidth,config.discordWidth);
+												spellMessage += Array(maxWidth).join("-") + "\n";
+												spellMessage += spellBuff;
+											
+												maxWidth = Math.min(tools.getMaxWidth(spells[spell]["description"]),config.discordWidth);
+												spellMessage += Array(maxWidth).join("-") + "\n";
+												spellMessage += spells[spell]["description"];
+												break;
+										}
+								}
+								if(spellFound == false){
+										spellMessage += "I don't recognize the spell " + totArgs;
+								}
+								
+						}
+						else{
+								spellMessage += "Please give me the name of a spell.";
+								
+						}
+						messageSend(message,spellMessage);
+				}
+		},
+
+		
     "armor" : {
 				permissions: "any",
 				description: "This command changes the armor you have equipped.",
@@ -820,15 +914,24 @@ var commands = {
 				description: "Give end of youtube address (everything after watch?v=) to play audio.",
 				process: function(client,message,args,id=0){
 						if( args.length >= 1){
+								if(dispatcher != null){
+										console.log("killing stream");
+										dispatcher.end();
+										dispactcher = null;
+								}
 								const streamOptions = {seek: 0, volume: 1};
 								var video_id = args[0];
 								
 								var playMessage = "Playing " + args[0];
 								messageSend(message, playMessage);
 								var stream = ytdl("https://www.youtube.com/watch?v=" + video_id, {filter: 'audioonly'});
-								//console.log("Streaming audio from https://www.youtube.com/watch?v=" + video_id );	
+								var info = ytdl.getInfo("https://www.youtube.com/watch?v=" + video_id);
+								console.log(info);
+								console.log("Streaming audio from https://www.youtube.com/watch?v=" + video_id );	
+
 								dispatcher = client.voiceConnections.first().playStream(stream, streamOptions);
-   							
+
+								
 						}
 				}
     },

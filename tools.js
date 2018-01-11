@@ -402,6 +402,18 @@ function getDice(someString){
 		
 }
 
+function getMaxWidth(text){
+
+		textArr = text.split("\n");
+		var max = 0;
+		for(i=0;i<textArr.length;i++){
+				max = Math.max(max, textArr[i].length);
+		}
+		return max;
+				
+		
+
+}
 
 function getModFromString(players, id, stat)
 {
@@ -761,6 +773,7 @@ function getRollMessage(numDieArr, maxDieArr, modifier, players, id, sumFlag, ad
 module.exports = {
 		toTitleCase,
 		inWords,
+		getMaxWidth,
 		getAliases,
     getProf,
     parseStringForStat,
