@@ -23,3 +23,7 @@ Jenkins needs:
  opusscript from npm
  
  ffmpeg
+
+## Citations
+The spell-list Jenkins uses is taken from vorpalhex's spell-list project:
+[github.com/vorpalhex/srd_spells](https://github.com/vorpalhex/srd_spells)
