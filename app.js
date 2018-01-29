@@ -42,7 +42,9 @@ function set(id, args){
 						message += "Setting gold to " + Number(gold).toFixed(2) + "gp.";
 				}
 				else{
-						var statBuff = tools.parseStringForStat(String(args.join(" ")));
+						// var statBuff = tools.parseStringForStat(String(args.join(" ")));
+						var statBuff = tools.parseStringForStat(String(args[0]));
+						
 						console.log(statBuff);
 						for(i=0; i< players.length;i++){
 								if (id == players[i].getId()){
@@ -113,6 +115,12 @@ function set(id, args){
 										case "hp":
 												players[i].setHp(args[args.length-1]);
 												message += "Setting HP to " + args[args.length-1] + ".\n";
+												break;
+										case "atk":
+												args.shift();
+												totArgs = args.join(" "); 
+												players[i].setAttack(totArgs);
+												message += "Setting favorite attack to " + totArgs + ".\n";
 												break;
 										default:
 												message += "Invalid argument " + args[0] + ".\n"
@@ -201,7 +209,7 @@ function messageSend(message, text, messagefile = "", breakChar = '\n'){
 
 
 		if (text.length > config.discordMax){
-	
+				
 				var arr = tools.breakUpString(text, breakChar);
 				
 				for(i=0; i < arr.length;i++){
@@ -211,7 +219,7 @@ function messageSend(message, text, messagefile = "", breakChar = '\n'){
 		}
 		else{
 				var textToSend = "```\n" + text + "\n```";		
-//				var textToSend = text;
+				//				var textToSend = text;
 				if(messagefile != ""){
 						message.channel.send(textToSend, {
 								file: messagefile
@@ -228,8 +236,32 @@ var commands = {
 				permissions: "any",
 				description: 'A testbed function for Jenkins.',
 				process: function(client,message,args,id){
-				
-						messageSend(message,"I do nothing!");
+
+						for( i=0;i < players.length; i++){
+								if(players[i].getId() == id){
+						
+										args.unshift(players[i].getAttack());
+
+										commands["roll"].process(client, message, args, id);
+								}					
+						}
+
+				}
+		},
+		"attack" : {
+				permissions: "any",
+				description: 'Rolls the saved attack for this character.',
+				process: function(client,message,args,id){
+
+						for( i=0;i < players.length; i++){
+								if(players[i].getId() == id){
+						
+										args.unshift(players[i].getAttack());
+
+										commands["roll"].process(client, message, args, id);
+								}					
+						}
+
 				}
 		},
 		"spell" : {
@@ -240,78 +272,108 @@ var commands = {
 						if(args.length > 0){
 								var spellFound = false;;
 								totArgs = args.join(" ").toLowerCase();
+								var spellVec = [];
 								for( spell in spells){
-										if( spells[spell]["name"].toLowerCase().indexOf(totArgs) == 0){
-												spellFound = true;
 
-												spellMessage += String(spells[spell]["name"]) + "\n";
-												var spellBuff = ""
-												
-												spellBuff += "Level: " + spells[spell]["level"] + "\n";
-												spellBuff += "School: " + tools.toTitleCase(spells[spell]["school"]) + "\n";
-												spellBuff += "Components: "
-												if(spells[spell]["components"]["material"] == true){
-														spellBuff += "M";
-												}
-												if(spells[spell]["components"]["material"] == true
-													 && (spells[spell]["components"]["somatic"] == true
-															 || spells[spell]["components"]["verbal"] == true)){
-
-														spellBuff += ", ";
-												}
-
-												if(spells[spell]["components"]["somatic"] == true){
-														spellBuff += "S";
-												}
-												
-												if(spells[spell]["components"]["somatic"] == true
-													 && spells[spell]["components"]["verbal"] == true){
-														
-														spellBuff += ", ";
-												}
-
-												if(spells[spell]["components"]["verbal"] == true){
-														spellBuff += "V";
-												}
-
-												if(spells[spell]["components"]["material"] == false
-													 && spells[spell]["components"]["somatic"] == false
-													 && spells[spell]["components"]["verbal"] == false){
-														
-														spellBuff += "None";
-												}
-												spellBuff += "\n";
-
-												var re = new RegExp(regex.costCheck);
-												if(spells[spell]["components"]["materials_needed"] != null){
-														var matList = spells[spell]["components"]["materials_needed"];
-														for(var j = 0; j < matList.length;j++){
-																rebuff = matList[j].match(re);
-																if(rebuff != null){
-																		console.log(rebuff);
-																		spellBuff += "Cost: " + rebuff[0] + "\n";
-																		break;
-																}
-														}
-														
-														//.match(re);
-												}
-												
-												spellBuff += "Range: " + spells[spell]["range"] + "\n";
-												
-												var maxWidth = Math.max(tools.getMaxWidth(spellBuff)+1,spellMessage.length);
-												maxWidth = Math.min(maxWidth,config.discordWidth);
-												spellMessage += Array(maxWidth).join("-") + "\n";
-												spellMessage += spellBuff;
-											
-												maxWidth = Math.min(tools.getMaxWidth(spells[spell]["description"]),config.discordWidth);
-												spellMessage += Array(maxWidth).join("-") + "\n";
-												spellMessage += spells[spell]["description"];
+										if(spells[spell]["name"].toLowerCase() == totArgs){
+												spellVec = [ spell ];
 												break;
 										}
+
+										if( spells[spell]["name"].toLowerCase().indexOf(totArgs) >-1){
+												//spellFound = true;
+												spellVec.push(spell);
+										}
 								}
-								if(spellFound == false){
+								if(spellVec.length == 1){
+										spell = spellVec[0];
+										spellMessage += String(spells[spell]["name"]) + "\n";
+										var spellBuff = ""
+										
+										spellBuff += "Level: " + spells[spell]["level"] + "\n";
+										spellBuff += "School: " + tools.toTitleCase(spells[spell]["school"]) + "\n";
+										spellBuff += "Casting Time: " + spells[spell]["casting_time"] + "\n";
+										spellBuff += "Components: "
+										if(spells[spell]["components"]["material"] == true){
+												spellBuff += "M";
+										}
+										if(spells[spell]["components"]["material"] == true
+											 && (spells[spell]["components"]["somatic"] == true
+													 || spells[spell]["components"]["verbal"] == true)){
+												
+												spellBuff += ", ";
+										}
+										
+										if(spells[spell]["components"]["somatic"] == true){
+												spellBuff += "S";
+										}
+										
+										if(spells[spell]["components"]["somatic"] == true
+											 && spells[spell]["components"]["verbal"] == true){
+												
+												spellBuff += ", ";
+										}
+										
+										if(spells[spell]["components"]["verbal"] == true){
+												spellBuff += "V";
+										}
+										
+										if(spells[spell]["components"]["material"] == false
+											 && spells[spell]["components"]["somatic"] == false
+											 && spells[spell]["components"]["verbal"] == false){
+												
+												spellBuff += "None";
+										}
+										spellBuff += "\n";
+										
+										var re = new RegExp(regex.costCheck);
+										if(spells[spell]["components"]["materials_needed"] != null){
+												var matList = spells[spell]["components"]["materials_needed"];
+												for(var j = 0; j < matList.length;j++){
+														rebuff = matList[j].match(re);
+														if(rebuff != null){
+																console.log(rebuff);
+																spellBuff += "Cost: " + rebuff[0] + "\n";
+																break;
+														}
+												}
+												
+												//.match(re);
+										}
+										
+										spellBuff += "Range: " + spells[spell]["range"] + "\n";
+										spellBuff += "Duration: " +spells[spell]["duration"] + "\n";
+										var maxWidth = Math.max(tools.getMaxWidth(spellBuff)+1,spellMessage.length);
+										maxWidth = Math.min(maxWidth,config.discordWidth);
+										spellMessage += Array(maxWidth).join("-") + "\n";
+										spellMessage += spellBuff;
+										
+										maxWidth = Math.min(tools.getMaxWidth(spells[spell]["description"]),config.discordWidth);
+										spellMessage += Array(maxWidth).join("-") + "\n";
+										spellMessage += spells[spell]["description"];
+										if(spells[spell]["higher_levels"] != null){
+												spellMessage += "\n\n" + spells[spell]["higher_levels"] + "\n";
+										}
+										
+								}
+								else if(spellVec.length == 0){
 										spellMessage += "I don't recognize the spell " + totArgs;
+								}
+								else if(spellVec.length > 1){
+										for(var k = 0; k <spellVec.length;k++){
+												spellVec[k] = spells[spellVec[k]]["name"];
+										}
+										spellVec.sort();
+										spellMessage += "These spells all matched your request:" + "\n";
+										var spellNameBuff = ""
+										for(var k = 0; k <spellVec.length;k++){
+												spellNameBuff += spellVec[k] +"\n";
+										}
+										var maxNameWidth = spellMessage.length;
+										maxNameWidth= Math.max(tools.getMaxWidth(spellNameBuff), maxNameWidth);
+										maxNameWidth = Math.min(maxNameWidth, config.discordWidth);
+										spellMessage += Array(maxNameWidth).join("-") + "\n";
+										spellMessage += spellNameBuff;
 								}
 								
 						}
@@ -322,95 +384,95 @@ var commands = {
 						messageSend(message,spellMessage);
 				}
 		},
-
 		
-    "armor" : {
+		
+		"armor" : {
 				permissions: "any",
 				description: "This command changes the armor you have equipped.",
 				process: function(client, message, args, id) 
-	                        {
-				    var numTypes = Object.keys(armor).length;
-				    var newAC;
-				    var ACdexBuff;
+	      {
+						var numTypes = Object.keys(armor).length;
+						var newAC;
+						var ACdexBuff;
 
-				    if(args[0]=="equip" || args[0]=="unequip")
-				    {
-					var valid_armor = 0;
-					var armor_type;
-					if(args[0]=="unequip")
-					{
-					    armor_type = "_none";
-					}
-					else
-					{
-					    args.shift();
-					    armor_type = "_" + args.join("");
-					}
-					for (ar in armor)
-					{
-					    if(ar == armor_type)
-						valid_armor = 1;
-					}
-					if(valid_armor)
-					{
-					    for(i=0; i < players.length; i++)
-					    {
-						if(id == players[i].getId())
+						if(args[0]=="equip" || args[0]=="unequip")
 						{
-						    newAC = armor[armor_type][2];
-						    if(armor[armor_type][3] != "na")
-						    {
-							if(armor[armor_type][3] == "Inf")
-							{
-							    ACdexBuff = players[i].getDexmod();
-							}
-							else
-							{							
-							    ACdexBuff = Math.min(players[i].getDexmod(), armor[armor_type][3]);
-							}
-							    newAC = newAC + ACdexBuff;			
-						    }
-						    messageSend(message, "Equipping " + armor[armor_type][0] + " armor on " + players[i].getName() + ".");
-						    messageSend(message, "New AC should be " + newAC);
-						    players[i].setAc(newAC);
-						    
+								var valid_armor = 0;
+								var armor_type;
+								if(args[0]=="unequip")
+								{
+										armor_type = "_none";
+								}
+								else
+								{
+										args.shift();
+										armor_type = "_" + args.join("");
+								}
+								for (ar in armor)
+								{
+										if(ar == armor_type)
+												valid_armor = 1;
+								}
+								if(valid_armor)
+								{
+										for(i=0; i < players.length; i++)
+										{
+												if(id == players[i].getId())
+												{
+														newAC = armor[armor_type][2];
+														if(armor[armor_type][3] != "na")
+														{
+																if(armor[armor_type][3] == "Inf")
+																{
+																		ACdexBuff = players[i].getDexmod();
+																}
+																else
+																{							
+																		ACdexBuff = Math.min(players[i].getDexmod(), armor[armor_type][3]);
+																}
+																newAC = newAC + ACdexBuff;			
+														}
+														messageSend(message, "Equipping " + armor[armor_type][0] + " armor on " + players[i].getName() + ".");
+														messageSend(message, "New AC should be " + newAC);
+														players[i].setAc(newAC);
+														
+												}
+										}		
+								}
+								else
+								{
+										messageSend(message, "Invalid armor type.");
+								}
 						}
-					    }		
-					}
-					else
-					{
-					    messageSend(message, "Invalid armor type.");
-					}
-				    }
-				    else if(args[0]=="unequip")
-				    {
-					messageSend(message, "Unequipping armor.");
-				    }
-				    else if(args[0]=="")
-				    {
-					messageSend(message, "Report the armor currently equipped here.");
-				    }
-				    else
-				    {
-					messageSend(message, "Unacceptable arguments for armor command.");
-				    }
+						else if(args[0]=="unequip")
+						{
+								messageSend(message, "Unequipping armor.");
+						}
+						else if(args[0]=="")
+						{
+								messageSend(message, "Report the armor currently equipped here.");
+						}
+						else
+						{
+								messageSend(message, "Unacceptable arguments for armor command.");
+						}
 				}
 				
-    },
-    "close": {
+		},
+		"close": {
 				permissions: "administrator",
-        description: "Turns me off. Needs admin permissions.",
-        process: function(client, message, args, id=0) {
+				description: "Turns me off. Needs admin permissions.",
+				process: function(client, message, args, id=0) {
 						messageSend(message,"Shutting down.");
 						client.destroy().then(function(){
 								process.exit(0);	
 						});
 				}
-    },
-    "reboot": {
+		},
+		"reboot": {
 				permissions: "any",
-        description: "Reboots me.",
-        process: function(client, message, args, id=0) {
+				description: "Reboots me.",
+				process: function(client, message, args, id=0) {
 						const { spawn } = require('child_process')
 						messageSend(message,"Rebooting.");
 						
@@ -433,11 +495,11 @@ var commands = {
 								process.exit(0);	
 						});
 				}
-    },
-    "update": {
+		},
+		"update": {
 				permissions: "administrator",
 				description: "Updates from git repo and reboots.",
-        process: function(client, message, args, id=0) {
+				process: function(client, message, args, id=0) {
 						const { spawn } = require('child_process');
 						messageSend(message,"Updating from git repo.");
 
@@ -466,20 +528,20 @@ var commands = {
 								process.exit(0);	
 						});
 				}
-    },		
-    "save": {
+		},		
+		"save": {
 				permissions: "any",
-        description: "Saves all player profiles and gold.",
-        process: function(client, message, args,id=0) {
+				description: "Saves all player profiles and gold.",
+				process: function(client, message, args,id=0) {
 
 						save();
 
 						messageSend(message,"Saving Profiles.\n");
 
 				}
-    },
+		},
 
-    "map":{
+		"map":{
 				permissions: "any",
 				description: "Shows a map of Faerun.",
 				process: function(client, message, args, id=0){
@@ -489,8 +551,8 @@ var commands = {
 				}
 				
 
-    },
-    "say":{
+		},
+		"say":{
 				permissions: "any",
 				description: "Makes me say something.",
 				process: function(client,message,args,id){
@@ -514,16 +576,16 @@ var commands = {
 						messageSend(message,sayMessage);
 
 				}
-    },
-    "set":{
+		},
+		"set":{
 				permissions: "any",
 				description: "Sets stats or gold to a given value.",
 				process: function(client,message,args,id){
 						setMessage = set(id, args);
 						messageSend(message,setMessage);
 				}
-    },
-    "stats":{
+		},
+		"stats":{
 				permissions: "any",
 				description: "Shows character stats and modifiers.",
 				process: function(client,message,args,id){
@@ -560,8 +622,8 @@ var commands = {
 								}
 						}
 				}						
-    },
-    "skills":{
+		},
+		"skills":{
 				permissions: "any",
 				description: "Shows your character's skills, proficiencies and modifiers. You can give me the first name of someone to see their skills.",
 				process: function(client,message,args,id){
@@ -601,8 +663,8 @@ var commands = {
 						
 						
 				}
-    },
-    "bonuses":{
+		},
+		"bonuses":{
 				permissions: "any",
 				description: "Shows your character's additional modifiers that have been extracted from your notes. You can give me the first name of someone to see their bonuses.",
 				process: function(client,message,args,id){
@@ -642,9 +704,9 @@ var commands = {
 						
 						
 				}
-    },
-    
-    "roll":{
+		},
+		
+		"roll":{
 				permissions: "any",
 				description: "Give a number of die with modifier(s) to roll and show result, (1d4 + 10 - 5 or 5d17 - 5). Put sum at the end if you don't want to see the individual rolls.",
 				process: function(client,message,args,id){
@@ -687,7 +749,7 @@ var commands = {
 
 						totArgs = args.join(" ").toLowerCase();
 						re = new RegExp(regex.statAdditionCheck);
-				
+						
 						var buff;
 						while((buff = totArgs.match(re)) != null){
 								modifier += tools.getModFromString(players,id,tools.parseStringForStat(buff[3]));
@@ -703,7 +765,7 @@ var commands = {
 						}
 
 						
-				
+						
 						var	buff= tools.parseSum(buffArr[1].replace(/ +/g, ""))
 						modifier += Number(buff[0])
 						modifier += tools.getModFromString(players,id,tools.parseStringForStat(buffArr[1]));
@@ -714,9 +776,9 @@ var commands = {
 
 						
 						var rollType = tools.parseStringForStat(buffArr[1]);
-				
+						
 
-					
+						
 
 						rollMessage = tools.getRollMessage(numDieArr,maxDieArr, modifier, players, id, sumFlag, advFlag, disFlag, rollType);
 						
@@ -726,9 +788,9 @@ var commands = {
 						
 						
 				}
-    },
+		},
 		
-    "aliases":{
+		"aliases":{
 				permissions: "any",
 				description: "Shows the aliases of all the different stats and skills that roll and notes can understand.",
 				process: function(client,message,args,id){
@@ -737,7 +799,7 @@ var commands = {
 				}
 		},
 		
-    "gold":{
+		"gold":{
 				permissions: "any",
 				description: "Shows the party's gold. Can be added and subtracted from (i.e. +100 - 50 +...).",
 				process: function(client,message,args,id){
@@ -868,7 +930,7 @@ var commands = {
 				}
 				
 				
-    },
+		},
 
 		"mygold":{
 				permissions: "any",
@@ -884,7 +946,7 @@ var commands = {
 										else {
 
 												if( (tools.parseStringForStat(args.join(" ")) == "take") || (tools.parseStringForStat(args.join(" ")) == "give") ){
-														commands["gold"].process(client, message, args, id)
+														commands["gold"].process(client, message, args, id);
 														return;
 												}
 												
@@ -905,11 +967,11 @@ var commands = {
 								}
 						}
 				}
-    },
+		},
 
 		
-    
-    "play":{
+		
+		"play":{
 				permissions: restrictPlay,
 				description: "Give end of youtube address (everything after watch?v=) to play audio.",
 				process: function(client,message,args,id=0){
@@ -934,8 +996,8 @@ var commands = {
 								
 						}
 				}
-    },
-    "stop":{
+		},
+		"stop":{
 				permissions: restrictPlay,
 				description: "Stops audio.",
 				process: function(client,message,args,id=0){
@@ -943,8 +1005,8 @@ var commands = {
 						messageSend(message, stopMessage);
 						dispatcher.end();
 				}
-    },
-    "pause":{
+		},
+		"pause":{
 				permissions: restrictPlay,
 				description: "Pauses audio.",
 				process: function(client,message,args,id=0){
@@ -952,8 +1014,8 @@ var commands = {
 						messageSend(message, pauseMessage);
  						dispatcher.pause();
 				}
-    },
-    "resume":{
+		},
+		"resume":{
 				permissions: restrictPlay,
 				description: "Resumes audio.",
 				process: function(client,message,args,id=0){
@@ -961,8 +1023,8 @@ var commands = {
 						messageSend(message, resumeMessage);
 						dispatcher.resume();
 				}
-    },
-    "restrict":{
+		},
+		"restrict":{
 				permissions: "administrator",
 				description: "",
 				process: function(client,message,args,id=0){
@@ -973,8 +1035,8 @@ var commands = {
 						messageSend(message,restrictMessage);
 						
 				}
-    },
-    "unrestrict":{
+		},
+		"unrestrict":{
 				permissions: "administrator",
 				description: "",
 				process: function(client,message,args,id=0){
@@ -985,9 +1047,9 @@ var commands = {
 						messageSend(message,restrictMessage);
 						
 				}
-    },
+		},
 
-    "players":{
+		"players":{
 				permissions: "any",
 				description: "Shows the list of players.",
 				process: function(client,message,args,id=0){
@@ -1020,9 +1082,9 @@ var commands = {
 				
 				
 				
-    },
-    
-    "defs":{
+		},
+		
+		"defs":{
 				permissions: "any",
 				description: "Shows the list of players' defenses and combat related stats.",
 				process: function(client,message,args,id=0){
@@ -1056,8 +1118,8 @@ var commands = {
 						
 				}
 
-    },
-    "notes":{
+		},
+		"notes":{
 				permissions: "any",
 				description: 'You can "add" or "remove"/"rm" notes about your characters. You can also give me the first name of any players to view their notes. These notes are parsed for any additional modifiers your character recieves, which can be view using '  + config.prefix + 'bonuses command. This means you can give me a note like "My Ring of Names give me +4 to PER/perception" and I will update your stats accordingly.',
 				process: function(client,message,args,id){
@@ -1170,7 +1232,7 @@ var commands = {
 						
 						messageSend(message,notesMessage);
 				}
-    },
+		},
 		"inv" : {
 				permissions: "any",
 				description: 'You can "add" or "remove"/"rm" items in your characters\' inventory.',
@@ -1282,20 +1344,20 @@ var commands = {
 						
 						messageSend(message,invMessage);
 				}
-    }
+		}
 
 		
 }
 function checkMessageForCommand(message, isEdit) {
-    //filter for prefix and bots
-    if(message.author.bot || message.content.indexOf(config.prefix) !== 0 ){
+		//filter for prefix and bots
+		if(message.author.bot || message.content.indexOf(config.prefix) !== 0 ){
 				return;
-    }
-    
-    const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
-    const command = args.shift().toLowerCase();
+		}
+		
+		const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
+		const command = args.shift().toLowerCase();
 
-    if(command == "help") {
+		if(command == "help") {
 				var dashSpace = "--      ";
 				var frontLength = 11;
 				var helpMessage = "";
@@ -1359,24 +1421,24 @@ function checkMessageForCommand(message, isEdit) {
 				messageSend(message, helpMessage, "", "\n\n" );
 				return;
 				
-    }
-    var cmd = commands[command];
-    if(String(cmd) == "undefined"){
+		}
+		var cmd = commands[command];
+		if(String(cmd) == "undefined"){
 				return;
-    }
+		}
 
-    var id = 0;
-    if (message.channel.type == "dm"){
+		var id = 0;
+		if (message.channel.type == "dm"){
 				id = message.channel.recipient.id;
 
-    }
+		}
 
-    else{
+		else{
 				id = message.member.id;
-    }
+		}
 
-	
-    if( (cmd.permissions == "administrator" && (perm.admin.indexOf(id) > -1))|| cmd.permissions == "any" ){
+		
+		if( (cmd.permissions == "administrator" && (perm.admin.indexOf(id) > -1))|| cmd.permissions == "any" ){
 				try{
 						cmd.process(client,message,args,id);
 				} catch(e){
@@ -1387,17 +1449,17 @@ function checkMessageForCommand(message, isEdit) {
 
 						messageSend(message,msgTxt);
 				}
-    }
-    else{
+		}
+		else{
 				msgTxt = "You do not have the neccesarry permissions for this command.\n";
 				messageSend(message,msgTxt);
-    }
+		}
 
 }
 
 
 client.on("message", async message => {
-    checkMessageForCommand(message, false);	
+		checkMessageForCommand(message, false);	
 });
 
 

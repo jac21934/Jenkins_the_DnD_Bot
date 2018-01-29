@@ -86,13 +86,14 @@ function parseStringForStat(someString){
     var stat = "";
     for(alias in aliases){
 				for(i = 0; i < aliases[alias].length; i++){
-						//						console.log(aliases[alias][i]);
+						console.log(aliases[alias][i]);
 						if(someString.indexOf(aliases[alias][i]) >-1){
 								stat = alias;
 								return stat;
 						}
 						else{
-								var re = new RegExp(aliases[alias][i]);
+								var aliasString = "\\b" + aliases[alias][i] + "\\b";
+								var re = new RegExp(aliasString);
 								if( someString.match(re) != null){
 										stat = alias;
 										return stat;
@@ -524,6 +525,8 @@ function getModFromString(players, id, stat)
 						case "pers":
 								modifier = players[i].getChamod() + players[i].getProfbonus() * players[i].getPersprof() + players[i].getPersadd();
 								break;
+						case "prof":
+								modifier = players[i].getProfbonus();
 						default:
 								break;
 						}

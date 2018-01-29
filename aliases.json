@@ -24,7 +24,7 @@
 		"hp":["hit points", "HP", "\\bhp\\b"],
 		"acr":["acrobatics","ACR", "\\bacr\\b"],
 		"ani":["animal handling", "ANI", "\\bani\\b"],
-		"arc":["arcana", "ARC", "\\barc\\b"],
+		"arc":["arcana", "ARC", "\\barc\\b", "Arcana"],
 		"ath":["athletics", "ATH", "\\bath\\b"],
 		"dec":["deception","DEC", "\\bdec\\b"],
 		"his":["history","HIS", "\\bhis\\b"],
@@ -34,11 +34,13 @@
 		"nat":["nature","NAT", "\\bnat\\b"],
 		"per":["perception","PER",  "\\bper\\b"],
 		"perf":["performance","PERF", "\\bperf\\b"],
-		"pers":["persuasion","PERS", "\\bpers\\b"],
+		"pers":["persuasion","PERS", "\\bpers\\b", "Persuasion"],
 		"rel":["religion","REL", "\\brel\\b"],
 		"soh":["sleight of hand","SOH", "\\bsoh\\b"],
 		"ste":["stealth","STE", "\\bste\\b"],
 		"sur":["survival","SUR", "\\bsur\\b"],
-		"ins":["insight","INS",  "\\bins\\b"]
+		"ins":["insight","INS",  "\\bins\\b"],
+		"prof":["proficiency","PROF",  "\\bprof\\b"],
+		"atk":["attack", "ATK", "\\batk\\b"]
 
 }

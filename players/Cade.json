@@ -1,7 +1,7 @@
 {
 	"_id": 189868212383383550,
 	"_name": "Cade",
-	"_level": "1",
+	"_level": "4",
 	"_class": "Bard",
 	"_gold": 48,
 	"_str": "10",
@@ -13,7 +13,7 @@
 	"_ac": 13,
 	"_init": 2,
 	"_spd": 30,
-	"_hp": "9",
+	"_hp": "21",
 	"_per": 13,
 	"_strmod": 0,
 	"_dexmod": 2,
@@ -33,17 +33,17 @@
 	"_arcanaprof": 1,
 	"_historyprof": 1,
 	"_investprof": 0,
-	"_natureprof": 0,
+	"_natureprof": 1,
 	"_religionprof": 0,
 	"_wissavprof": 0,
 	"_animalprof": 0,
 	"_insightprof": 0,
-	"_medicineprof": 0,
+	"_medicineprof": 1,
 	"_perprof": 1,
 	"_survprof": 0,
 	"_chasavprof": 1,
 	"_deceptprof": 1,
-	"_intimprof": 0,
+	"_intimprof": 1,
 	"_performprof": 1,
 	"_persprof": 1,
 	"_notes": [
@@ -51,7 +51,9 @@
 		"Cade is proficient with the lute, flute, and harp.",
 		"Cade was found and raised by the Goodbarrel family of the Goodbarrel Inn in Mirabar. Being a family of halflings, Cade's childhood was full of comical misunderstandings and highjinks as they tried there best to raise this strange magic-prone child. Cade picked up his musical skills from working in the Inn until he came of age, and then he apprenticed himself to a wandering minstrel. Cade remembers his childhood fondly, and has a deeply engrained love and trust of halflings.",
 		"More than anything, Cade is driven by the desire for fame. He's spent his whole life telling stories, and has come to the realization that while the minstrels and storytellers fade into obscurity, the stories remain. Cade has set out to make his own story. Cade does not want to be forgotten.",
-		"Cade has a porcelain box with a two headed worm inside. He won it in a dice game several years ago."
+		"Cade has a porcelain box with a two headed worm inside. He won it in a dice game several years ago.",
+		"Cade gets +2 to Persuasion from Expertise (double proficiency bonus)",
+		"Cade gets +2 to Arcana from Expertise (double proficiency bonus)"
 	],
 	"_inventory": [
 		"A rapier (1d8 piercing).",
@@ -82,7 +84,7 @@
 	"_stealthadd": 0,
 	"_consavadd": 0,
 	"_intsavadd": 0,
-	"_arcanaadd": 0,
+	"_arcanaadd": 2,
 	"_historyadd": 0,
 	"_investadd": 0,
 	"_natureadd": 0,
@@ -96,5 +98,6 @@
 	"_deceptadd": 0,
 	"_intimadd": 0,
 	"_performadd": 0,
-	"_persadd": 0
+	"_persadd": 2,
+	"_attack": "dex + prof"
 }

@@ -121,7 +121,9 @@ function Player() {
 
 		//Inventory:
 		this._inventory = "0";
-		 
+
+		this._attack = "";
+		
 }
 
 
@@ -406,6 +408,9 @@ Player.prototype = {
 		getInventory: function(){
 				return  this._inventory;
 		},
+		getAttack: function(){
+				return this._attack;
+		},
 
 		// Setting functions:
 		setName: function(name){
@@ -581,6 +586,9 @@ Player.prototype = {
 				this._inventory = inventory;
 		},
 
+		setAttack: function(attack){
+				this._attack = attack;
+		},
 
 		///////////////////////////
 		getStatsMessage: function(){
