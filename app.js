@@ -7,6 +7,7 @@ var fs = require('fs');
 
 var goldFile = require("./inventory/gold.json");
 var Player = require('./player.js');
+var Stat = require('./stat.js');
 const config = require("./config.json");
 var tools = require("./tools.js"); 
 var regex = require("./RegEx.json");
@@ -25,12 +26,6 @@ var dispatcher = null;
 const broadcast = client.createVoiceBroadcast();
 
 
-function addAditionalModifier(id, args){
-
-
-
-}
-
 
 function set(id, args){
 
@@ -44,95 +39,20 @@ function set(id, args){
 				else{
 						// var statBuff = tools.parseStringForStat(String(args.join(" ")));
 						var statBuff = tools.parseStringForStat(String(args[0]));
-						
-						console.log(statBuff);
-						for(i=0; i< players.length;i++){
-								if (id == players[i].getId()){
-										
-										switch(statBuff){
-										case "mygold":
-												players[i].setGold(Number(args[args.length-1]));
-												message += "Setting " + players[i].getName() + "'s gold to " + args[args.length-1] + ".\n";
-												break;
-										case "nm":
-												var name = args;
-												args.shift();
-												console.log(name);
-												if(args.length > 1){
-														name = name.join(" ");
-												}
-												else{
-														name = name[0];
-												}
-												console.log(name);
-												players[i].setName(name);
-												message += "Setting name to " + name + ".\n";
-												break;
-										case "lvl":
-												players[i].setLevel(args[args.length-1]);
-												message += "Setting level to " + args[args.length-1] + ".\n";
-												break;
-										case "cls":
-												players[i].setClass(args[args.length-1]);
-												message += "Setting class to " + args[args.length-1] + ".\n";
-												break;
-										case "str":
-												players[i].setStr(args[args.length-1]);
-												message += "Setting STR to " + args[args.length-1] + ".\n";
-												break;
-										case "dex":
-												players[i].setDex(args[args.length-1]);
-												message += "Setting DEX to " + args[args.length-1] + ".\n";
-												break;
-										case "con":
-												players[i].setCon(args[args.length-1]);
-												message += "Setting CON to " + args[args.length-1] + ".\n";
-												break;
-										case "int":
-												players[i].setInt(args[args.length-1]);
-												message += "Setting INT to " + args[args.length-1] + ".\n";
-												break;
-										case "wis":
-												players[i].setWis(args[args.length-1]);
-												message += "Setting WIS to " + args[args.length-1] + ".\n";
-												break;
-										case "cha":
-												players[i].setCha(args[args.length-1]);
-												message += "Setting CHA to " + args[args.length-1] + ".\n";
-												break;
-										case "ac":
-												players[i].setAc(args[args.length-1]);
-												message += "Setting AC to " + args[args.length-1] + ".\n";
-												break;
-										case "init":
-												players[i].setInit(args[args.length-1]);
-												message += "Setting INIT to " + args[args.length-1] + ".\n";
-												break;
-										case "spd":
-												players[i].setSpd(args[args.length-1]);
-												message += "Setting SPD to " + args[args.length-1] + ".\n";
-												break;
-										case "hp":
-												players[i].setHp(args[args.length-1]);
-												message += "Setting HP to " + args[args.length-1] + ".\n";
-												break;
-										case "atk":
-												args.shift();
-												totArgs = args.join(" "); 
-												players[i].setAttack(totArgs);
-												message += "Setting favorite attack to " + totArgs + ".\n";
-												break;
-										default:
-												message += "Invalid argument " + args[0] + ".\n"
-												break;
-										}
-										players[i].setMods();
-										break;
-								}
+						if(statBuff in players[id]){
+								args.shift();
+								totArgs = args.join(" "); 
+								players[id][statBuff].set(totArgs);
+								message += "Setting " + players[id]["name"].get() + "'s " + players[id][statBuff]["name"] + " to " + totArgs + ".\n";
+								players[id].setMods();
+								
+						}
+						else{
+								message += "Invalid argument " + args[0] + ".\n"
 						}
 				}
     }
-
+		
     else{
 				message += "Please give me something to set and its values.\n"
     }
@@ -144,9 +64,9 @@ function set(id, args){
 
 function save(callback){
     var json = "";
-    for(i=0; i < players.length; i++){
-				json = JSON.stringify(players[i], null, '\t');
-				var name = players[i].getName().split(" ");
+    for(id in players){
+				json = JSON.stringify(players[id], null, '\t');
+				var name = players[id]["name"].get().split(" ");
 				name = name.join("_");
 
 				fs.writeFile("./players/" + name + ".json", json, function(err) {
@@ -180,7 +100,6 @@ function PlayStream(streamUrl) {
 }
 
 
-
 client.on("ready", () => {
 
     voiceChannel = client.channels.find('name', 'The Game');
@@ -196,13 +115,22 @@ client.on("ready", () => {
     const dirname = './players/';
     
     fs.readdirSync(dirname).forEach(file => {
+				var stats = {};
 				json = fs.readFileSync(dirname+file, "utf8");
-				player = JSON.parse(json);
-				player.__proto__ = Player.prototype;
-				player.setMods();
-				players.push(player);
-    })
+				
+				json = JSON.parse(json);
+				for( key in json){
+						newStat = json[key];
+						Object.setPrototypeOf(newStat,Stat.prototype);
+						stats[key] = newStat;
+				}
 
+				Object.setPrototypeOf(stats, Player.prototype);
+				stats.initialize();
+				players[stats["id"].get()] =  stats;
+				stats = {};
+
+    });
 });
 
 function messageSend(message, text, messagefile = "", breakChar = '\n'){
@@ -236,16 +164,7 @@ var commands = {
 				permissions: "any",
 				description: 'A testbed function for Jenkins.',
 				process: function(client,message,args,id){
-
-						for( i=0;i < players.length; i++){
-								if(players[i].getId() == id){
-						
-										args.unshift(players[i].getAttack());
-
-										commands["roll"].process(client, message, args, id);
-								}					
-						}
-
+						players[id].parseNotes();
 				}
 		},
 		"attack" : {
@@ -253,15 +172,11 @@ var commands = {
 				description: 'Rolls the saved attack for this character.',
 				process: function(client,message,args,id){
 
-						for( i=0;i < players.length; i++){
-								if(players[i].getId() == id){
 						
-										args.unshift(players[i].getAttack());
-
-										commands["roll"].process(client, message, args, id);
-								}					
-						}
-
+						args.unshift(players[id]["attack"].get());
+						
+						commands["roll"].process(client, message, args, id);
+						
 				}
 		},
 		"spell" : {
@@ -332,7 +247,6 @@ var commands = {
 												for(var j = 0; j < matList.length;j++){
 														rebuff = matList[j].match(re);
 														if(rebuff != null){
-																console.log(rebuff);
 																spellBuff += "Cost: " + rebuff[0] + "\n";
 																break;
 														}
@@ -391,6 +305,7 @@ var commands = {
 				description: "This command changes the armor you have equipped.",
 				process: function(client, message, args, id) 
 	      {
+						var armorMessage = "";
 						var numTypes = Object.keys(armor).length;
 						var newAC;
 						var ACdexBuff;
@@ -401,12 +316,14 @@ var commands = {
 								var armor_type;
 								if(args[0]=="unequip")
 								{
-										armor_type = "_none";
+										armor_type = "none";
+										armorMessage += "Unequipping armor.\n"
+										
 								}
 								else
 								{
 										args.shift();
-										armor_type = "_" + args.join("");
+										armor_type = args.join("");
 								}
 								for (ar in armor)
 								{
@@ -415,47 +332,50 @@ var commands = {
 								}
 								if(valid_armor)
 								{
-										for(i=0; i < players.length; i++)
+										newAC = armor[armor_type][2];
+										if(armor[armor_type][3] != "na")
 										{
-												if(id == players[i].getId())
+												if(armor[armor_type][3] == "Inf")
 												{
-														newAC = armor[armor_type][2];
-														if(armor[armor_type][3] != "na")
-														{
-																if(armor[armor_type][3] == "Inf")
-																{
-																		ACdexBuff = players[i].getDexmod();
-																}
-																else
-																{							
-																		ACdexBuff = Math.min(players[i].getDexmod(), armor[armor_type][3]);
-																}
-																newAC = newAC + ACdexBuff;			
-														}
-														messageSend(message, "Equipping " + armor[armor_type][0] + " armor on " + players[i].getName() + ".");
-														messageSend(message, "New AC should be " + newAC);
-														players[i].setAc(newAC);
-														
+														ACdexBuff = Number(players[id]["dex"]["modifier"]);
 												}
-										}		
+												else
+												{							
+														ACdexBuff = Math.min(Number(players[id]["dex"]["modifier"]), Number(armor[armor_type][3]));
+												}
+												newAC = Number(newAC) + Number(ACdexBuff);			
+										}
+										players[id]["ac"].set(newAC);
+										players[id]["armor"].set(armor[armor_type][0]);
+										if(armor_type != "none"){
+												armorMessage += "Equipping " + players[id]["armor"].get() + " armor on " + players[id]["name"].get() + ".\n";
+										}
+										
+										armorMessage += players[id]["name"].get() + "'s new AC should be " + players[id]["ac"].get() + ".\n";
+										
 								}
 								else
 								{
-										messageSend(message, "Invalid armor type.");
+									armorMessage += "Invalid armor type.";
 								}
 						}
-						else if(args[0]=="unequip")
+						else if(args.length == 0)
 						{
-								messageSend(message, "Unequipping armor.");
-						}
-						else if(args[0]=="")
-						{
-								messageSend(message, "Report the armor currently equipped here.");
+								armorMessage += players[id]["name"].get() + " is wearing ";
+								if(players[id]["armor"].get() != "none"){
+										
+										armorMessage += players[id]["armor"].get() + " armor.\n";
+								}
+								else{
+										armorMessage += "no armor.\n";
+								}
 						}
 						else
 						{
-								messageSend(message, "Unacceptable arguments for armor command.");
+								armorMessage += "Unacceptable arguments for armor command.";
 						}
+
+						messageSend(message, armorMessage);
 				}
 				
 		},
@@ -505,7 +425,6 @@ var commands = {
 
 						var fetch = spawn('git', ['pull']);
 						fetch.stdout.on('data',function(data){
-								console.log(data.toString());
 						});
 						
 						
@@ -589,120 +508,75 @@ var commands = {
 				permissions: "any",
 				description: "Shows character stats and modifiers.",
 				process: function(client,message,args,id){
+						var statsMessage = "";
 						
 						if( args.length > 0){
-								for(i=0; i< players.length;i++){
-										playerName = players[i].getName().toLowerCase();
-										
-										if( playerName.indexOf(" ") > -1){
-												if( playerName.slice(0, playerName.indexOf(" ")) == args[0].toLowerCase()){
-														var statsMessage =players[i]. getStatsMessage();
-														messageSend(message,statsMessage);
-														break;
-												}
-										}
-										
-										name = String(args.join(" ")).toLowerCase();
-										if (name == players[i].getName().toLowerCase()){
-												var statsMessage = players[i].getStatsMessage();
-												messageSend(message,statsMessage);
+								var name = String(args.join(" ")).toLowerCase();
+								for(key in players){
+										if(players[key]["name"].get().toLowerCase().indexOf(name) == 0){
+												statsMessage =players[key].getStatsMessage();
 												break;
+												
 										}
 								}
-								
 						}
-
+						
 						else{
-								for(i=0; i< players.length;i++){
-										if (id == players[i].getId()){
-												var statsMessage = players[i].getStatsMessage();
-												messageSend(message,statsMessage);
-												break;
-										}
-								}
+								statsMessage = players[id].getStatsMessage();
 						}
+						messageSend(message,statsMessage);
 				}						
 		},
 		"skills":{
 				permissions: "any",
 				description: "Shows your character's skills, proficiencies and modifiers. You can give me the first name of someone to see their skills.",
 				process: function(client,message,args,id){
+						var skillsMessage = "";
 						if( args.length > 0){
-								for(i=0; i< players.length;i++){
-										
-										
-										playerName = players[i].getName().toLowerCase();
-										
-										if( playerName.indexOf(" ") > -1){
-												if( playerName.slice(0, playerName.indexOf(" ")) == args[0].toLowerCase()  ){
-														var skillsMessage = players[i].getSkillsMessage();
-														messageSend(message,skillsMessage);
-														break;
-												}
-										}
-										
-										name = String(args.join(" ")).toLowerCase();
-										if (name == players[i].getName().toLowerCase()){
-												var skillsMessage = players[i].getSkillsMessage();
-												messageSend(message,skillsMessage);
+								var name = String(args.join(" ")).toLowerCase();
+								for(key in players){
+										if(players[key]["name"].get().toLowerCase().indexOf(name) == 0){
+												skillsMessage = players[key].getSkillsMessage();
 												break;
+												
 										}
 								}
-								
 						}
 						
 						else{
-								for(i=0; i< players.length;i++){
-										if (id == players[i].getId()){
-												var skillsMessage = players[i].getSkillsMessage();
-												messageSend(message,skillsMessage);
-												break;
-										}
-								}
+								skillsMessage = players[id].getSkillsMessage();
+								
+								
+								
 						}
-						
-						
+						messageSend(message,skillsMessage);
+
 				}
 		},
 		"bonuses":{
 				permissions: "any",
 				description: "Shows your character's additional modifiers that have been extracted from your notes. You can give me the first name of someone to see their bonuses.",
 				process: function(client,message,args,id){
+						var bonusMessage = "";
 						if( args.length > 0){
-								for(i=0; i< players.length;i++){
-										
-										
-										playerName = players[i].getName().toLowerCase();
-										
-										if( playerName.indexOf(" ") > -1){
-												if( playerName.slice(0, playerName.indexOf(" ")) == args[0].toLowerCase()  ){
-														var bonusMessage = players[i].getBonusMessage();
-														messageSend(message,bonusMessage);
-														break;
-												}
-										}
-										
-										name = String(args.join(" ")).toLowerCase();
-										if (name == players[i].getName().toLowerCase()){
-												var bonusMessage = players[i].getBonusMessage();
-												messageSend(message,bonusMessage);
+								var name = String(args.join(" ")).toLowerCase();
+								for(key in players){
+										if(players[key]["name"].get().toLowerCase().indexOf(name) == 0){
+												bonusMessage = players[key].getBonusMessage();
 												break;
+												
 										}
 								}
-								
 						}
 						
 						else{
-								for(i=0; i< players.length;i++){
-										if (id == players[i].getId()){
-												var bonusMessage = players[i].getBonusMessage();
-												messageSend(message,bonusMessage);
-												break;
-										}
-								}
+								bonusMessage = players[id].getBonusMessage();
+								
+								
+								
 						}
-						
-						
+						messageSend(message,bonusMessage);
+
 				}
 		},
 		
@@ -810,21 +684,24 @@ var commands = {
 						else {
 								if(tools.parseStringForStat(args.join(" ")) == "div"){
 
-										var numPlayers = players.length - 1;
+										var numPlayers = 0;										
 
+										for( id in players){
+												if( players[id]["name"].get() != "The DM"){
+														numPlayers++;
+												}
+										}
+										
 										var divGold = Number(gold/numPlayers).toFixed(2);
 										goldMessage += "Dividing " + Number(gold).toFixed(2) + "gp amongst the party into " + tools.inWords(numPlayers) + " parts of " + divGold + "gp.\n";
 										var divMessage = Array(goldMessage.length).join("-");
 										goldMessage += divMessage + '\n';
 										var max = 0;
-										for(i = 0; i < players.length; i++){
-												if(players[i].getId() != config.DM_ID){
-														//console.log(players[i].getGold());
-														//console.log(divGold);
-														players[i].setGold(Number(Number(players[i].getGold()) +Number( divGold)).toFixed(2));
-														//console.log(players[i].getGold());
+										for(id in players){
+												if(id != config.DM_ID){
+														players[id]["gold"].set(Number(Number(players[id]["gold"].get()) +Number( divGold)).toFixed(2));
 
-														var buffMessage = "Adding " + divGold + " to " + players[i].getName() + "'s gold.\n" 
+														var buffMessage = "Adding " + divGold + " to " + players[id]["name"].get() + "'s gold.\n" 
 														if (buffMessage.length > max){
 																max = buffMessage.length;
 														}
@@ -838,77 +715,63 @@ var commands = {
 										max = Math.max(max, String("Total gold: " + Number(gold).toFixed(2) + "gp\n").length);
 										divMessage = Array(max).join("-");
 										goldMessage += divMessage + '\n';
-										
-										
-										
-										
 								}
 								else if( tools.parseStringForStat(args.join(" ")) == "give"){
-										for(k = 0; k < players.length; k++){
-												//			console.log(i + " " + players[i].getName() + " " + players[i].getGold());
-
-												if(id == players[k].getId()){
-														var giveGold = 0;
-														var index = tools.findNumberIndex(args.join(" "));
-														if( index == -1){
-																var re = new RegExp("\\ball\\b");
-																if( args.join(" ").match(re) != null){
-																		giveGold = players[k].getGold();
-																}
-																else{
-																		goldMessage += "Please state how much gold you want to give to the party.\n"
-																		messageSend(message, goldMessage);
-																		return;
-																}
-														}
-														else{
-																giveGold = tools.parseNumberFromString(index, args.join(" "));
-														}
-														if(giveGold > players[k].getGold()){
-																giveGold = players[k].getGold();
-														}
-														players[k].setGold(Number(Number(players[k].getGold()) - Number( giveGold)).toFixed(2));
-														gold = Number(Number(gold) +  Number(giveGold));
-														goldMessage += players[k].getName() + " has given " + String(Number(giveGold).toFixed(2)) + "gp to the party.\n";
-														break;
+										var giveGold = 0;
+										var index = tools.findNumberIndex(args.join(" "));
+										if( index == -1){
+												var re = new RegExp("\\ball\\b");
+												if( args.join(" ").match(re) != null){
+														giveGold = players[id]["gold"].get();
 												}
-												
-												
+												else{
+														goldMessage += "Please state how much gold you want to give to the party.\n"
+														messageSend(message, goldMessage);
+														return;
+												}
 										}
+										else{
+												giveGold = tools.parseNumberFromString(index, args.join(" "));
+										}
+										if(giveGold > players[id]["gold"].get()){
+												giveGold = players[id]["gold"].get();
+										}
+										players[id]["gold"].set(Number(Number(players[id]["gold"].get()) - Number( giveGold)).toFixed(2));
+										gold = Number(Number(gold) +  Number(giveGold));
+										goldMessage += players[id]["name"].get() + " has given " + String(Number(giveGold).toFixed(2)) + "gp to the party.\n";
 								}
+								
+								
+								
+								
 								else if( tools.parseStringForStat(args.join(" ")) == "take"){
-										for(k = 0; k < players.length; k++){
-												//			console.log(i + " " + players[i].getName() + " " + players[i].getGold());
 
-												if(id == players[k].getId()){
-														var takeGold = 0;
-														var index = tools.findNumberIndex(args.join(" "));
-														if( index == -1){
-																var re = new RegExp("\\ball\\b");
-																if( args.join(" ").match(re) != null){
-																		takeGold = gold;
-																}
-																else{
-																		goldMessage += "Please state how much gold you want to take from the party.\n"
-																		messageSend(message, goldMessage);
-																		return;
-																}
-														}
-														else{
-																takeGold = tools.parseNumberFromString(index, args.join(" "));
-														}
-														if(takeGold > gold){
-																takeGold = gold;
-														}
-														players[k].setGold(Number(Number(players[k].getGold()) + Number( takeGold)).toFixed(2));
-														gold = Number(Number(gold) -  Number(takeGold));
-														goldMessage += players[k].getName() + " has taken " + String(Number(takeGold).toFixed(2)) + "gp from the party.\n";
-														break;
+										var takeGold = 0;
+										var index = tools.findNumberIndex(args.join(" "));
+										if( index == -1){
+												var re = new RegExp("\\ball\\b");
+												if( args.join(" ").match(re) != null){
+														takeGold = gold;
 												}
-												
-												
+												else{
+														goldMessage += "Please state how much gold you want to take from the party.\n"
+														messageSend(message, goldMessage);
+														return;
+												}
 										}
+										else{
+												takeGold = tools.parseNumberFromString(index, args.join(" "));
+										}
+										if(takeGold > gold){
+												takeGold = gold;
+										}
+										players[id]["gold"].set(Number(Number(players[id]["gold"].get()) + Number( takeGold)).toFixed(2));
+										gold = Number(Number(gold) -  Number(takeGold));
+										goldMessage += players[id]["name"].get() + " has taken " + String(Number(takeGold).toFixed(2)) + "gp from the party.\n";
+										
 								}
+								
+								
 								
 								else{
 										var goldBuff = Number(tools.parseSum(totArgs)[0]);
@@ -928,8 +791,8 @@ var commands = {
 						
 						
 				}
-				
-				
+
+
 		},
 
 		"mygold":{
@@ -939,38 +802,33 @@ var commands = {
 						
 						var goldMessage = "";
 						totArgs = args.join("");
-						for(k=0; k < players.length;k++){
-								if(id == players[k].getId()){
-										console.log(players[k].getName());
-										if (totArgs.length < 1){}
-										else {
+						
+						if (totArgs.length < 1){}
+						else {
 
-												if( (tools.parseStringForStat(args.join(" ")) == "take") || (tools.parseStringForStat(args.join(" ")) == "give") ){
-														commands["gold"].process(client, message, args, id);
-														return;
-												}
-												
-												var goldBuff = Number(tools.parseSum(totArgs)[0]);
-												players[k].setGold(Number(Number(players[k].getGold()) +  Number(goldBuff)));
-												if(goldBuff >= 0){
-														goldMessage += "Adding " + Number(goldBuff).toFixed(2) + "gp\n";
-												} 
-												else if(goldBuff < 0){
-														goldMessage += "Removing " + Number(goldBuff).toFixed(2) + "gp\n";
-												}
-										}
-										
-										goldMessage += players[k].getName() + "'s total gold: " + Number(players[k].getGold()).toFixed(2) + "gp\n";
-										messageSend(message,goldMessage);
-										break;
-										
+								if( (tools.parseStringForStat(args.join(" ")) == "take") || (tools.parseStringForStat(args.join(" ")) == "give") ){
+										commands["gold"].process(client, message, args, id);
+										return;
+								}
+								
+								var goldBuff = Number(tools.parseSum(totArgs)[0]);
+								players[id]["gold"].set(Number(Number(players[id]["gold"].get()) +  Number(goldBuff)));
+								if(goldBuff >= 0){
+										goldMessage += "Adding " + Number(goldBuff).toFixed(2) + "gp\n";
+								} 
+								else if(goldBuff < 0){
+										goldMessage += "Removing " + Number(goldBuff).toFixed(2) + "gp\n";
 								}
 						}
+						
+						goldMessage += players[id]["name"].get() + "'s total gold: " + Number(players[id]["gold"].get()).toFixed(2) + "gp\n";
+						messageSend(message,goldMessage);
+						
 				}
 		},
 
-		
-		
+
+
 		"play":{
 				permissions: restrictPlay,
 				description: "Give end of youtube address (everything after watch?v=) to play audio.",
@@ -1061,12 +919,12 @@ var commands = {
 						
 						var playersHeader = "Name" + Array(regionSize - String("Name").length).join(" ") + "Level" + Array(regionSize - String("Level").length).join(" ") + "Class" + Array(regionSize - String("Class").length).join(" ") + "Gold" +  "\n"; 
 						
-						for(i = 0; i < players.length; i++){
-								if(players[i].getClass() != "Dungeon Master"){
-										buffMessage += players[i].getName() + Array(regionSize - String(players[i].getName()).length).join(" ") + "Level " + players[i].getLevel() + Array(regionSize - String("Level " + players[i].getLevel()).length).join(" ") + players[i].getClass() + Array(regionSize - String(players[i].getClass()).length).join(" ") + String(Number(players[i].getGold()).toFixed(2)) + "gp" +  "\n"; 
+						for(id in players){
+								if(players[id]["class"].get() != "Dungeon Master"){
+										buffMessage += players[id]["name"].get() + Array(regionSize - String(players[id]["name"].get()).length).join(" ") + "Level " + players[id]["level"].get() + Array(regionSize - String("Level " + players[id]["level"].get()).length).join(" ") + players[id]["class"].get() + Array(regionSize - String(players[id]["class"].get()).length).join(" ") + String(Number(players[id]["gold"].get()).toFixed(2)) + "gp" +  "\n"; 
 										
-										if(players[i].getClass().length > maxSize){
-												maxSize = players[i].getClass().length;
+										if(players[id]["class"].get().length > maxSize){
+												maxSize = players[id]["class"].get().length;
 										}
 										
 										
@@ -1083,7 +941,7 @@ var commands = {
 				
 				
 		},
-		
+
 		"defs":{
 				permissions: "any",
 				description: "Shows the list of players' defenses and combat related stats.",
@@ -1097,13 +955,13 @@ var commands = {
 						
 						var defsHeader = "Name" + Array(nameregionSize - String("Name").length).join(" ") + "AC" + Array(regionSize - String("AC").length).join(" ") + "INIT" + Array(regionSize - String("INIT").length).join(" ") + "SPD" + Array(regionSize - String("SPD").length).join(" ")  + "PER" + Array(regionSize - String("PER").length).join(" ")  +  "HP" + "\n"; 
 						
-						for(i = 0; i < players.length; i++){
+						for(id in players){
 								
-								if(players[i].getClass() != "Dungeon Master"){
-										buffMessage += players[i].getName() + Array(nameregionSize - String(players[i].getName()).length).join(" ")  + players[i].getAc() + Array(regionSize - String(players[i].getAc()).length).join(" ") + players[i].getInit() + Array(regionSize - String(players[i].getInit()).length).join(" ") + players[i].getSpd() + Array(regionSize - String(players[i].getSpd()).length).join(" ") + players[i].getPer() + Array(regionSize - String(players[i].getPer()).length).join(" ") + players[i].getHp() + "\n"; 
+								if(players[id]["class"].get() != "Dungeon Master"){
+										buffMessage += players[id]["name"].get() + Array(nameregionSize - String(players[id]["name"].get()).length).join(" ")  + players[id]["ac"].get() + Array(regionSize - String(players[id]["ac"].get()).length).join(" ") + players[id]["init"].get() + Array(regionSize - String(players[id]["init"].get()).length).join(" ") + players[id]["spd"].get() + Array(regionSize - String(players[id]["spd"].get()).length).join(" ") + players[id]["per"].get() + Array(regionSize - String(players[id]["per"].get()).length).join(" ") + players[id]["hp"].get() + "\n"; 
 										
-										if(String(players[i].getSpd()).length > maxSize){
-												maxSize = String(players[i].getSpd()).length;
+										if(String(players[id]["spd"].get()).length > maxSize){
+												maxSize = String(players[id]["spd"].get()).length;
 												
 										}
 										
@@ -1123,38 +981,26 @@ var commands = {
 				permissions: "any",
 				description: 'You can "add" or "remove"/"rm" notes about your characters. You can also give me the first name of any players to view their notes. These notes are parsed for any additional modifiers your character recieves, which can be view using '  + config.prefix + 'bonuses command. This means you can give me a note like "My Ring of Names give me +4 to PER/perception" and I will update your stats accordingly.',
 				process: function(client,message,args,id){
-						notesMessage = "";
-						var playerNotes = false;
+
+						var notesMessage = "";
 						
-						if(args.length > 0){
-								for(i=0; i< players.length;i++){
-										var playerName = players[i].getName().toLowerCase();
-										
-										if( playerName.indexOf(" ") > -1){
-												if( playerName.slice(0, playerName.indexOf(" ")) == args[0].toLowerCase()  ){
-														var notesMessage = players[i].getNotesMessage();
-														playerNotes = true;
-														break;
-												}
-										}
-										
-										name = String(args.join(" ")).toLowerCase();
-										if (name == players[i].getName().toLowerCase()){
-												var notesMessage = players[i].getNotesMessage();
-												playerNotes = true;
+						
+						var playerNotes = false;
+						var name = args.join(" ").toLowerCase();
+
+						
+						if( args.length > 0){
+								for(key in players){
+										if(players[key]["name"].get().toLowerCase().indexOf(name) == 0){
+												notesMessage = players[key].getNotesMessage();
 												break;
+												
 										}
 								}
 						}
-						
 						else{
-								for(i = 0; i < players.length; i++){
-										if(players[i].getId() == id){
-												notesMessage = players[i].getNotesMessage();
-												playerNotes = true;
-												break;
-										}
-								}
+								notesMessage = players[id].getNotesMessage();
+								playerNotes = true;
 								
 						}
 						
@@ -1167,66 +1013,54 @@ var commands = {
 										var note = message.content.replace("\\notes","");
 										note = note.replace("add", "");
 										note = note.replace(/^\s+|\s+$/g, "");
-										for(i = 0; i < players.length; i++){
-												if(players[i].getId() == id){
-														var notesBuff = players[i].getNotes();
-														notesBuff.push(note);
-														players[i].setNotes(notesBuff);
-														notesMessage += "Added to " + players[i].getName() + "'s notes.\n";
-														players[i].parseNotes();
-														break;
-												}
-										}
+										var notesBuff = players[id]["notes"].get();
+										notesBuff.push(note);
+										players[id]["notes"].set(notesBuff);
+										notesMessage += "Added to " + players[id]["name"].get() + "'s notes.\n";
+										players[id].parseNotes();
 								}
 								else if (args[0] == "rm" || args[0] == "remove") {
 										if( args.length == 1){
 												notesMessage += "Please specify which note to remove.";
 										}
 										else{
-												for(i = 0; i < players.length; i++){
-														if(players[i].getId() == id){
-																var notesBuff = players[i].getNotes();
-																var newNotes = [];
-																var rmFlag = false;
-																
-																for(j = 0; j < notesBuff.length; j++){
-																		var addFlag = true;
-																		for(k = 1; k < args.length; k++){
-																				if( args[k] == String(Number(j+1)) ){
-																						addFlag = false;
-																						rmFlag = true;
-																						break;
-																				}
-																				
-																		}
-																		if(addFlag){
-																				newNotes.push(notesBuff[j]);
-																		}
-																		else{
-																				notesMessage += "Removing note (" + String(j+1) + ") from " + players[i].getName() + "'s notes.\n";
-																		}
-																		
-																}
-																if(rmFlag == false){
-																		notesMessage += "I cannot remove notes that do not exist!";
+												
+												var notesBuff = players[id]["notes"].get();
+												var newNotes = [];
+												var rmFlag = false;
+												
+												for(j = 0; j < notesBuff.length; j++){
+														var addFlag = true;
+														for(k = 1; k < args.length; k++){
+																if( args[k] == String(Number(j+1)) ){
+																		addFlag = false;
+																		rmFlag = true;
+																		break;
 																}
 																
-																players[i].setNotes(newNotes);
-																players[i].parseNotes();
-																break;
+														}
+														if(addFlag){
+																newNotes.push(notesBuff[j]);
+														}
+														else{
+																notesMessage += "Removing note (" + String(j+1) + ") from " + players[id]["name"].get() + "'s notes.\n";
 														}
 														
 												}
-										}
-								}
-								else{
-										for(i = 0; i < players.length; i++){
-												if(players[i].getId() == id){
-														notesMessage = players[i].getNotesMessage();
+												if(rmFlag == false){
+														notesMessage += "I cannot remove notes that do not exist!";
 												}
+												
+												players[id]["notes"].set(newNotes);
+												players[id].parseNotes();
+												
 										}
-										
 								}
+								// else{
+
+								// 		notesMessage = players[id].getNotesMessage();
+										
+								// }
 						}
 						
 						
@@ -1237,38 +1071,26 @@ var commands = {
 				permissions: "any",
 				description: 'You can "add" or "remove"/"rm" items in your characters\' inventory.',
 				process: function(client,message,args,id){
-						invMessage = "";
-						var playerInv = false;
+						var invMessage = "";
 						
-						if(args.length > 0){
-								for(i=0; i< players.length;i++){
-										var playerName = players[i].getName().toLowerCase();
-										
-										if( playerName.indexOf(" ") > -1){
-												if( playerName.slice(0, playerName.indexOf(" ")) == args[0].toLowerCase()  ){
-														var invMessage = players[i].getInvMessage();
-														playerInv = true;
-														break;
-												}
-										}
-										
-										name = String(args.join(" ")).toLowerCase();
-										if (name == players[i].getName().toLowerCase()){
-												var invMessage = players[i].getInvMessage();
-												playerInv = true;
+						
+						var playerInv = false;
+						var name = args.join(" ").toLowerCase();
+						
+						if( args.length > 0){
+								var name = String(args.join(" ")).toLowerCase();
+								for(key in players){
+										if(players[key]["name"].get().toLowerCase().indexOf(name) == 0){
+												invMessage = players[key].getInvMessage();
 												break;
+												
 										}
 								}
 						}
 						
 						else{
-								for(i = 0; i < players.length; i++){
-										if(players[i].getId() == id){
-												invMessage = players[i].getInvMessage();
-												playerInv = true;
-												break;
-										}
-								}
+								invMessage = players[id].getInvMessage();
+								playerInv = true;
 								
 						}
 						
@@ -1281,72 +1103,59 @@ var commands = {
 										var inv = message.content.replace("\\inv","");
 										inv = inv.replace("add", "");
 										inv = inv.replace(/^\s+|\s+$/g, "");
-										for(i = 0; i < players.length; i++){
-												if(players[i].getId() == id){
-														var invBuff = players[i].getInventory();
-														invBuff.push(inv);
-														players[i].setInventory(invBuff);
-														invMessage += "Added to " + players[i].getName() + "'s inventory.\n";
-														break;
-												}
-										}
+										var invBuff = players[id]["inventory"].get();
+										invBuff.push(inv);
+										players[id]["inventory"].set(invBuff);
+										invMessage += "Added to " + players[id]["name"].get() + "'s inv.\n";
 								}
 								else if (args[0] == "rm" || args[0] == "remove") {
 										if( args.length == 1){
 												invMessage += "Please specify which item to remove.";
 										}
 										else{
-												for(i = 0; i < players.length; i++){
-														if(players[i].getId() == id){
-																var invBuff = players[i].getInventory();
-																var newInv = [];
-																var rmFlag = false;
-																
-																for(j = 0; j < invBuff.length; j++){
-																		var addFlag = true;
-																		for(k = 1; k < args.length; k++){
-																				if( args[k] == String(Number(j+1)) ){
-																						addFlag = false;
-																						rmFlag = true;
-																						break;
-																				}
-																				
-																		}
-																		if(addFlag){
-																				newInv.push(invBuff[j]);
-																		}
-																		else{
-																				invMessage += "Removing item (" + String(j+1) + ") from " + players[i].getName() + "'s inventory.\n";
-																		}
-																		
-																}
-																if(rmFlag == false){
-																		invMessage += "I cannot remove items that do not exist!";
+												
+												var invBuff = players[id]["inventory"].get();
+												var newInv = [];
+												var rmFlag = false;
+												
+												for(j = 0; j < invBuff.length; j++){
+														var addFlag = true;
+														for(k = 1; k < args.length; k++){
+																if( args[k] == String(Number(j+1)) ){
+																		addFlag = false;
+																		rmFlag = true;
+																		break;
 																}
 																
-																players[i].setInventory(newInv);
-																break;
+														}
+														if(addFlag){
+																newInv.push(invBuff[j]);
+														}
+														else{
+																invMessage += "Removing item (" + String(j+1) + ") from " + players[id]["name"].get() + "'s inventory.\n";
 														}
 														
 												}
-										}
-								}
-								else{
-										for(i = 0; i < players.length; i++){
-												if(players[i].getId() == id){
-														invMessage = players[i].getInvMessage();
+												if(rmFlag == false){
+														invMessage += "I cannot remove items that do not exist!";
 												}
+												
+												players[id]["inventory"].set(newInv);
+											
 										}
-										
 								}
+								// else{
+
+								// 		invMessage = players[id].getInvMessage();
+										
+								// }
 						}
-						
 						
 						messageSend(message,invMessage);
 				}
 		}
 
-		
+
 }
 function checkMessageForCommand(message, isEdit) {
 		//filter for prefix and bots

@@ -75,7 +75,6 @@ function breakUpString(someString, someBreak){
 
 				Arr.push(buffString);
 		}
-		//		console.log(Arr);
 		return Arr;
 		
 
@@ -86,7 +85,6 @@ function parseStringForStat(someString){
     var stat = "";
     for(alias in aliases){
 				for(i = 0; i < aliases[alias].length; i++){
-						console.log(aliases[alias][i]);
 						if(someString.indexOf(aliases[alias][i]) >-1){
 								stat = alias;
 								return stat;
@@ -104,7 +102,6 @@ function parseStringForStat(someString){
 		var stat = "";
     for(alias in aliases){
 				for(i = 0; i < aliases[alias].length; i++){
-						//						console.log(aliases[alias][i]);
 						if(someString.indexOf(aliases[alias][i]) >-1){
 								stat = alias;
 								return stat;
@@ -119,7 +116,6 @@ function parseAlias(someString){
 		var aliasString = "";
     for(alias in aliases){
 				for(i = 0; i < aliases[alias].length; i++){
-						//						console.log(aliases[alias][i]);
 						if(someString.indexOf(aliases[alias][i]) >-1){
 								stat = alias;
 								aliasString =  aliases[alias][i];
@@ -138,7 +134,6 @@ function parseAlias(someString){
 		var stat = "";
     for(alias in aliases){
 				for(i = 0; i < aliases[alias].length; i++){
-						//						console.log(aliases[alias][i]);
 						if(someString.indexOf(aliases[alias][i]) >-1){
 								stat = alias;
 								return [stat, aliasString];
@@ -177,7 +172,6 @@ function	getRandomInt(min, max) {
 
 function findNumberIndex(someString){
 		for(i = 0; i < someString.length; i++){
-				//				console.log(someString[i]);
 				if(String(Number(someString[i])) == someString[i]){
 						
 						return i;
@@ -197,7 +191,6 @@ function parseNumberFromString(Index,someString){
     while(numFlag){
 				if( String(Number(someString[Index])) == someString[Index] ){
 						buffVal += String(someString[Index])
-						//	console.log(someString[Index] + " is a number.") 
 
 				}
 				else if((someString[Index] == '.') && (periodCheck == false) ){
@@ -206,18 +199,15 @@ function parseNumberFromString(Index,someString){
 								buffVal += "0";
 						}
 						buffVal += String(someString[Index]);
-						//			console.log(someString[Index] + " is a period.") 
 
 				}
 				else{
-						//		console.log(someString[Index] + " is not a number.") 
 
 						numFlag = false;
 						//		Index -=1;
 						break;
 				}
 				if(Index == someString.length -1 ){
-						//	console.log(someString[Index] + " is the last digit.") 
 
 						numFlag = false;
 						//		Index -=1;
@@ -226,7 +216,6 @@ function parseNumberFromString(Index,someString){
 				Index += 1;
 
     }
-    //		console.log("I'm Out!");
     return Number(buffVal)
 }
 
@@ -270,10 +259,8 @@ function parseSum(someString){
 		var sum = 0;
 		while((buff = someString.match(re)) != null){
 				someString = someString.replace(re, "");
-				console.log(buff);
 				
 				var sumBuff = Number(buff[0].replace(reSplit,""));
-				console.log(buff[0])
 				if( buff[0][0] == "-"){
 						sumBuff = -1 * sumBuff;
 				}
@@ -281,85 +268,10 @@ function parseSum(someString){
 				
 		}
 
-		console.log(sum);
 
 		return [sum.toFixed(2), someString];
 		
 }
-
-// function  parseSum (someString){
-
-//     var checkFlag = true;
-//     var sumFlag = false;
-//     var minusFlag = false;
-//     var Index  = 0;
-//     var totVal = 0;
-//     var bufVal = "";
-//     var bufbufVal;
-// 		//    console.log("someString: " + someString);
-//     while(checkFlag){
-// 				Index = someString.indexOf("+");
-// 				if( Index != -1 && Index != (someString.length -1)){
-						
-// 						bufVal = "";
-// 						sumFlag = true;
-// 						var buffArray = parseNumberFromString(Index+1,someString);
-						
-// 						if(String(buffArray)[0] == "0" && someString[Index+1] == "."){
-// 								bufVal = String(buffArray).replace("0","");
-// 						}
-// 						else{
-// 								bufVal = buffArray;
-// 						}
-// 						if(someString.indexOf("+" + bufVal) > -1){
-								
-// 								someString = someString.replace("+" + bufVal,'');
-// 						}
-// 						else{
-// 								someString = someString.replace("+",'');
-// 						}
-// 						console.log(someString);
-
-// 						totVal += Number(buffVal);
-// 				}
-// 				else{
-// 						sumFlag = false;
-// 				}
-// 				periodCheck = false;
-
-// 				Index = someString.indexOf("-");
-// 				if( Index != -1 && Index != (someString.length -1)){
-// 						bufVal = "";
-// 						minusFlag = true;
-// 						var buffArray = parseNumberFromString(Index+1,someString);
-// 						if(String(buffArray)[0] == "0" && someString[Index+1] == "."){
-// 								bufVal = String(buffArray).replace("0","");
-// 						}
-// 						else{
-// 								bufVal = buffArray;
-// 						}
-// 						if(someString.indexOf("-" + bufVal) > -1){
-								
-// 								someString = someString.replace("-" + bufVal,'');
-// 						}
-// 						else{
-// 								someString = someString.replace("-",'');
-// 						}
-// 						totVal -= Number(buffVal);
-						
-// 				}
-// 				else {
-// 						minusFlag = false;
-// 				}
-// 				if(sumFlag == false && minusFlag == false){
-// 						checkFlag = false;
-// 				}				
-//     }
-//     //	console.log("totVal: " + totVal);
-//     return [totVal, someString];
-
-
-// }
 
 
 function getDice(someString){
@@ -374,17 +286,14 @@ function getDice(someString){
     }
 		else{
 				
-			//	re = new RegExp("\\b(([1-9])([0-9]*))?d([1-9])([0-9]*)\\b");
+				//	re = new RegExp("\\b(([1-9])([0-9]*))?d([1-9])([0-9]*)\\b");
 				re = new RegExp(regex.dieCheck);
 				
 				var buff;
-				// console.log(someString.match(re));
 				
 				while((buff = someString.match(re)) != null){
-						//				console.log(someString.match(re));
 						
 						var die = buff[0].split("d");
-						//				console.log(die);
 						if( die[0] == ''){
 								
 								dice.push( [ Number(1) , Number(die[1]) ] );
@@ -411,7 +320,7 @@ function getMaxWidth(text){
 				max = Math.max(max, textArr[i].length);
 		}
 		return max;
-				
+		
 		
 
 }
@@ -419,120 +328,26 @@ function getMaxWidth(text){
 function getModFromString(players, id, stat)
 {
     var modifier = 0;
-    for(i = 0; i < players.length; i++)
-    {
-				if(players[i].getId() == id)
-				{
-						
-						switch(stat){
-								//base stats
-						case "str":
-								modifier = players[i].getStrmod() + players[i].getStradd();
-								break;
-						case "dex":
-								modifier = players[i].getDexmod() + players[i].getDexadd();
-								break;
-						case "con":
-								modifier = players[i].getConmod() + players[i].getConadd();
-								break;
-						case "int":
-								modifier = players[i].getIntmod()  + players[i].getIntadd();
-								break;
-						case "wis":
-								modifier = players[i].getWismod() + players[i].getWisadd();
-								break;
-						case "cha":
-								modifier = players[i].getChamod() + players[i].getChaadd();
-								break;
-								//strength skills
-						case "strsav":
-								modifier = players[i].getStrmod() + players[i].getProfbonus() * players[i].getStrsavprof() + players[i].getStrsavadd();
-								break;
-						case "ath":
-								modifier = players[i].getStrmod() + players[i].getProfbonus() * players[i].getAthprof() + players[i].getAthadd();
-								break;
-								//dex skills
-						case "dexsav":
-								modifier = players[i].getDexmod() + players[i].getProfbonus() * players[i].getDexsavprof() + players[i].getDexadd();
-								break;
-						case "init":
-								modifier = players[i].getInit();
-								break;
-						case "acr":
-								modifier = players[i].getDexmod() + players[i].getProfbonus() * players[i].getAcroprof() + players[i].getAcroadd();
-								break;
-						case "soh":
-								modifier = players[i].getDexmod() + players[i].getProfbonus() * players[i].getSleightprof() + players[i].getSleightadd();
-								break;
-						case "ste":
-								modifier = players[i].getDexmod() + players[i].getProfbonus() * players[i].getStealthprof() + players[i].getStealthadd();
-								break;
-								//con skills
-						case "consav":
-								modifier = players[i].getConmod() + players[i].getProfbonus() * players[i].getConsavprof() + players[i].getConsavadd();
-								break;
-								//int skills
-						case "intsav":
-								modifier = players[i].getIntmod() + players[i].getProfbonus() * players[i].getIntsavprof() + players[i].getIntsavadd();
-								break;
-						case "arc":
-								modifier = players[i].getIntmod() + players[i].getProfbonus() * players[i].getArcanaprof() + players[i].getArcanaadd();
-								break;
-						case "his":
-								modifier = players[i].getIntmod() + players[i].getProfbonus() * players[i].getHistoryprof() + players[i].getHistoryadd();
-								break;
-						case "inv":
-								modifier = players[i].getIntmod() + players[i].getProfbonus() * players[i].getInvestprof() + players[i].getInvestadd();
-								break;
-						case "rel":
-								modifier = players[i].getIntmod() + players[i].getProfbonus() * players[i].getReligionprof() + players[i].getReligionadd();
-								break;
-						case "nat":
-								modifier = players[i].getIntmod() + players[i].getProfbonus() * players[i].getNatureprof() + players[i].getNatureadd();
-								break;
-								//wis skills
-						case "wissav":
-								modifier = players[i].getWismod() + players[i].getProfbonus() * players[i].getWissavprof() + players[i].getWissavadd();
-								break;
-						case "ani":
-								modifier = players[i].getWismod() + players[i].getProfbonus() * players[i].getAnimalprof() + players[i].getAnimaladd();
-								break;
-						case "ins":
-								modifier = players[i].getWismod() + players[i].getProfbonus() * players[i].getInsightprof() + players[i].getInsightadd();
-								break;
-						case "med":
-								modifier = players[i].getWismod() + players[i].getProfbonus() * players[i].getMedicineprof() + players[i].getMedicineadd();
-								break;
-						case "per":
-								modifier = players[i].getWismod() + players[i].getProfbonus() * players[i].getPerprof() + players[i].getPeradd();
-								break;
-						case "sur":
-								modifier = players[i].getWismod() + players[i].getProfbonus() * players[i].getSurvprof() + players[i].getSurvadd();
-								break;
-								//cha skills
-						case "chasav":
-								modifier = players[i].getChamod() + players[i].getProfbonus() * players[i].getChasavprof() + players[i].getChasavadd();
-								break;
-						case "dec":
-								modifier = players[i].getChamod() + players[i].getProfbonus() * players[i].getDeceptprof() + players[i].getAcroadd();
-								break;
-						case "intim":
-								modifier = players[i].getChamod() + players[i].getProfbonus() * players[i].getIntimprof() + players[i].getIntimadd();
-								break;
-						case "perf":
-								modifier = players[i].getChamod() + players[i].getProfbonus() * players[i].getPerformprof() + players[i].getPerformadd();
-								break;
-						case "pers":
-								modifier = players[i].getChamod() + players[i].getProfbonus() * players[i].getPersprof() + players[i].getPersadd();
-								break;
-						case "prof":
-								modifier = players[i].getProfbonus();
-						default:
-								break;
-						}
-						break;
+		if(stat.length < 1){
+				modifier = 0;
+		}
+		else{
+				var type = players[id][stat]["type"];
+				if(type == "stat"){
+						modifier += Number(players[id][stat]["modifier"]);
+
 				}
-    }
+				else if( type == "skill"){
+
+						modifier += Number(players[id][players[id][stat]["mainStat"]]["modifier"])
+								+ Number(players[id][stat]["bonus"])
+								+ Number(players[id][stat]["prof"]) * Number(players[id]["prof"].get());
+				}
+				else if( type == "prof"){
+						modifier += Number(players[id][stat].get());
+
+				}
+		}
     return modifier;
 }
 
@@ -548,15 +363,16 @@ function getRollMessage(numDieArr, maxDieArr, modifier, players, id, sumFlag, ad
 
 		var numDie = 0;
 		var maxCheck = 0;
-					var name = "";
-						for(i=0; i < players.length;i++){
-								if(id == players[i].getId()){
-										name = players[i].getName();
-										break;
-								}
-								
-						}
-								
+		var name = players[id]["name"].get();
+		// var name = "";
+		// 	for(i=0; i < players.length;i++){
+		// 			if(id == players[i].getId()){
+		// 					name = players[i].getName();
+		// 					break;
+		// 			}
+		
+		// 	}
+		
 
 		for(i = 0; i < numDieArr.length; i++){
 				numDie += Number(numDieArr[i]);
@@ -566,8 +382,6 @@ function getRollMessage(numDieArr, maxDieArr, modifier, players, id, sumFlag, ad
 				maxCheck += Number(maxDieArr[i]);
 		}
 
-		// console.log( advFlag);
-		// console.log(disFlag);
 		
 		if(isNaN(numDie) || isNaN(maxCheck) || (numDieArr.length == 0) || (maxDieArr.length == 0) ){
 		 		rollMessage += "I didn't understand that input. I can take values like 3d6 + 2 or 12d13 - 21 or strength.\n";
@@ -602,7 +416,7 @@ function getRollMessage(numDieArr, maxDieArr, modifier, players, id, sumFlag, ad
 								if(k < numDieArr.length - 1){
 										rollMessage += ", ";
 										
-								
+										
 								}
 
 								if( k == numDieArr.length - 2){
@@ -620,7 +434,7 @@ function getRollMessage(numDieArr, maxDieArr, modifier, players, id, sumFlag, ad
 				if (Number(modifier) != 0){
 						if (modifier < 0){
 								if(numDieArr.length == 1){
-								rollMessage += modifier;
+										rollMessage += modifier;
 								}
 								else{
 										rollMessage += " - " + Math.abs(modifier);
@@ -784,7 +598,7 @@ module.exports = {
     getRandomInt,
 		findNumberIndex,
     parseNumberFromString,
-//		parseSumNew,
+		//		parseSumNew,
     parseSum,
     getDice,
 		breakUpString,

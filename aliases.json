@@ -1,6 +1,6 @@
 {
-		"nm":["name", "\\bnm\\b"],
-		"lvl":["level"],
+		"name":["name", "\\bnm\\b"],
+		"level":["level", "\\blvl\\b"],
 		"cls":["class", "\\bcls\\b"],
 		"div":["divide", "\\bdiv\\b"],
 		"give":["\\bgive\\b"],
@@ -41,6 +41,6 @@
 		"sur":["survival","SUR", "\\bsur\\b"],
 		"ins":["insight","INS",  "\\bins\\b"],
 		"prof":["proficiency","PROF",  "\\bprof\\b"],
-		"atk":["attack", "ATK", "\\batk\\b"]
+		"attack":["attack","atk", "ATK", "\\batk\\b"]
 
 }

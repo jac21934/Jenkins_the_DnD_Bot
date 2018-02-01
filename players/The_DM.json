@@ -1,88 +1,320 @@
 {
-	"_id": 272158302958387200,
-	"_name": "The DM",
-	"_level": "1",
-	"_class": "Dungeon Master",
-	"_gold": 10000,
-	"_str": "30",
-	"_dex": "30",
-	"_con": "30",
-	"_int": "30",
-	"_wis": "30",
-	"_cha": "30",
-	"_ac": 100,
-	"_ini": 10,
-	"_spd": 100,
-	"_hp": 1000,
-	"_per": 22,
-	"_strmod": 10,
-	"_dexmod": 10,
-	"_conmod": 10,
-	"_intmod": 10,
-	"_wismod": 10,
-	"_chamod": 10,
-	"_profbonus": 2,
-	"_strsavprof": 1,
-	"_athprof": 1,
-	"_dexsavprof": 1,
-	"_acroprof": 1,
-	"_sleightprof": 1,
-	"_stealthprof": 1,
-	"_consavprof": 1,
-	"_intsavprof": 1,
-	"_arcanaprof": 1,
-	"_historyprof": 1,
-	"_investprof": 1,
-	"_natureprof": 1,
-	"_religionprof": 1,
-	"_wissavprof": 1,
-	"_animalprof": 1,
-	"_insightprof": 1,
-	"_medicineprof": 1,
-	"_perprof": 1,
-	"_survprof": 1,
-	"_chasavprof": 1,
-	"_deceptprof": 1,
-	"_intimprof": 1,
-	"_performprof": 1,
-	"_persprof": 1,
-	"_notes": [
-		"This is also a note."
-	],
-	"_stradd": 0,
-	"_dexadd": 0,
-	"_conadd": 0,
-	"_intadd": 0,
-	"_wisadd": 0,
-	"_chaadd": 0,
-	"_profbonusadd": 0,
-	"_acadd": 0,
-	"_initadd": 0,
-	"_spdadd": 0,
-	"_peradd": 0,
-	"_hpadd": 0,
-	"_strsavadd": 0,
-	"_athadd": 0,
-	"_dexsavadd": 0,
-	"_acroadd": 0,
-	"_sleightadd": 0,
-	"_stealthadd": 0,
-	"_consavadd": 0,
-	"_intsavadd": 0,
-	"_arcanaadd": 0,
-	"_historyadd": 0,
-	"_investadd": 0,
-	"_natureadd": 0,
-	"_religionadd": 0,
-	"_wissavadd": 0,
-	"_animaladd": 0,
-	"_insightadd": 0,
-	"_medicineadd": 0,
-	"_survadd": 0,
-	"_chasavadd": 0,
-	"_deceptadd": 0,
-	"_intimadd": 0,
-	"_performadd": 0,
-	"_persadd": 0,
-	"_init": 10
+		"id": {
+				"value": "272158302958387200"
+		},
+		"name": {
+				"value": "The DM",
+				"name": "name"
+		},
+		"class": {
+				"value": "Dungeon Master",
+				"name": "class"
+		},
+		"level": {
+				"value": "4",
+				"name": "level"
+		},
+		"prof": {
+				"value": "2",
+				"name": "Proficiency Bonus",
+				"bonus": 0,
+				"type": "prof"
+		},
+		"str": {
+				"value": "10",
+				"name": "Strength",
+				"modifier": "0",
+				"bonus": 0,
+				"type": "stat"
+		},
+		"dex": {
+				"value": "15",
+				"name": "Dexterity",
+				"modifier": "2",
+				"bonus": 0,
+				"type": "stat"
+		},
+		"con": {
+				"value": "8",
+				"name": "Constitution",
+				"modifier": "-1",
+				"bonus": 0,
+				"type": "stat"
+		},
+		"int": {
+				"value": "14",
+				"name": "Intelligence",
+				"modifier": "2",
+				"bonus": 0,
+				"type": "stat"
+		},
+		"wis": {
+				"value": "12",
+				"name": "Wisdom",
+				"modifier": "1",
+				"bonus": 0,
+				"type": "stat"
+		},
+		"cha": {
+				"value": "17",
+				"name": "Charisma",
+				"modifier": "3",
+				"bonus": 0,
+				"type": "stat"
+		},
+		"ac": {
+				"value": 13,
+				"name": "AC",
+				"bonus": 0,
+				"type": "combat",
+				"mainStat": "dex"
+		},
+		"init": {
+				"value": "2",
+				"name": "Initiative",
+				"bonus": 0,
+				"type": "combat",
+				"mainStat": "dex"
+		},
+		"spd": {
+				"value": "30",
+				"name": "Speed",
+				"bonus": 0,
+				"type": "combat"
+		},
+		"hp": {
+				"value": "21",
+				"name": "HP",
+				"bonus": 0,
+				"type": "combat"
+		},
+		"strsav": {
+				"value": "10",
+				"name": "Strength Save",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "str"
+		},
+		"ath": {
+				"value": "10",
+				"name": "Athletics",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "str"
+		},
+		"dexsav": {
+				"value": "10",
+				"name": "Dexterity Save",
+				"bonus": 0,
+				"prof": "1",
+				"type": "skill",
+				"mainStat": "dex"
+		},
+		"acr": {
+				"value": "10",
+				"name": "Acrobatics",
+				"bonus": 0,
+				"prof": "1",
+				"type": "skill",
+				"mainStat": "dex"
+		},
+		"soh": {
+				"value": "10",
+				"name": "Sleight of Hand",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "dex"
+		},
+		"ste": {
+				"value": "10",
+				"name": "Stealth",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "dex"
+		},
+		"consav": {
+				"value": "10",
+				"name": "Constitution Save",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "con"
+		},
+		"intsav": {
+				"value": "10",
+				"name": "Intelligence Save",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "int"
+		},
+		"arc": {
+				"value": "10",
+				"name": "Arcana",
+				"bonus": 2,
+				"prof": "1",
+				"type": "skill",
+				"mainStat": "int"
+		},
+		"his": {
+				"value": "10",
+				"name": "History",
+				"bonus": 0,
+				"prof": "1",
+				"type": "skill",
+				"mainStat": "int"
+		},
+		"inv": {
+				"value": "10",
+				"name": "Investigation",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "int"
+		},
+		"nat": {
+				"value": "10",
+				"name": "Nature",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "int"
+		},
+		"rel": {
+				"value": "10",
+				"name": "Religion",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "int"
+		},
+		"wissav": {
+				"value": "10",
+				"name": "Wisdom Save",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "wis"
+		},
+		"ani": {
+				"value": "10",
+				"name": "Animal Handling",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "wis"
+		},
+		"ins": {
+				"value": "10",
+				"name": "Insight",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "wis"
+		},
+		"med": {
+				"value": "10",
+				"name": "Medicine",
+				"bonus": 0,
+				"prof": "1",
+				"type": "skill",
+				"mainStat": "wis"
+		},
+		"per": {
+				"value": "3",
+				"name": "Perception",
+				"bonus": 0,
+				"prof": "1",
+				"type": "skill",
+				"mainStat": "wis"
+		},
+		"sur": {
+				"value": "10",
+				"name": "Survival",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "wis"
+		},
+		"chasav": {
+				"value": "10",
+				"name": "Charisma Save",
+				"bonus": 0,
+				"prof": "1",
+				"type": "skill",
+				"mainStat": "cha"
+		},
+		"dec": {
+				"value": "10",
+				"name": "Deception",
+				"bonus": 0,
+				"prof": "1",
+				"type": "skill",
+				"mainStat": "cha"
+		},
+		"intim": {
+				"value": "10",
+				"name": "Intimidation",
+				"bonus": 0,
+				"prof": "1",
+				"type": "skill",
+				"mainStat": "cha"
+		},
+		"perf": {
+				"value": "10",
+				"name": "Performance",
+				"bonus": 0,
+				"prof": "1",
+				"type": "skill",
+				"mainStat": "cha"
+		},
+		"pers": {
+				"value": "10",
+				"name": "Persuasion",
+				"bonus": 2,
+				"prof": "1",
+				"type": "skill",
+				"mainStat": "cha"
+		},
+		"gold": {
+				"value": "48",
+				"name": "gold"
+		},
+		"notes": {
+				"value": [
+						"Cade speaks Common, Elvish, and Dwarvish.",
+						"Cade is proficient with the lute, flute, and harp.",
+						"Cade was found and raised by the Goodbarrel family of the Goodbarrel Inn in Mirabar. Being a family of halflings, Cade's childhood was full of comical misunderstandings and highjinks as they tried there best to raise this strange magic-prone child. Cade picked up his musical skills from working in the Inn until he came of age, and then he apprenticed himself to a wandering minstrel. Cade remembers his childhood fondly, and has a deeply engrained love and trust of halflings.",
+						"More than anything, Cade is driven by the desire for fame. He's spent his whole life telling stories, and has come to the realization that while the minstrels and storytellers fade into obscurity, the stories remain. Cade has set out to make his own story. Cade does not want to be forgotten.",
+						"Cade has a porcelain box with a two headed worm inside. He won it in a dice game several years ago.",
+						"Cade gets +2 to Persuasion from Expertise (double proficiency bonus)",
+						"Cade gets +2 to Arcana from Expertise (double proficiency bonus)"
+				],
+				"name": "notes"
+		},
+		"inventory": {
+				"value": [
+						"A rapier (1d8 piercing).",
+						"A Lute.",
+						"A Flute.",
+						"An entertainer's Pack.",
+						"Leather Armor",
+						"A dagger",
+						"Cade's Canoe"
+				],
+				"name": "Inventory"
+		},
+
+		"attack": {
+				"value": "dex+prof",
+				"name": "favorite attack"
+		},
+		"armor": {
+				"value": "leather",
+				"name": "Armor"
+		}
 }

@@ -1,109 +1,326 @@
 {
-	"_id": 141664827918516220,
-	"_name": "Zithembe",
-	"_level": "4",
-	"_class": "Fighter",
-	"_gold": 135,
-	"_str": "15",
-	"_dex": 10,
-	"_con": 14,
-	"_int": 14,
-	"_wis": 9,
-	"_cha": 10,
-	"_strmod": 2,
-	"_dexmod": 0,
-	"_conmod": 2,
-	"_intmod": 2,
-	"_wismod": -1,
-	"_chamod": 0,
-	"_profbonus": 2,
-	"_ac": 16,
-	"_init": 0,
-	"_spd": 30,
-	"_hp": "34",
-	"_per": 9,
-	"_strsavprof": 1,
-	"_athprof": 1,
-	"_dexsavprof": 0,
-	"_acroprof": 0,
-	"_sleightprof": 0,
-	"_stealthprof": 0,
-	"_consavprof": 1,
-	"_intsavprof": 0,
-	"_arcanaprof": 0,
-	"_historyprof": 1,
-	"_investprof": 1,
-	"_natureprof": 0,
-	"_religionprof": 0,
-	"_wissavprof": 0,
-	"_animalprof": 0,
-	"_insightprof": 0,
-	"_medicineprof": 0,
-	"_perprof": 0,
-	"_survprof": 1,
-	"_chasavprof": 0,
-	"_deceptprof": 0,
-	"_intimprof": 0,
-	"_performprof": 0,
-	"_persprof": 0,
-	"_notes": [
-		"I am often so engrossed by ancient cultures, that I have trouble fitting into my own.",
-		"I am driven by curiosity. I just need to see these things myself!",
-		"I have an unfinished map that I believe leads to a place of great and terrible power.",
-		"When I hear about a potential ruin to explore, I obsess over it to the point of being blind to the risks.",
-		"I have a 1-ounce block made from an unknown material",
-		"My shield adds +2 to my AC",
-		"I speak Common, Midani (language of native Zakhara), and Sindele (derivative of deep speech)",
-		"My Defense style gives me +1 to AC",
-		"\"Seek the wise guardian of orolonga, east of Mbala\"",
-		"I have second wind and 1 action surge"
-	],
-	"_inventory": [
-		"Chain mail",
-		"2 handaxes",
-		"1 spear",
-		"1 unfinished map",
-		"dungeoneer's pack",
-		"1 unfinished temple floorplan",
-		"1 shield",
-		"1 set cartographer's tools",
-		"1 small knife",
-		"1 pick and spade",
-		"1 scholar's pack"
-	],
-	"_stradd": 0,
-	"_dexadd": 0,
-	"_conadd": 0,
-	"_intadd": 0,
-	"_wisadd": 0,
-	"_chaadd": 0,
-	"_profbonusadd": 0,
-	"_acadd": 3,
-	"_initadd": 0,
-	"_spdadd": 0,
-	"_peradd": 0,
-	"_hpadd": 0,
-	"_strsavadd": 0,
-	"_athadd": 0,
-	"_dexsavadd": 0,
-	"_acroadd": 0,
-	"_sleightadd": 0,
-	"_stealthadd": 0,
-	"_consavadd": 0,
-	"_intsavadd": 0,
-	"_arcanaadd": 0,
-	"_historyadd": 0,
-	"_investadd": 0,
-	"_natureadd": 0,
-	"_religionadd": 0,
-	"_wissavadd": 0,
-	"_animaladd": 0,
-	"_insightadd": 0,
-	"_medicineadd": 0,
-	"_survadd": 0,
-	"_chasavadd": 0,
-	"_deceptadd": 0,
-	"_intimadd": 0,
-	"_performadd": 0,
-	"_persadd": 0
+		"id": {
+				"value": "141664827918516220"
+		},
+		"name": {
+				"value": "Zithembe",
+				"name": "name"
+		},
+		"class": {
+				"value": "Fighter",
+				"name": "class"
+		},
+		"level": {
+				"value": "4",
+				"name": "level"
+		},
+		"prof": {
+				"value": "2",
+				"name": "Proficiency Bonus",
+				"bonus": 0,
+				"type": "prof"
+		},
+		"str": {
+				"value": "15",
+				"name": "Strength",
+				"modifier": "0",
+				"bonus": 0,
+				"type": "stat"
+		},
+		"dex": {
+				"value": "10",
+				"name": "Dexterity",
+				"modifier": "2",
+				"bonus": 0,
+				"type": "stat"
+		},
+		"con": {
+				"value": "14",
+				"name": "Constitution",
+				"modifier": "-1",
+				"bonus": 0,
+				"type": "stat"
+		},
+		"int": {
+				"value": "14",
+				"name": "Intelligence",
+				"modifier": "2",
+				"bonus": 0,
+				"type": "stat"
+		},
+		"wis": {
+				"value": "9",
+				"name": "Wisdom",
+				"modifier": "1",
+				"bonus": 0,
+				"type": "stat"
+		},
+		"cha": {
+				"value": "10",
+				"name": "Charisma",
+				"modifier": "3",
+				"bonus": 0,
+				"type": "stat"
+		},
+		"ac": {
+				"value": 16,
+				"name": "AC",
+				"bonus": 0,
+				"type": "combat",
+				"mainStat": "dex"
+		},
+		"init": {
+				"value": "2",
+				"name": "Initiative",
+				"bonus": 0,
+				"type": "combat",
+				"mainStat": "dex"
+		},
+		"spd": {
+				"value": "30",
+				"name": "Speed",
+				"bonus": 0,
+				"type": "combat"
+		},
+		"hp": {
+				"value": "34",
+				"name": "HP",
+				"bonus": 0,
+				"type": "combat"
+		},
+		"strsav": {
+				"value": "0",
+				"name": "Strength Save",
+				"bonus": 0,
+				"prof": "1",
+				"type": "skill",
+				"mainStat": "str"
+		},
+		"ath": {
+				"value": "0",
+				"name": "Athletics",
+				"bonus": 0,
+				"prof": "1",
+				"type": "skill",
+				"mainStat": "str"
+		},
+		"dexsav": {
+				"value": "0",
+				"name": "Dexterity Save",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "dex"
+		},
+		"acr": {
+				"value": "0",
+				"name": "Acrobatics",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "dex"
+		},
+		"soh": {
+				"value": "0",
+				"name": "Sleight of Hand",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "dex"
+		},
+		"ste": {
+				"value": "0",
+				"name": "Stealth",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "dex"
+		},
+		"consav": {
+				"value": "0",
+				"name": "Constitution Save",
+				"bonus": 0,
+				"prof": "1",
+				"type": "skill",
+				"mainStat": "con"
+		},
+		"intsav": {
+				"value": "0",
+				"name": "Intelligence Save",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "int"
+		},
+		"arc": {
+				"value": "0",
+				"name": "Arcana",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "int"
+		},
+		"his": {
+				"value": "0",
+				"name": "History",
+				"bonus": 0,
+				"prof": "1",
+				"type": "skill",
+				"mainStat": "int"
+		},
+		"inv": {
+				"value": "10",
+				"name": "Investigation",
+				"bonus": 0,
+				"prof": "1",
+				"type": "skill",
+				"mainStat": "int"
+		},
+		"nat": {
+				"value": "0",
+				"name": "Nature",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "int"
+		},
+		"rel": {
+				"value": "0",
+				"name": "Religion",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "int"
+		},
+		"wissav": {
+				"value": "0",
+				"name": "Wisdom Save",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "wis"
+		},
+		"ani": {
+				"value": "0",
+				"name": "Animal Handling",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "wis"
+		},
+		"ins": {
+				"value": "0",
+				"name": "Insight",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "wis"
+		},
+		"med": {
+				"value": "0",
+				"name": "Medicine",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "wis"
+		},
+		"per": {
+				"value": "3",
+				"name": "Perception",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "wis"
+		},
+		"sur": {
+				"value": "0",
+				"name": "Survival",
+				"bonus": 0,
+				"prof": "1",
+				"type": "skill",
+				"mainStat": "wis"
+		},
+		"chasav": {
+				"value": "0",
+				"name": "Charisma Save",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "cha"
+		},
+		"dec": {
+				"value": "0",
+				"name": "Deception",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "cha"
+		},
+		"intim": {
+				"value": "0",
+				"name": "Intimidation",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "cha"
+		},
+		"perf": {
+				"value": "0",
+				"name": "Performance",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "cha"
+		},
+		"pers": {
+				"value": "0",
+				"name": "Persuasion",
+				"bonus": 0,
+				"prof": "0",
+				"type": "skill",
+				"mainStat": "cha"
+		},
+		"gold": {
+				"value": "135",
+				"name": "gold"
+		},
+		"notes": {
+				"value": [
+						"I am often so engrossed by ancient cultures, that I have trouble fitting into my own.",
+						"I am driven by curiosity. I just need to see these things myself!",
+						"I have an unfinished map that I believe leads to a place of great and terrible power.",
+						"When I hear about a potential ruin to explore, I obsess over it to the point of being blind to the risks.",
+						"I have a 1-ounce block made from an unknown material",
+						"My shield adds +2 to my AC",
+						"I speak Common, Midani (language of native Zakhara), and Sindele (derivative of deep speech)",
+						"My Defense style gives me +1 to AC",
+						"\"Seek the wise guardian of orolonga, east of Mbala\"",
+						"I have second wind and 1 action surge"
+				],
+				"name": "notes"
+		},
+		"inventory" : {
+				"value": [
+						"Chain mail",
+						"2 handaxes",
+						"1 spear",
+						"1 unfinished map",
+						"dungeoneer's pack",
+						"1 unfinished temple floorplan",
+						"1 shield",
+						"1 set cartographer's tools",
+						"1 small knife",
+						"1 pick and spade",
+						"1 scholar's pack"
+				],
+				"name" : "Inventory"
+		},
+		"attack": {
+				"value": "",
+				"name": "favorite attack"
+		},
+		"armor": {
+				"value": "chain mail",
+				"name": "Armor"
+		}
 }
