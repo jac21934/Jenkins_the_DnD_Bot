@@ -2,7 +2,7 @@
 var fs = require('fs');
 var tools = require("./tools.js"); 
 var config = require("./config.json");
-
+var armor = require("./inventory/armor.json");
 
 function Player() {}
 
@@ -13,11 +13,38 @@ Player.prototype = {
 		///////////////////////////
 
 		initialize: function(){
-
 				this.parseNotes();
 				this.setMods();
+				this.parseArmor();
 
 
+
+		},
+
+		parseArmor: function(){
+				var armor_type = "none";
+				for( ar in armor){
+						if(this["armor"].get() == armor[ar][0]){
+								armor_type = ar;
+								break;
+						}
+				}
+				console.log(armor_type);
+				var newAC = armor[armor_type][2];
+				console.log(newAC);
+				var ACdexBuff = 0;
+				if(armor[armor_type][3] != "na"){
+						if(armor[armor_type][3] == "Inf"){
+								ACdexBuff = Number(this["dex"]["modifier"]);
+						}
+						
+						else{							
+								ACdexBuff = Math.min(Number(this["dex"]["modifier"]), Number(armor[armor_type][3]));
+						}
+				}
+				newAC = Number(newAC) + Number(ACdexBuff);			
+				this["ac"].set(newAC);
+				
 		},
 		
 		getStatsMessage: function(){

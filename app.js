@@ -332,21 +332,24 @@ var commands = {
 								}
 								if(valid_armor)
 								{
-										newAC = armor[armor_type][2];
-										if(armor[armor_type][3] != "na")
-										{
-												if(armor[armor_type][3] == "Inf")
-												{
-														ACdexBuff = Number(players[id]["dex"]["modifier"]);
-												}
-												else
-												{							
-														ACdexBuff = Math.min(Number(players[id]["dex"]["modifier"]), Number(armor[armor_type][3]));
-												}
-												newAC = Number(newAC) + Number(ACdexBuff);			
-										}
-										players[id]["ac"].set(newAC);
 										players[id]["armor"].set(armor[armor_type][0]);
+										players[id].parseArmor();
+																						 
+										// newAC = armor[armor_type][2];
+										// if(armor[armor_type][3] != "na")
+										// {
+										// 		if(armor[armor_type][3] == "Inf")
+										// 		{
+										// 				ACdexBuff = Number(players[id]["dex"]["modifier"]);
+										// 		}
+										// 		else
+										// 		{							
+										// 				ACdexBuff = Math.min(Number(players[id]["dex"]["modifier"]), Number(armor[armor_type][3]));
+										// 		}
+										// 		newAC = Number(newAC) + Number(ACdexBuff);			
+										// }
+										// players[id]["ac"].set(newAC);
+										// players[id]["armor"].set(armor[armor_type][0]);
 										if(armor_type != "none"){
 												armorMessage += "Equipping " + players[id]["armor"].get() + " armor on " + players[id]["name"].get() + ".\n";
 										}
