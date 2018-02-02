@@ -133,6 +133,37 @@ client.on("ready", () => {
     });
 });
 
+
+function close(reboot=false){
+		if(reboot == true){
+				const { spawn } = require('child_process')
+				
+					client.destroy().then(function(){
+								var com = "";
+								if(process.platform == "win32"){
+										com = "node";
+								}
+								else if(process.platform == "linux"){
+										com = "nodejs";
+								}
+								const child = spawn(com, ['app.js'], {
+										detached: true,
+										stdio: ['ignore']
+								});
+								
+								child.unref();
+								
+
+								process.exit(0);	
+					});
+		}
+		else{
+				client.destroy().then(function(){
+						process.exit(0);	
+				});
+		}
+}
+
 function messageSend(message, text, messagefile = "", breakChar = '\n'){
 
 
@@ -334,22 +365,7 @@ var commands = {
 								{
 										players[id]["armor"].set(armor[armor_type][0]);
 										players[id].parseArmor();
-																						 
-										// newAC = armor[armor_type][2];
-										// if(armor[armor_type][3] != "na")
-										// {
-										// 		if(armor[armor_type][3] == "Inf")
-										// 		{
-										// 				ACdexBuff = Number(players[id]["dex"]["modifier"]);
-										// 		}
-										// 		else
-										// 		{							
-										// 				ACdexBuff = Math.min(Number(players[id]["dex"]["modifier"]), Number(armor[armor_type][3]));
-										// 		}
-										// 		newAC = Number(newAC) + Number(ACdexBuff);			
-										// }
-										// players[id]["ac"].set(newAC);
-										// players[id]["armor"].set(armor[armor_type][0]);
+	
 										if(armor_type != "none"){
 												armorMessage += "Equipping " + players[id]["armor"].get() + " armor on " + players[id]["name"].get() + ".\n";
 										}
@@ -387,36 +403,38 @@ var commands = {
 				description: "Turns me off. Needs admin permissions.",
 				process: function(client, message, args, id=0) {
 						messageSend(message,"Shutting down.");
-						client.destroy().then(function(){
-								process.exit(0);	
-						});
+						// client.destroy().then(function(){
+						// 		process.exit(0);	
+						// });
+						
+						setTimeout(close, 1000);
 				}
 		},
 		"reboot": {
 				permissions: "any",
 				description: "Reboots me.",
 				process: function(client, message, args, id=0) {
-						const { spawn } = require('child_process')
 						messageSend(message,"Rebooting.");
-						
-						client.destroy().then(function(){
-								var com = "";
-								if(process.platform == "win32"){
-										com = "node";
-								}
-								else if(process.platform == "linux"){
-										com = "nodejs";
-								}
-								const child = spawn(com, ['app.js'], {
-										detached: true,
-										stdio: ['ignore']
-								});
+						var reboot = true;
+						setTimeout(close, 1000, reboot);
+						// client.destroy().then(function(){
+						// 		var com = "";
+						// 		if(process.platform == "win32"){
+						// 				com = "node";
+						// 		}
+						// 		else if(process.platform == "linux"){
+						// 				com = "nodejs";
+						// 		}
+						// 		const child = spawn(com, ['app.js'], {
+						// 				detached: true,
+						// 				stdio: ['ignore']
+						// 		});
 								
-								child.unref();
+						// 		child.unref();
 								
 
-								process.exit(0);	
-						});
+						// 		process.exit(0);	
+						// });
 				}
 		},
 		"update": {
@@ -837,24 +855,32 @@ var commands = {
 				description: "Give end of youtube address (everything after watch?v=) to play audio.",
 				process: function(client,message,args,id=0){
 						if( args.length >= 1){
+								console.log(dispatcher);
 								if(dispatcher != null){
-										console.log("killing stream");
-										dispatcher.end();
-										dispactcher = null;
+										commands["stop"].process(client, message, args, id);
+										setTimeout( commands["play"].process, 1000, client, message, args, id);
 								}
-								const streamOptions = {seek: 0, volume: 1};
-								var video_id = args[0];
-								
-								var playMessage = "Playing " + args[0];
-								messageSend(message, playMessage);
-								var stream = ytdl("https://www.youtube.com/watch?v=" + video_id, {filter: 'audioonly'});
-								var info = ytdl.getInfo("https://www.youtube.com/watch?v=" + video_id);
-								console.log(info);
-								console.log("Streaming audio from https://www.youtube.com/watch?v=" + video_id );	
-
-								dispatcher = client.voiceConnections.first().playStream(stream, streamOptions);
-
-								
+								else{
+										// if(dispatcher != null){
+										// 		console.log("killing stream");
+										// 		dispatcher.end();
+										// 		dispatcher = null;
+										// }
+										const streamOptions = {seek: 0, volume: 1};
+										var video_id = args[0];
+										
+										var playMessage = "Playing " + args[0];
+										var stream = ytdl("https://www.youtube.com/watch?v=" + video_id, {filter: 'audioonly'});
+										var info = ytdl.getInfo("https://www.youtube.com/watch?v=" + video_id);
+										console.log("Streaming audio from https://www.youtube.com/watch?v=" + video_id );	
+										console.log(dispatcher);
+										dispatcher = client.voiceConnections.first().playStream(stream, streamOptions);
+										dispatcher.once("end", reason =>{
+												dispatcher = null;
+										});
+										
+										messageSend(message, playMessage);
+								}
 						}
 				}
 		},
@@ -863,8 +889,13 @@ var commands = {
 				description: "Stops audio.",
 				process: function(client,message,args,id=0){
 						var stopMessage = "Stopping stream.";
-						messageSend(message, stopMessage);
-						dispatcher.end();
+						if(dispatcher != null){
+								dispatcher.end();
+								dispatcher = null;
+								messageSend(message, stopMessage);
+								
+						}
+
 				}
 		},
 		"pause":{
