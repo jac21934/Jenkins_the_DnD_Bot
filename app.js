@@ -415,6 +415,7 @@ var commands = {
 				permissions: "any",
 				description: "Reboots me.",
 				process: function(client, message, args, id=0) {
+						save();
 						messageSend(message,"Rebooting.");
 						var reboot = true;
 						setTimeout(close, 1000, reboot);
