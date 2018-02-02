@@ -443,32 +443,15 @@ var commands = {
 				permissions: "administrator",
 				description: "Updates from git repo and reboots.",
 				process: function(client, message, args, id=0) {
+						save();
+						var reboot = true;
 						const { spawn } = require('child_process');
 						messageSend(message,"Updating from git repo.");
 
 						var fetch = spawn('git', ['pull']);
 						fetch.stdout.on('data',function(data){
 						});
-						
-						
-						client.destroy().then(function(){
-								var com = "";
-								if(process.platform == "win32"){
-										com = "node";
-								}
-								else if(process.platform == "linux"){
-										com = "nodejs";
-								}
-								const child = spawn(com, ['app.js'], {
-										detached: true,
-										stdio: ['ignore']
-								});
-								
-								child.unref();
-								
-
-								process.exit(0);	
-						});
+						setTimeout(close, 1000, reboot);
 				}
 		},		
 		"save": {
