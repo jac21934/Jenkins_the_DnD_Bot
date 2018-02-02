@@ -402,6 +402,7 @@ var commands = {
 				permissions: "administrator",
 				description: "Turns me off. Needs admin permissions.",
 				process: function(client, message, args, id=0) {
+						save();
 						messageSend(message,"Shutting down.");
 						// client.destroy().then(function(){
 						// 		process.exit(0);	
