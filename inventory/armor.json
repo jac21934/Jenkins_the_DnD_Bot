@@ -1,5 +1,6 @@
 {
-    "none":           ["none",            "none",     10, "Inf", 0,  "na",           0 ],
+		"na":             ["na",              "na",      "na", "na","na","na",         "na"],
+		"none":           ["none",            "none",     10, "Inf", 0,  "na",           0 ],
     "padded":         ["padded",          "Light",    11, "Inf", 0,  "disadvantage", 8 ],
     "leather":        ["leather",         "Light",    11, "Inf", 0,  "na",           10],
     "studdedleather": ["studded leather", "Light",    12, "Inf", 0,  "na",           13],

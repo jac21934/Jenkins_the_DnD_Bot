@@ -1,6 +1,6 @@
 {
 	"id": {
-		"value": "272158302958387200"
+		"value": "189868212383383552"
 	},
 	"name": {
 		"value": "The DM",
@@ -11,11 +11,11 @@
 		"name": "class"
 	},
 	"level": {
-		"value": "4",
+		"value": "400",
 		"name": "level"
 	},
 	"prof": {
-		"value": "2",
+		"value": "101",
 		"name": "Proficiency Bonus",
 		"bonus": 0,
 		"type": "prof"
@@ -77,13 +77,14 @@
 		"mainStat": "dex"
 	},
 	"spd": {
-		"value": "30",
+		"value": "100000",
 		"name": "Speed",
 		"bonus": 0,
 		"type": "combat"
 	},
 	"hp": {
 		"value": "21",
+		"current": 21,
 		"name": "HP",
 		"bonus": 0,
 		"type": "combat"

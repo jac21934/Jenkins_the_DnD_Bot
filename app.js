@@ -26,7 +26,6 @@ var dispatcher = null;
 const broadcast = client.createVoiceBroadcast();
 
 
-
 function set(id, args){
 
     var message = "";
@@ -48,13 +47,13 @@ function set(id, args){
 								
 						}
 						else{
-								message += "Invalid argument " + args[0] + ".\n"
+								message += "Invalid argument " + args[0] + ".\n";
 						}
 				}
     }
 		
     else{
-				message += "Please give me something to set and its values.\n"
+				message += "Please give me something to set and its values.\n";
     }
 
     return message;
@@ -136,26 +135,26 @@ client.on("ready", () => {
 
 function close(reboot=false){
 		if(reboot == true){
-				const { spawn } = require('child_process')
+				const { spawn } = require('child_process');
 				
-					client.destroy().then(function(){
-								var com = "";
-								if(process.platform == "win32"){
-										com = "node";
-								}
-								else if(process.platform == "linux"){
-										com = "nodejs";
-								}
-								const child = spawn(com, ['app.js'], {
-										detached: true,
-										stdio: ['ignore']
-								});
-								
-								child.unref();
-								
+				client.destroy().then(function(){
+						var com = "";
+						if(process.platform == "win32"){
+								com = "node";
+						}
+						else if(process.platform == "linux"){
+								com = "nodejs";
+						}
+						const child = spawn(com, ['app.js'], {
+								detached: true,
+								stdio: ['ignore']
+						});
+						
+						child.unref();
+						
 
-								process.exit(0);	
-					});
+						process.exit(0);	
+				});
 		}
 		else{
 				client.destroy().then(function(){
@@ -163,6 +162,9 @@ function close(reboot=false){
 				});
 		}
 }
+
+
+
 
 function messageSend(message, text, messagefile = "", breakChar = '\n'){
 
@@ -195,7 +197,64 @@ var commands = {
 				permissions: "any",
 				description: 'A testbed function for Jenkins.',
 				process: function(client,message,args,id){
-						players[id].parseNotes();
+
+						
+				}
+		},
+		"hp" : {
+				permissions: "any",
+				description: 'A HP tracker.',
+				process: function(client,message,args,id){
+						var hpMessage = "";
+						
+						var currentHP = Number(players[id]["hp"]["current"]);
+						var maxHP = Number(players[id]["hp"].get());
+						if( args.length > 0){
+								var sum = 0;
+								var totArgs = args.join(" ")
+								var buff = tools.parseSum(totArgs);
+								sum = Number(buff[0]);
+								if(sum != 0){
+										currentHP += sum;
+										if( sum > 0){
+												hpMessage += "Adding " + String(sum);
+										}
+										else if ( sum < 0){
+												hpMessage += "Removing " + String(Math.abs(sum)) ;
+										}
+										players[id]["hp"]["current"] = currentHP;
+
+										hpMessage += " HP\n";
+								}
+								else if (tools.parseStringForStat(totArgs) == "max"){
+										currentHP = maxHP;
+										players[id]["hp"]["current"] = currentHP;
+										hpMessage += "Healing to max HP\n";
+								}
+
+								else{
+										var buffID = tools.getPlayer(totArgs, players);
+										if(buffID != 0){
+												id = buffID;
+										}
+								}
+
+						}
+
+
+
+
+						hpMessage +=  players[id]["name"].get();
+
+						hpMessage += "'s current HP: ";
+
+						hpMessage += players[id]["hp"]["current"];
+
+						hpMessage += "/";
+
+						hpMessage += players[id]["hp"].get();
+						messageSend(message, hpMessage);
+						
 				}
 		},
 		"attack" : {
@@ -232,14 +291,14 @@ var commands = {
 										}
 								}
 								if(spellVec.length == 1){
-										spell = spellVec[0];
+										spell = spellVec[0]; 
 										spellMessage += String(spells[spell]["name"]) + "\n";
-										var spellBuff = ""
+										var spellBuff = "";      								
 										
 										spellBuff += "Level: " + spells[spell]["level"] + "\n";
 										spellBuff += "School: " + tools.toTitleCase(spells[spell]["school"]) + "\n";
 										spellBuff += "Casting Time: " + spells[spell]["casting_time"] + "\n";
-										spellBuff += "Components: "
+										spellBuff += "Components: ";
 										if(spells[spell]["components"]["material"] == true){
 												spellBuff += "M";
 										}
@@ -348,7 +407,7 @@ var commands = {
 								if(args[0]=="unequip")
 								{
 										armor_type = "none";
-										armorMessage += "Unequipping armor.\n"
+										armorMessage += "Unequipping armor.\n";
 										
 								}
 								else
@@ -365,7 +424,7 @@ var commands = {
 								{
 										players[id]["armor"].set(armor[armor_type][0]);
 										players[id].parseArmor();
-	
+										
 										if(armor_type != "none"){
 												armorMessage += "Equipping " + players[id]["armor"].get() + " armor on " + players[id]["name"].get() + ".\n";
 										}
@@ -375,7 +434,7 @@ var commands = {
 								}
 								else
 								{
-									armorMessage += "Invalid armor type.";
+										armorMessage += "Invalid armor type.";
 								}
 						}
 						else if(args.length == 0)
@@ -419,24 +478,6 @@ var commands = {
 						messageSend(message,"Rebooting.");
 						var reboot = true;
 						setTimeout(close, 1000, reboot);
-						// client.destroy().then(function(){
-						// 		var com = "";
-						// 		if(process.platform == "win32"){
-						// 				com = "node";
-						// 		}
-						// 		else if(process.platform == "linux"){
-						// 				com = "nodejs";
-						// 		}
-						// 		const child = spawn(com, ['app.js'], {
-						// 				detached: true,
-						// 				stdio: ['ignore']
-						// 		});
-								
-						// 		child.unref();
-								
-
-						// 		process.exit(0);	
-						// });
 				}
 		},
 		"update": {
@@ -590,7 +631,6 @@ var commands = {
 				permissions: "any",
 				description: "Give a number of die with modifier(s) to roll and show result, (1d4 + 10 - 5 or 5d17 - 5). Put sum at the end if you don't want to see the individual rolls.",
 				process: function(client,message,args,id){
-
 						var sumFlag = false;
 						var advFlag = false;
 						var disFlag = false;
@@ -645,28 +685,15 @@ var commands = {
 						}
 
 						
-						
-						var	buff= tools.parseSum(buffArr[1].replace(/ +/g, ""))
-						modifier += Number(buff[0])
+						var	buff= tools.parseSum(buffArr[1].replace(/ +/g, ""));
+						modifier += Number(buff[0]);
 						modifier += tools.getModFromString(players,id,tools.parseStringForStat(buffArr[1]));
-						
-
-						
-						
-
 						
 						var rollType = tools.parseStringForStat(buffArr[1]);
 						
-
-						
-
 						rollMessage = tools.getRollMessage(numDieArr,maxDieArr, modifier, players, id, sumFlag, advFlag, disFlag, rollType);
 						
 						messageSend(message,rollMessage);
-						
-						
-						
-						
 				}
 		},
 		
@@ -707,13 +734,13 @@ var commands = {
 												if(id != config.DM_ID){
 														players[id]["gold"].set(Number(Number(players[id]["gold"].get()) +Number( divGold)).toFixed(2));
 
-														var buffMessage = "Adding " + divGold + " to " + players[id]["name"].get() + "'s gold.\n" 
+														var buffMessage = "Adding " + divGold + " to " + players[id]["name"].get() + "'s gold.\n";
 														if (buffMessage.length > max){
 																max = buffMessage.length;
 														}
 
 														
-														goldMessage += buffMessage
+														goldMessage += buffMessage;
 												}
 										}
 										gold = 0;
@@ -731,7 +758,7 @@ var commands = {
 														giveGold = players[id]["gold"].get();
 												}
 												else{
-														goldMessage += "Please state how much gold you want to give to the party.\n"
+														goldMessage += "Please state how much gold you want to give to the party.\n";
 														messageSend(message, goldMessage);
 														return;
 												}
@@ -975,9 +1002,15 @@ var commands = {
 						var defsHeader = "Name" + Array(nameregionSize - String("Name").length).join(" ") + "AC" + Array(regionSize - String("AC").length).join(" ") + "INIT" + Array(regionSize - String("INIT").length).join(" ") + "SPD" + Array(regionSize - String("SPD").length).join(" ")  + "PER" + Array(regionSize - String("PER").length).join(" ")  +  "HP" + "\n"; 
 						
 						for(id in players){
+
+								var ac   = Number(players[id]["ac"].get()) + Number(players[id]["ac"]["bonus"]);
+								var init = Number(players[id]["init"].get()) + Number(players[id]["init"]["bonus"]);
+								var spd  = Number(players[id]["spd"].get()) + Number(players[id]["spd"]["bonus"]);
+								var per  = 10 + Number(players[id]["per"]["bonus"]) + Number(players[id]["per"]["prof"])*Number(players[id]["prof"].get()) + Number(players[id]["wis"]["modifier"]);
+								var hp   = Number(players[id]["hp"].get()) + Number(players[id]["hp"]["bonus"]);
 								
 								if(players[id]["class"].get() != "Dungeon Master"){
-										buffMessage += players[id]["name"].get() + Array(nameregionSize - String(players[id]["name"].get()).length).join(" ")  + players[id]["ac"].get() + Array(regionSize - String(players[id]["ac"].get()).length).join(" ") + players[id]["init"].get() + Array(regionSize - String(players[id]["init"].get()).length).join(" ") + players[id]["spd"].get() + Array(regionSize - String(players[id]["spd"].get()).length).join(" ") + players[id]["per"].get() + Array(regionSize - String(players[id]["per"].get()).length).join(" ") + players[id]["hp"].get() + "\n"; 
+										buffMessage += players[id]["name"].get() + Array(nameregionSize - String(players[id]["name"].get()).length).join(" ")  + ac + Array(regionSize - String(ac).length).join(" ") + init + Array(regionSize - String(init).length).join(" ") + spd + Array(regionSize - String(spd).length).join(" ") + per + Array(regionSize - String(per).length).join(" ") + hp + "\n"; 
 										
 										if(String(players[id]["spd"].get()).length > maxSize){
 												maxSize = String(players[id]["spd"].get()).length;
@@ -1078,7 +1111,7 @@ var commands = {
 								// else{
 
 								// 		notesMessage = players[id].getNotesMessage();
-										
+								
 								// }
 						}
 						
@@ -1160,14 +1193,9 @@ var commands = {
 												}
 												
 												players[id]["inventory"].set(newInv);
-											
+												
 										}
 								}
-								// else{
-
-								// 		invMessage = players[id].getInvMessage();
-										
-								// }
 						}
 						
 						messageSend(message,invMessage);
@@ -1204,16 +1232,10 @@ function checkMessageForCommand(message, isEdit) {
 												var maxIndex = discordMax - (frontLength+ dashSpace.length);
 												var buffString = "";
 												var newIndex = tools.findSpace(arrBuff[k],maxIndex);
-												// 	if(newIndex == maxIndex || newIndex < maxIndex - 15){ 
-												// 					buffString = arrBuff[k].slice(maxIndex);
-												// 					arrBuff[k] = arrBuff[k].replace(buffString,"-");
-												// 					buffString = "-" + buffString;
-												// 			}
-												// //	
-												//	else{
+
 												buffString = arrBuff[k].slice(newIndex);
 												arrBuff[k] = arrBuff[k].replace(buffString, "");
-												//		}
+
 												if( k < arrBuff.length - 1){
 														arrBuff[k+1] = buffString + " " + arrBuff[k+1];
 												}

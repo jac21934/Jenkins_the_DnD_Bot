@@ -2,6 +2,22 @@ var aliases = require("./aliases.json");
 var config = require("./config.json");
 var regex = require("./RegEx.json");
 
+
+function getPlayer(string, players){
+				var playerID = 0
+				for( id in players){
+						if(String(players[id]["name"].get()).toLowerCase().indexOf(String(string).toLowerCase()) == 0){
+								if(id == config.DM_ID){
+										continue;
+								}
+								playerID =  id;
+								break;
+						}
+				}
+				return playerID;
+				
+}
+
 function getAliases(){
 		var aliasMessage = "";
 		var space = 28;
@@ -588,6 +604,7 @@ function getRollMessage(numDieArr, maxDieArr, modifier, players, id, sumFlag, ad
 }
 
 module.exports = {
+		getPlayer,
 		toTitleCase,
 		inWords,
 		getMaxWidth,

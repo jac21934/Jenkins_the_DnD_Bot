@@ -41,6 +41,7 @@
 		"sur":["survival","SUR", "\\bsur\\b"],
 		"ins":["insight","INS",  "\\bins\\b"],
 		"prof":["proficiency","PROF",  "\\bprof\\b"],
-		"attack":["attack","atk", "ATK", "\\batk\\b"]
+		"attack":["attack","atk", "ATK", "\\batk\\b"],
+		"max": ["max","full"]
 
 }
