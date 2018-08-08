@@ -1,20 +1,20 @@
 var Stat =  {
-		value: "",
-		prof : "",
-		bonus: "",
-		mainStat: "",
-		type: ""		
+    value: "",
+    prof : "",
+    bonus: "",
+    mainStat: "",
+    type: ""    
 }
 
 
 Stat.prototype = {
-		get: function(){
-				return this['value'];
-		},
+    get: function(){
+        return this['value'];
+    },
 
-		set: function(value){
-				this['value'] = value;
-		}
+    set: function(value){
+        this['value'] = value;
+    }
 }
 
 
